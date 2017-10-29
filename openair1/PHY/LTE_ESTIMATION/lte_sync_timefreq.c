@@ -101,40 +101,65 @@ void lte_sync_timefreq(PHY_VARS_UE *ue,int band,unsigned int DL_freq) {
     	  //LA: f is number of steps
 
         if ((f<-256)||(f>=0)) { // no split around DC
-          //          printf("No split, f %d (%d)\n",f,f&3);
+          //printf("No split, f %d (%d)\n",f,f&3);
 
           // align filters and input buffer pointer to 128-bit
           switch (f&3) {
           case 0:
-        	//LOG_I( HW, "case 0, f = %d\n",f);
             pss6144_0 = &pss6144_0_0[0];
             pss6144_1 = &pss6144_1_0[0];
             pss6144_2 = &pss6144_2_0[0];
             sp2 = (f<0) ? (__m128i*)&sp[12288+(f<<1)] : (__m128i*)&sp[(f<<1)];
+
+            LOG_I( HW, "No split. case %d, f = %d.\n",f&3,f);
+        	  LOG_I( HW, "pss6144_0 = {%d,%d,%d,%d,%d,%d,%d}.\n",(int16_t *)pss6144_0[0],(int16_t *)pss6144_0[1],(int16_t *)pss6144_0[2],(int16_t *)pss6144_0[3],(int16_t *)pss6144_0[4],(int16_t *)pss6144_0[5],(int16_t *)pss6144_0[6]);
+        	  LOG_I( HW, "pss6144_1 = {%d,%d,%d,%d,%d,%d,%d}.\n",(int16_t *)pss6144_1[0],(int16_t *)pss6144_1[1],(int16_t *)pss6144_1[2],(int16_t *)pss6144_1[3],(int16_t *)pss6144_1[4],(int16_t *)pss6144_1[5],(int16_t *)pss6144_1[6]);
+        	  LOG_I( HW, "pss6144_2 = {%d,%d,%d,%d,%d,%d,%d}.\n",(int16_t *)pss6144_2[0],(int16_t *)pss6144_2[1],(int16_t *)pss6144_2[2],(int16_t *)pss6144_2[3],(int16_t *)pss6144_2[4],(int16_t *)pss6144_2[5],(int16_t *)pss6144_2[6]);
+            LOG_I( HW, "sp2 = %d, index = %d.\n",(__m128i)sp2[0],(f<0) ? (12288+(f<<1)) : ((f<<1)));
+            printf("----------------------------------------------------\n");
             break;
 
           case 1:
-        	//LOG_I( HW, "case 1, f = %d\n",f);
             pss6144_0 = &pss6144_0_1[0];
             pss6144_1 = &pss6144_1_1[0];
             pss6144_2 = &pss6144_2_1[0];
             sp2 = (f<0) ? (__m128i*)&sp[12286+(f<<1)] : (__m128i*)&sp[-2+(f<<1)];
+
+
+      	  LOG_I( HW, "No split. case %d, f = %d.\n",f&3,f);
+      	  LOG_I( HW, "pss6144_0 = {%d,%d,%d,%d,%d,%d,%d}.\n",(int16_t *)pss6144_0[0],(int16_t *)pss6144_0[1],(int16_t *)pss6144_0[2],(int16_t *)pss6144_0[3],(int16_t *)pss6144_0[4],(int16_t *)pss6144_0[5],(int16_t *)pss6144_0[6]);
+      	  LOG_I( HW, "pss6144_1 = {%d,%d,%d,%d,%d,%d,%d}.\n",(int16_t *)pss6144_1[0],(int16_t *)pss6144_1[1],(int16_t *)pss6144_1[2],(int16_t *)pss6144_1[3],(int16_t *)pss6144_1[4],(int16_t *)pss6144_1[5],(int16_t *)pss6144_1[6]);
+      	  LOG_I( HW, "pss6144_2 = {%d,%d,%d,%d,%d,%d,%d}.\n",(int16_t *)pss6144_2[0],(int16_t *)pss6144_2[1],(int16_t *)pss6144_2[2],(int16_t *)pss6144_2[3],(int16_t *)pss6144_2[4],(int16_t *)pss6144_2[5],(int16_t *)pss6144_2[6]);
+      	LOG_I( HW, "sp2 = %d, index = %d.\n",(__m128i)sp2[0],(f<0) ? (12286+(f<<1)) : (-2+(f<<1)));
+      	printf("----------------------------------------------------\n");
             break;
 
           case 2:
-        	//LOG_I( HW, "case 2, f = %d\n",f);
             pss6144_0 = &pss6144_0_2[0];
             pss6144_1 = &pss6144_1_2[0];
             pss6144_2 = &pss6144_2_2[0];
             sp2 = (f<0) ? (__m128i*)&sp[12284+(f<<1)] : (__m128i*)&sp[-4+(f<<1)];
+
+      	  LOG_I( HW, "No split. case %d, f = %d.\n",f&3,f);
+      	  LOG_I( HW, "pss6144_0 = {%d,%d,%d,%d,%d,%d,%d}.\n",(int16_t *)pss6144_0[0],(int16_t *)pss6144_0[1],(int16_t *)pss6144_0[2],(int16_t *)pss6144_0[3],(int16_t *)pss6144_0[4],(int16_t *)pss6144_0[5],(int16_t *)pss6144_0[6]);
+      	  LOG_I( HW, "pss6144_1 = {%d,%d,%d,%d,%d,%d,%d}.\n",(int16_t *)pss6144_1[0],(int16_t *)pss6144_1[1],(int16_t *)pss6144_1[2],(int16_t *)pss6144_1[3],(int16_t *)pss6144_1[4],(int16_t *)pss6144_1[5],(int16_t *)pss6144_1[6]);
+      	  LOG_I( HW, "pss6144_2 = {%d,%d,%d,%d,%d,%d,%d}.\n",(int16_t *)pss6144_2[0],(int16_t *)pss6144_2[1],(int16_t *)pss6144_2[2],(int16_t *)pss6144_2[3],(int16_t *)pss6144_2[4],(int16_t *)pss6144_2[5],(int16_t *)pss6144_2[6]);
+      	LOG_I( HW, "sp2 = %d, index = %d.\n",(__m128i)sp2[0],(f<0) ? (12284+(f<<1)) : (-4+(f<<1)));
+      	printf("----------------------------------------------------\n");
             break;
 
           case 3:
-        	//LOG_I( HW, "case 3, f = %d\n",f);
         	pss6144_0 = &pss6144_0_3[0];
             pss6144_1 = &pss6144_1_3[0];
             pss6144_2 = &pss6144_2_3[0];
             sp2 = (f<0) ? (__m128i*)&sp[12282+(f<<1)] : (__m128i*)&sp[-6+(f<<1)];
+
+      	  LOG_I( HW, "No split. case %d, f = %d.\n",f&3,f);
+      	  LOG_I( HW, "pss6144_0 = {%d,%d,%d,%d,%d,%d,%d}.\n",(int16_t *)pss6144_0[0],(int16_t *)pss6144_0[1],(int16_t *)pss6144_0[2],(int16_t *)pss6144_0[3],(int16_t *)pss6144_0[4],(int16_t *)pss6144_0[5],(int16_t *)pss6144_0[6]);
+      	  LOG_I( HW, "pss6144_1 = {%d,%d,%d,%d,%d,%d,%d}.\n",(int16_t *)pss6144_1[0],(int16_t *)pss6144_1[1],(int16_t *)pss6144_1[2],(int16_t *)pss6144_1[3],(int16_t *)pss6144_1[4],(int16_t *)pss6144_1[5],(int16_t *)pss6144_1[6]);
+      	  LOG_I( HW, "pss6144_2 = {%d,%d,%d,%d,%d,%d,%d}.\n",(int16_t *)pss6144_2[0],(int16_t *)pss6144_2[1],(int16_t *)pss6144_2[2],(int16_t *)pss6144_2[3],(int16_t *)pss6144_2[4],(int16_t *)pss6144_2[5],(int16_t *)pss6144_2[6]);
+      	LOG_I( HW, "sp2 = %d, index = %d.\n",(__m128i)sp2[0],(f<0) ? (12282+(f<<1)) : (-6+(f<<1)));
+      	printf(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n");
             break;
           }
 
@@ -161,7 +186,7 @@ void lte_sync_timefreq(PHY_VARS_UE *ue,int band,unsigned int DL_freq) {
             re256 = (re256+1)&0x3f;
           }
         } else { // Split around DC, this is the negative frequencies
-          //          printf("split around DC, f %d (f/4 %d, f&3 %d)\n",f,f>>2,f&3);
+          //printf("split around DC, f %d (f/4 %d, f&3 %d)\n",f,f>>2,f&3);
 
           // align filters and input buffer pointer to 128-bit
           switch (f&3) {
@@ -170,6 +195,14 @@ void lte_sync_timefreq(PHY_VARS_UE *ue,int band,unsigned int DL_freq) {
             pss6144_1 = &pss6144_1_0[0];
             pss6144_2 = &pss6144_2_0[0];
             sp2 = (__m128i*)&sp[12288+(f<<1)];
+
+
+      	  LOG_I( HW, "split around DC, case %d, f = %d.\n",f&3,f);
+      	  LOG_I( HW, "pss6144_0 = {%d,%d,%d,%d,%d,%d,%d}.\n",(int16_t *)pss6144_0[0],(int16_t *)pss6144_0[1],(int16_t *)pss6144_0[2],(int16_t *)pss6144_0[3],(int16_t *)pss6144_0[4],(int16_t *)pss6144_0[5],(int16_t *)pss6144_0[6]);
+      	  LOG_I( HW, "pss6144_1 = {%d,%d,%d,%d,%d,%d,%d}.\n",(int16_t *)pss6144_1[0],(int16_t *)pss6144_1[1],(int16_t *)pss6144_1[2],(int16_t *)pss6144_1[3],(int16_t *)pss6144_1[4],(int16_t *)pss6144_1[5],(int16_t *)pss6144_1[6]);
+      	  LOG_I( HW, "pss6144_2 = {%d,%d,%d,%d,%d,%d,%d}.\n",(int16_t *)pss6144_2[0],(int16_t *)pss6144_2[1],(int16_t *)pss6144_2[2],(int16_t *)pss6144_2[3],(int16_t *)pss6144_2[4],(int16_t *)pss6144_2[5],(int16_t *)pss6144_2[6]);
+      	LOG_I( HW, "sp2 = %d, index = %d.\n",(__m128i *)sp2,12288+(f<<1));
+      	printf("----------------------------------------------------\n");
             break;
 
           case 1:
@@ -177,6 +210,13 @@ void lte_sync_timefreq(PHY_VARS_UE *ue,int band,unsigned int DL_freq) {
             pss6144_1 = &pss6144_1_1[0];
             pss6144_2 = &pss6144_2_1[0];
             sp2 = (__m128i*)&sp[12286+(f<<1)];
+
+        	  LOG_I( HW, "split around DC, case %d, f = %d.\n",f&3,f);
+          	  LOG_I( HW, "pss6144_0 = {%d,%d,%d,%d,%d,%d,%d}.\n",(int16_t *)pss6144_0[0],(int16_t *)pss6144_0[1],(int16_t *)pss6144_0[2],(int16_t *)pss6144_0[3],(int16_t *)pss6144_0[4],(int16_t *)pss6144_0[5],(int16_t *)pss6144_0[6]);
+          	  LOG_I( HW, "pss6144_1 = {%d,%d,%d,%d,%d,%d,%d}.\n",(int16_t *)pss6144_1[0],(int16_t *)pss6144_1[1],(int16_t *)pss6144_1[2],(int16_t *)pss6144_1[3],(int16_t *)pss6144_1[4],(int16_t *)pss6144_1[5],(int16_t *)pss6144_1[6]);
+          	  LOG_I( HW, "pss6144_2 = {%d,%d,%d,%d,%d,%d,%d}.\n",(int16_t *)pss6144_2[0],(int16_t *)pss6144_2[1],(int16_t *)pss6144_2[2],(int16_t *)pss6144_2[3],(int16_t *)pss6144_2[4],(int16_t *)pss6144_2[5],(int16_t *)pss6144_2[6]);
+        	  LOG_I( HW, "sp2 = %d, index = %d.\n",(__m128i *)sp2,12286+(f<<1));
+        	  printf("----------------------------------------------------\n");
             break;
 
           case 2:
@@ -184,6 +224,13 @@ void lte_sync_timefreq(PHY_VARS_UE *ue,int band,unsigned int DL_freq) {
             pss6144_1 = &pss6144_1_2[0];
             pss6144_2 = &pss6144_2_2[0];
             sp2 = (__m128i*)&sp[12284+(f<<1)];
+
+        	  LOG_I( HW, "split around DC, case %d, f = %d.\n",f&3,f);
+          	  LOG_I( HW, "pss6144_0 = {%d,%d,%d,%d,%d,%d,%d}.\n",(int16_t *)pss6144_0[0],(int16_t *)pss6144_0[1],(int16_t *)pss6144_0[2],(int16_t *)pss6144_0[3],(int16_t *)pss6144_0[4],(int16_t *)pss6144_0[5],(int16_t *)pss6144_0[6]);
+          	  LOG_I( HW, "pss6144_1 = {%d,%d,%d,%d,%d,%d,%d}.\n",(int16_t *)pss6144_1[0],(int16_t *)pss6144_1[1],(int16_t *)pss6144_1[2],(int16_t *)pss6144_1[3],(int16_t *)pss6144_1[4],(int16_t *)pss6144_1[5],(int16_t *)pss6144_1[6]);
+          	  LOG_I( HW, "pss6144_2 = {%d,%d,%d,%d,%d,%d,%d}.\n",(int16_t *)pss6144_2[0],(int16_t *)pss6144_2[1],(int16_t *)pss6144_2[2],(int16_t *)pss6144_2[3],(int16_t *)pss6144_2[4],(int16_t *)pss6144_2[5],(int16_t *)pss6144_2[6]);
+        	  LOG_I( HW, "sp2 = %d, index = %d.\n",(__m128i *)sp2,12284+(f<<1));
+        	  printf("----------------------------------------------------\n");
             break;
 
           case 3:
@@ -191,6 +238,14 @@ void lte_sync_timefreq(PHY_VARS_UE *ue,int band,unsigned int DL_freq) {
             pss6144_1 = &pss6144_1_3[0];
             pss6144_2 = &pss6144_2_3[0];
             sp2 = (__m128i*)&sp[12282+(f<<1)];
+
+        	  LOG_I( HW, "split around DC, case %d, f = %d.\n",f&3,f);
+          	  LOG_I( HW, "pss6144_0 = {%d,%d,%d,%d,%d,%d,%d}.\n",(int16_t *)pss6144_0[0],(int16_t *)pss6144_0[1],(int16_t *)pss6144_0[2],(int16_t *)pss6144_0[3],(int16_t *)pss6144_0[4],(int16_t *)pss6144_0[5],(int16_t *)pss6144_0[6]);
+          	  LOG_I( HW, "pss6144_1 = {%d,%d,%d,%d,%d,%d,%d}.\n",(int16_t *)pss6144_1[0],(int16_t *)pss6144_1[1],(int16_t *)pss6144_1[2],(int16_t *)pss6144_1[3],(int16_t *)pss6144_1[4],(int16_t *)pss6144_1[5],(int16_t *)pss6144_1[6]);
+          	  LOG_I( HW, "pss6144_2 = {%d,%d,%d,%d,%d,%d,%d}.\n",(int16_t *)pss6144_2[0],(int16_t *)pss6144_2[1],(int16_t *)pss6144_2[2],(int16_t *)pss6144_2[3],(int16_t *)pss6144_2[4],(int16_t *)pss6144_2[5],(int16_t *)pss6144_2[6]);
+        	  LOG_I( HW, "sp2 = %d, index = %d.\n",(__m128i *)sp2,12282+(f<<1));
+        	  printf(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n");
+
             break;
           }
 
@@ -340,16 +395,18 @@ void lte_sync_timefreq(PHY_VARS_UE *ue,int band,unsigned int DL_freq) {
             //LA:scan_info->freq_offset_Hz[pssind][pos]=((f+128)*5000)+DL_freq;
             scan_info->freq_offset_Hz[pssind][pos]=((f+128)*5000);
             //LA:printf("[i = %d] pss = %d, correlation = %d dB (%d>%d) freq %u (%d).\n",i,pssind,dB_fixed(maxcorr[pssind]),maxcorr[pssind],minamp,((f+128)*5000)+DL_freq,f);
-            printf("[i = %d] pss = %d, correlation = %d dB (%d > %d), freq_offset_Hz = %u (%d).\n",i,pssind,dB_fixed(maxcorr[pssind]),maxcorr[pssind],minamp,((f+128)*5000),f);
+            printf("[i = %d] [pssind = %d], correlation = %d dB (%d > %d), freq_offset_kHz = %d (%d).\n",i,pssind,dB_fixed(maxcorr[pssind]),maxcorr[pssind],minamp,((f+128)*5000)/1000,f);
           }
         } // loop on pss index
       }
 
       if (rxp == &ue->common_vars.rxdata[0][i+38400*4]) {
+    	  printf("LA: In IF"); //LA
         rxp = &ue->common_vars.rxdata[0][i+38400*4];
         sp=spectrum_p5ms;
       } else {
-        break;
+        return; //LA
+    	  //LA:break;
       }
     }
   }// loop on time index i

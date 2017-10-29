@@ -267,7 +267,7 @@ static void *UE_thread_synch(void *arg) {
         sync_mode = pbch;
 
     } else {
-    	//LA: Not executed when the frequency is specified in the input
+    	//LA: Performs frequency scanning. Not executed when the frequency is specified in the input
         current_band=0;
         printf("====================================================================\n"); //LA
         for (i=0; i<openair0_cfg[UE->rf_map.card].rx_num_channels; i++) {
@@ -279,17 +279,17 @@ static void *UE_thread_synch(void *arg) {
             openair0_cfg[UE->rf_map.card].tx_freq[UE->rf_map.chain+i] = downlink_frequency[CC_id][i]-uplink_frequency_offset[CC_id][i];
             openair0_cfg[UE->rf_map.card].rx_gain[UE->rf_map.chain+i] = UE->rx_total_gain_dB;
 
-            LOG_I(PHY, "UE_scan = %d. i = %d, downlink_frequency[%d][%d] = %"PRIu32".\n",UE->UE_scan,i,(UE->rf_map.card),(UE->rf_map.chain+i),downlink_frequency[UE->rf_map.card][UE->rf_map.chain+i]);
-            LOG_I(PHY, "UE_scan = %d. i = %d, uplink_frequency_offset[%d][%d] = %"PRIu32".\n",UE->UE_scan,i,(UE->rf_map.card),(UE->rf_map.chain+i),uplink_frequency_offset[UE->rf_map.card][UE->rf_map.chain+i]);
-            LOG_I(PHY, "UE_scan = %d. i = %d, openair0_cfg[%d].rx_freq[%d] = %"PRIu32".\n",UE->UE_scan,i,(UE->rf_map.card),(UE->rf_map.chain+i),openair0_cfg[UE->rf_map.card].rx_freq[UE->rf_map.chain+i]);
-            LOG_I(PHY, "UE_scan = %d. i = %d, openair0_cfg[%d].tx_freq[%d] = %"PRIu32".\n",UE->UE_scan,i,(UE->rf_map.card),(UE->rf_map.chain+i),openair0_cfg[UE->rf_map.card].tx_freq[UE->rf_map.chain+i]);
+            LOG_I(PHY, "UE_scan = %d. i = %d, downlink_frequency[%d][%d] = %"PRIu32" MHz.\n",UE->UE_scan,i,(UE->rf_map.card),(UE->rf_map.chain+i),downlink_frequency[UE->rf_map.card][UE->rf_map.chain+i]/1000000);
+            LOG_I(PHY, "UE_scan = %d. i = %d, uplink_frequency_offset[%d][%d] = %"PRIu32" MHz.\n",UE->UE_scan,i,(UE->rf_map.card),(UE->rf_map.chain+i),uplink_frequency_offset[UE->rf_map.card][UE->rf_map.chain+i]/1000000);
+            LOG_I(PHY, "UE_scan = %d. i = %d, openair0_cfg[%d].rx_freq[%d] = %"PRIu32" MHz.\n",UE->UE_scan,i,(UE->rf_map.card),(UE->rf_map.chain+i),openair0_cfg[UE->rf_map.card].rx_freq[UE->rf_map.chain+i]/1000000);
+            LOG_I(PHY, "UE_scan = %d. i = %d, openair0_cfg[%d].tx_freq[%d] = %"PRIu32" MHz.\n",UE->UE_scan,i,(UE->rf_map.card),(UE->rf_map.chain+i),openair0_cfg[UE->rf_map.card].tx_freq[UE->rf_map.chain+i]/1000000);
             LOG_I(PHY, "UE_scan = %d. i = %d, openair0_cfg[%d].rx_gain[%d] = %"PRIu32".\n",UE->UE_scan,i,(UE->rf_map.card),(UE->rf_map.chain+i),openair0_cfg[UE->rf_map.card].rx_gain[UE->rf_map.chain+i]);
 
             LOG_I(PHY, "UE_scan = %d. i = %d, bands_to_scan.band_info[%d].band = %d.\n",UE->UE_scan,i,CC_id,bands_to_scan.band_info[CC_id].band);
-            LOG_I(PHY, "UE_scan = %d. i = %d, bands_to_scan.band_info[%d].ul_min = %"PRIu32".\n",UE->UE_scan,i,CC_id,bands_to_scan.band_info[CC_id].ul_min	);
-            LOG_I(PHY, "UE_scan = %d. i = %d, bands_to_scan.band_info[%d].ul_max = %"PRIu32".\n",UE->UE_scan,i,CC_id,bands_to_scan.band_info[CC_id].ul_max);
-            LOG_I(PHY, "UE_scan = %d. i = %d, bands_to_scan.band_info[%d].dl_min = %"PRIu32".\n",UE->UE_scan,i,CC_id,bands_to_scan.band_info[CC_id].dl_min);
-            LOG_I(PHY, "UE_scan = %d. i = %d, bands_to_scan.band_info[%d].dl_max = %"PRIu32".\n",UE->UE_scan,i,CC_id,bands_to_scan.band_info[CC_id].dl_max);
+            LOG_I(PHY, "UE_scan = %d. i = %d, bands_to_scan.band_info[%d].ul_min = %"PRIu32" MHz.\n",UE->UE_scan,i,CC_id,bands_to_scan.band_info[CC_id].ul_min/1000000);
+            LOG_I(PHY, "UE_scan = %d. i = %d, bands_to_scan.band_info[%d].ul_max = %"PRIu32" MHz.\n",UE->UE_scan,i,CC_id,bands_to_scan.band_info[CC_id].ul_max/1000000);
+            LOG_I(PHY, "UE_scan = %d. i = %d, bands_to_scan.band_info[%d].dl_min = %"PRIu32" MHz.\n",UE->UE_scan,i,CC_id,bands_to_scan.band_info[CC_id].dl_min/1000000);
+            LOG_I(PHY, "UE_scan = %d. i = %d, bands_to_scan.band_info[%d].dl_max = %"PRIu32" MHz.\n",UE->UE_scan,i,CC_id,bands_to_scan.band_info[CC_id].dl_max/1000000);
             LOG_I(PHY, "UE_scan = %d. i = %d, bands_to_scan.band_info[%d].frame_type = %d.\n",UE->UE_scan,i,CC_id,bands_to_scan.band_info[CC_id].frame_type);
 
 
@@ -311,7 +311,7 @@ static void *UE_thread_synch(void *arg) {
         case pss:
         {
         	LOG_I(PHY, "Running Initial Synch (mode = %d) [0:normal_txrx] (sync_mode = %d) [pss=0,pbch=1,si=2]\n",UE->mode,sync_mode);
-            LOG_I(PHY,"[SCHED][UE] Scanning band %d (%d of %d), freq %u\n",bands_to_scan.band_info[current_band].band, current_band+1,bands_to_scan.nbands,bands_to_scan.band_info[current_band].dl_min+current_offset);
+            LOG_I(PHY,"[SCHED][UE] Scanning band %d (%d of %d), freq %u MHz\n",bands_to_scan.band_info[current_band].band, current_band+1,bands_to_scan.nbands,(bands_to_scan.band_info[current_band].dl_min+current_offset)/1000000);
             lte_sync_timefreq(UE,current_band,bands_to_scan.band_info[current_band].dl_min+current_offset);
             current_offset += 20000000; // increase by 20 MHz
 
@@ -327,6 +327,7 @@ static void *UE_thread_synch(void *arg) {
                 oai_exit=1;
             }
 
+            //LA: This runs as many times as the number of Rx antennas (only once in our case)
             for (i=0; i<openair0_cfg[UE->rf_map.card].rx_num_channels; i++) {
                 downlink_frequency[UE->rf_map.card][UE->rf_map.chain+i] = bands_to_scan.band_info[current_band].dl_min+current_offset;
                 //LA:doesn't the offset remains constant?
@@ -340,6 +341,7 @@ static void *UE_thread_synch(void *arg) {
                 if (UE->UE_scan_carrier) {
                     openair0_cfg[UE->rf_map.card].autocal[UE->rf_map.chain+i] = 1;
                 }
+                LOG_I(PHY, "Current offset: %d MHz, DL: %"PRIu32" MHz, UL: %"PRIu32" MHz, Antenna Gain: %"PRIu32" dB, autocalibration: %d. \n",current_offset/1000000,openair0_cfg[UE->rf_map.card].rx_freq[0]/1000000,openair0_cfg[UE->rf_map.card].tx_freq[UE->rf_map.chain]/1000000,openair0_cfg[UE->rf_map.card].rx_gain[UE->rf_map.chain],openair0_cfg[UE->rf_map.card].autocal[UE->rf_map.chain]);
 
             }
 
@@ -721,7 +723,7 @@ void *UE_thread(void *arg) {
         AssertFatal ( 0== pthread_mutex_unlock(&UE->proc.mutex_synch), "");
 
         if (is_synchronized == 0) {
-        	LOG_I(PHY,"UE->is_synchronized==0\n");
+        	LOG_I(PHY,"UE->is_synchronized=0\n");
             if (instance_cnt_synch < 0) {  // we can invoke the synch
                 // grab 10 ms of signal and wakeup synch thread
                 for (int i=0; i<UE->frame_parms.nb_antennas_rx; i++)
@@ -765,7 +767,7 @@ void *UE_thread(void *arg) {
 
         } // UE->is_synchronized==0
         else {
-        	LOG_I(PHY,"UE->is_synchronized==1\n");
+        	LOG_I(PHY,"UE->is_synchronized=1\n");
             if (start_rx_stream==0) {
                 start_rx_stream=1;
                 if (UE->mode != loop_through_memory) {

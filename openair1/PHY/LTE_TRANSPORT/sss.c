@@ -33,7 +33,7 @@
 #include "defs.h"
 #include "PHY/extern.h"
 
-//#define DEBUG_SSS
+#define DEBUG_SSS
 
 
 int generate_sss(int32_t **txdataF,
@@ -308,9 +308,9 @@ int rx_sss(PHY_VARS_UE *ue,int32_t *tot_metric,uint8_t *flip_max,uint8_t *phase_
 #ifdef DEBUG_SSS
 
     if (frame_parms->Ncp == NORMAL)
-      msg("[PHY][UE%d] Doing SSS for FDD Normal Prefix\n",ue->Mod_id);
+    	LOG_I(PHY,"[UE%d] Doing SSS for FDD Normal Prefix\n",ue->Mod_id);
     else
-      msg("[PHY][UE%d] Doing SSS for FDD Extended Prefix\n",ue->Mod_id);
+    	LOG_I(PHY,"[UE%d] Doing SSS for FDD Extended Prefix\n",ue->Mod_id);
 
 #endif
     // Do FFTs for SSS/PSS
@@ -330,10 +330,10 @@ int rx_sss(PHY_VARS_UE *ue,int32_t *tot_metric,uint8_t *flip_max,uint8_t *phase_
 	     1);
   } else { // TDD
 #ifdef DEBUG_SSS
-    if (ue->frame_parms->Ncp == NORMAL)
-      msg("[PHY][UE%d] Doing SSS for TDD Normal Prefix\n",ue->Mod_id);
+    if (ue->frame_parms.Ncp == NORMAL)
+    	LOG_I(PHY,"[UE%d] Doing SSS for TDD Normal Prefix\n",ue->Mod_id);
     else
-      msg("[PHY][UE%d] Doing SSS for TDD Extended Prefix\n",ue->Mod_id);
+    	LOG_I(PHY,"[UE%d] Doing SSS for TDD Extended Prefix\n",ue->Mod_id);
 
 #endif
     // SSS
@@ -451,7 +451,7 @@ int rx_sss(PHY_VARS_UE *ue,int32_t *tot_metric,uint8_t *flip_max,uint8_t *phase_
           *phase_max = phase;
           *flip_max=flip;
 #ifdef DEBUG_SSS
-          msg("(flip,phase,Nid1) (%d,%d,%d), metric_phase %d tot_metric %d, phase_max %d, flip_max %d\n",flip,phase,Nid1,metric,*tot_metric,*phase_max,*flip_max);
+          LOG_I(PHY,"(flip,phase,Nid1) (%d,%d,%d), metric_phase %d tot_metric %d, phase_max %d, flip_max %d\n",flip,phase,Nid1,metric,*tot_metric,*phase_max,*flip_max);
 #endif
 
         }

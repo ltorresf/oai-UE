@@ -118,9 +118,9 @@ typedef enum {
 /*!\brief  openair0 device host type */
 typedef enum {
   MIN_HOST_TYPE = 0,
- /*!\brief device functions within a BBU */
+ /*!\brief device functions within a BBU. Digital function unit, or baseband unit (BBU) */
   BBU_HOST,
- /*!\brief device functions within a RRH */
+ /*!\brief device functions within a RRH. Radio function unit, also known as the remote radio head (RRH) */
   RRH_HOST,
   MAX_HOST_TYPE
 
@@ -175,10 +175,10 @@ typedef struct {
   int32_t* txbase[4];
   //! \brief Center frequency in Hz for RX.
   //! index: [0..rx_num_channels[
-  double rx_freq[4];
+  uint32_t rx_freq[4]; //LA:double rx_freq[4];
   //! \brief Center frequency in Hz for TX.
   //! index: [0..rx_num_channels[ !!! see lte-ue.c:427 FIXME iterates over rx_num_channels
-  double tx_freq[4];
+  uint32_t tx_freq[4]; //LA: double
   //! \brief memory
   //! \brief Pointer to Calibration table for RX gains
   rx_gain_calib_table_t *rx_gain_calib_table;
@@ -187,7 +187,7 @@ typedef struct {
   rx_gain_t rxg_mode[4];
   //! \brief Gain for RX in dB.
   //! index: [0..rx_num_channels]
-  double rx_gain[4];
+  uint32_t rx_gain[4]; //LA:double
   //! \brief Gain offset (for calibration) in dB
   //! index: [0..rx_num_channels]
   double rx_gain_offset[4];

@@ -821,7 +821,7 @@ typedef struct {
   /// - second index: sample [0..FRAME_LENGTH_COMPLEX_SAMPLES_NO_PREFIX[
   int32_t **txdataF;
 
-  /// \brief Holds the received data in time domain.
+  /// \brief Holds the received data in time domain (10-ms LTE frame).
   /// Should point to the same memory as PHY_vars->rx_vars[a].RX_DMA_BUFFER.
   /// - first index: rx antenna [0..nb_antennas_rx[
   /// - second index: sample [0..FRAME_LENGTH_COMPLEX_SAMPLES+2048[

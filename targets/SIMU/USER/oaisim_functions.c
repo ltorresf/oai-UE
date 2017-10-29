@@ -1295,6 +1295,7 @@ void init_devices(void){
 
 void init_openair1(void)
 {
+  printf("[init_openair1]\n");'
   module_id_t UE_id, eNB_id = 0;
   uint8_t CC_id;
 #if ENABLE_RAL

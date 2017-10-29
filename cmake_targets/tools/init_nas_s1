@@ -48,7 +48,8 @@ load_module() {
   sudo insmod $1
 }
 
-load_module ../../targets/bin/ue_ip.ko
+#load_module ../../targets/bin/ue_ip.ko
+load_module ~/src/openairinterface5g/targets/bin/ue_ip.ko
 
 if [ "$1" = "UE" ]; then
   echo "bring up $LTEIF interface for UE"

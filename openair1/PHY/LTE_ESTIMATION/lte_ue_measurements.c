@@ -33,7 +33,7 @@
 #define k2 ((long long int) (1024-k1))
 
 //#define DEBUG_MEAS_RRC
-//#define DEBUG_MEAS_UE
+#define DEBUG_MEAS_UE
 //#define DEBUG_RANK_EST
 
 int16_t cond_num_threshold = 0;
@@ -460,7 +460,7 @@ void lte_ue_measurements(PHY_VARS_UE *ue,
                          unsigned char rank_adaptation,
                          uint8_t subframe)
 {
-
+  printf("[lte_ue_measurements]\n");
 
   int aarx,aatx,eNB_id=0; //,gain_offset=0;
   //int rx_power[NUMBER_OF_CONNECTED_eNB_MAX];

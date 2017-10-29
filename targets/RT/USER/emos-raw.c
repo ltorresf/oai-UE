@@ -830,6 +830,7 @@ int main(int argc, char **argv)
   int i,j,aa;
   void *status;
   int card = 0;
+  //LA:printf("[emos-raw.c][main] \n");
 
   uint32_t rf_mode_base   = TXLPFNORM + TXLPFEN  + RXLPFNORM + RXLPFEN + LNA1ON +LNAMax + RFBBNORM;
   uint32_t rf_local[4]    = {8255000,8255000,8255000,8255000}; // UE zepto

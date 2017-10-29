@@ -42,7 +42,7 @@
 #endif
 
 
-//#define DEBUG_PBCH 1
+#define DEBUG_PBCH 1
 //#define DEBUG_PBCH_ENCODING
 //#define INTERFERENCE_MITIGATION 1
 
@@ -889,7 +889,7 @@ uint16_t rx_pbch(LTE_UE_COMMON *lte_ue_common_vars,
   pbch_E  = (frame_parms->Ncp==0) ? 1920 : 1728; //RE/RB * #RB * bits/RB (QPSK)
   pbch_e_rx = &lte_ue_pbch_vars->llr[frame_mod4*(pbch_E>>2)];
 #ifdef DEBUG_PBCH
-  msg("[PBCH] starting symbol loop (Ncp %d, frame_mod4 %d,mimo_mode %d\n",frame_parms->Ncp,frame_mod4,mimo_mode);
+  LOG_I(PHY,"starting symbol loop (Ncp %d, frame_mod4 %d,mimo_mode %d\n",frame_parms->Ncp,frame_mod4,mimo_mode);
 #endif
 
   // clear LLR buffer
@@ -898,7 +898,7 @@ uint16_t rx_pbch(LTE_UE_COMMON *lte_ue_common_vars,
   for (symbol=(nsymb>>1); symbol<(nsymb>>1)+4; symbol++) {
 
 #ifdef DEBUG_PBCH
-    msg("[PBCH] starting extract\n");
+	  LOG_I(PHY,"starting extract\n");
 #endif
     pbch_extract(lte_ue_common_vars->common_vars_rx_data_per_thread[0].rxdataF,
                  lte_ue_common_vars->common_vars_rx_data_per_thread[0].dl_ch_estimates[eNB_id],
@@ -908,8 +908,8 @@ uint16_t rx_pbch(LTE_UE_COMMON *lte_ue_common_vars,
                  high_speed_flag,
                  frame_parms);
 #ifdef DEBUG_PBCH
-    msg("[PHY] PBCH Symbol %d\n",symbol);
-    msg("[PHY] PBCH starting channel_level\n");
+    LOG_I(PHY,"PBCH Symbol %d\n",symbol);
+    LOG_I(PHY,"PBCH starting channel_level\n");
 #endif
 
     max_h = pbch_channel_level(lte_ue_pbch_vars->dl_ch_estimates_ext,
@@ -918,7 +918,7 @@ uint16_t rx_pbch(LTE_UE_COMMON *lte_ue_common_vars,
     log2_maxh = 3+(log2_approx(max_h)/2);
 
 #ifdef DEBUG_PBCH
-    msg("[PHY] PBCH log2_maxh = %d (%d)\n",log2_maxh,max_h);
+    LOG_I(PHY,"PBCH log2_maxh = %d (%d)\n",log2_maxh,max_h);
 #endif
 
     pbch_channel_compensation(lte_ue_pbch_vars->rxdataF_ext,
@@ -939,7 +939,7 @@ uint16_t rx_pbch(LTE_UE_COMMON *lte_ue_common_vars,
       //  msg("[PBCH][RX] Alamouti receiver not yet implemented!\n");
       //  return(-1);
     } else if (mimo_mode != SISO) {
-      msg("[PBCH][RX] Unsupported MIMO mode\n");
+    	LOG_I(PHY,"[RX] Unsupported MIMO mode\n");
       return(-1);
     }
 
@@ -966,7 +966,7 @@ uint16_t rx_pbch(LTE_UE_COMMON *lte_ue_common_vars,
 
   //un-scrambling
 #ifdef DEBUG_PBCH
-  msg("[PBCH] doing unscrambling\n");
+  LOG_I(PHY," doing unscrambling\n");
 #endif
 
 
@@ -979,7 +979,7 @@ uint16_t rx_pbch(LTE_UE_COMMON *lte_ue_common_vars,
 
   //un-rate matching
 #ifdef DEBUG_PBCH
-  msg("[PBCH] doing un-rate-matching\n");
+  LOG_I(PHY," doing un-rate-matching\n");
 #endif
 
 
@@ -1008,12 +1008,12 @@ uint16_t rx_pbch(LTE_UE_COMMON *lte_ue_common_vars,
 #ifdef DEBUG_PBCH
 
   for (i=0; i<(PBCH_A>>3); i++)
-    msg("[PBCH] pbch_a[%d] = %x\n",i,decoded_output[i]);
+	  LOG_I(PHY," pbch_a[%d] = %x\n",i,decoded_output[i]);
 
 #endif //DEBUG_PBCH
 
 #ifdef DEBUG_PBCH
-  msg("PBCH CRC %x : %x\n",
+  LOG_I(PHY," CRC %x : %x\n",
       crc16(pbch_a,PBCH_A),
       ((uint16_t)pbch_a[PBCH_A>>3]<<8)+pbch_a[(PBCH_A>>3)+1]);
 #endif

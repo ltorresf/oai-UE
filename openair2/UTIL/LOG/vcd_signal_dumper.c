@@ -56,7 +56,8 @@
 #define VCDSIGNALDUMPER_VERSION_MINOR 1
 
 // Global variable. If the VCD option is set at execution time, output VCD trace. Otherwise this module has no effect.
-int ouput_vcd = 0;
+//LA:int ouput_vcd = 0;
+int ouput_vcd = 1;
 
 struct vcd_module_s {
   const char     *name;

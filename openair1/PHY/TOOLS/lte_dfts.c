@@ -5575,8 +5575,8 @@ void idft6144(int16_t *input, int16_t *output)
 }
 
 
-void dft6144(int16_t *input, int16_t *output)
-{
+void dft6144(int16_t *input, int16_t *output) {
+	printf("[dft6144] \n");
   int i,i2,j;
   uint32_t tmp[3][2048] __attribute__((aligned(32)));
   uint32_t tmpo[3][2048] __attribute__((aligned(32)));

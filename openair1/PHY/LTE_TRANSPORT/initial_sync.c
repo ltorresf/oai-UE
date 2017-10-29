@@ -41,11 +41,11 @@
 #include "common_lib.h"
 extern openair0_config_t openair0_cfg[];
 
-//#define DEBUG_INITIAL_SYNCH
+#define DEBUG_INITIAL_SYNCH
 
 int pbch_detection(PHY_VARS_UE *ue, runmode_t mode)
 {
-
+	printf("[pbch_detection]\n");
   uint8_t l,pbch_decoded,frame_mod4,pbch_tx_ant,dummy;
   LTE_DL_FRAME_PARMS *frame_parms=&ue->frame_parms;
   char phich_resource[6];
@@ -132,6 +132,8 @@ int pbch_detection(PHY_VARS_UE *ue, runmode_t mode)
                           ue->high_speed_flag,
                           frame_mod4);
 
+    LOG_I(PHY,"[UE %d] SISO. pbch_tx_ant = %d\n",ue->Mod_id,pbch_tx_ant);
+
     if ((pbch_tx_ant>0) && (pbch_tx_ant<=2)) {
       pbch_decoded = 1;
       break;
@@ -145,6 +147,8 @@ int pbch_detection(PHY_VARS_UE *ue, runmode_t mode)
                           ue->high_speed_flag,
                           frame_mod4);
 
+    LOG_I(PHY,"[UE %d] ALAMOUTI. pbch_tx_ant = %d\n",pbch_tx_ant);
+
     if ((pbch_tx_ant>0) && (pbch_tx_ant<=2)) {
       pbch_decoded = 1;
       break;
@@ -153,6 +157,7 @@ int pbch_detection(PHY_VARS_UE *ue, runmode_t mode)
 
 
   if (pbch_decoded) {
+	printf("[pbch_decoded] TRUE\n");
 
     frame_parms->nb_antenna_ports_eNB = pbch_tx_ant;
 
@@ -256,6 +261,7 @@ int pbch_detection(PHY_VARS_UE *ue, runmode_t mode)
 #endif
     return(0);
   } else {
+	  printf("[pbch_decoded] FALSE\n");
     return(-1);
   }
 
@@ -267,7 +273,7 @@ char prefix_string[2][9] = {"NORMAL","EXTENDED"};
 
 int initial_sync(PHY_VARS_UE *ue, runmode_t mode)
 {
-
+	printf("[initial_sync]\n");
   int32_t sync_pos,sync_pos2,sync_pos_slot;
   int32_t metric_fdd_ncp=0,metric_fdd_ecp=0,metric_tdd_ncp=0,metric_tdd_ecp=0;
   uint8_t phase_fdd_ncp,phase_fdd_ecp,phase_tdd_ncp,phase_tdd_ecp;
@@ -279,11 +285,13 @@ int initial_sync(PHY_VARS_UE *ue, runmode_t mode)
   /*#ifdef OAI_USRP
   __m128i *rxdata128;
   #endif*/
-  //  LOG_I(PHY,"**************************************************************\n");
+  //  LOG_I(PHY,"**************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************\n");
   // First try FDD normal prefix
+  printf("****************** [1/4] Ncp=NORMAL, frame_type=FDD ******************\n");
   frame_parms->Ncp=NORMAL;
   frame_parms->frame_type=FDD;
   init_frame_parms(frame_parms,1);
+  dump_frame_parms(frame_parms);
   /*
   write_output("rxdata0.m","rxd0",ue->common_vars.rxdata[0],10*frame_parms->samples_per_tti,1,1);
   exit(-1);
@@ -342,6 +350,7 @@ int initial_sync(PHY_VARS_UE *ue, runmode_t mode)
   if (ret==-1) {
 
     // Now FDD extended prefix
+	  printf("****************** [2/4] Ncp=EXTENDED, frame_type=FDD ******************\n");
     frame_parms->Ncp=EXTENDED;
     frame_parms->frame_type=FDD;
     init_frame_parms(frame_parms,1);
@@ -386,6 +395,7 @@ int initial_sync(PHY_VARS_UE *ue, runmode_t mode)
 
     if (ret==-1) {
       // Now TDD normal prefix
+    	printf("****************** [3/4] Ncp=NORMAL, frame_type=TDD ******************\n");
       frame_parms->Ncp=NORMAL;
       frame_parms->frame_type=TDD;
       init_frame_parms(frame_parms,1);
@@ -425,6 +435,7 @@ int initial_sync(PHY_VARS_UE *ue, runmode_t mode)
 
       if (ret==-1) {
         // Now TDD extended prefix
+    	  printf("****************** [4/4] Ncp=EXTENDED, frame_type=TDD ******************\n");
         frame_parms->Ncp=EXTENDED;
         frame_parms->frame_type=TDD;
         init_frame_parms(frame_parms,1);
@@ -464,6 +475,7 @@ int initial_sync(PHY_VARS_UE *ue, runmode_t mode)
 
   /* Consider this is a false detection if the offset is > 1000 Hz */
   if( (abs(ue->common_vars.freq_offset) > 150) && (ret == 0) )
+  //LA:if( (abs(ue->common_vars.freq_offset) > 7500) && (ret == 0) )
   {
 	  ret=-1;
 #if DISABLE_LOG_X

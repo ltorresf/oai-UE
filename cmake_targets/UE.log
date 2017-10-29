@@ -1,0 +1,112 @@
+# /dev/cpu_dma_latency set to 0us
+log init done
+Downlink for CC_id 0 frequency set to 2660000000
+configuring for UE
+CPU Freq is 1.800098 
+[NETLINK]Opened socket with fd 39
+reported resolution = 1 ns
+[HW][I][main] Version: Branch: develop Abrev. Hash: 1fb7615 Date: Wed Aug 30 10:10:51 2017 +0200
+[PHY][I][main] Set nb_rx_antenna 1 , nb_tx_antenna 1 
+[PHY][I][init_frame_parms] Initializing frame parms for N_RB_DL 25, Ncp 0, osf 1
+lte_parms.c: Setting N_RB_DL to 25, ofdm_symbol_size 512
+Initializing UE vars (abstraction 0) for eNB TXant 1, UE RXant 1
+PHY_vars_UE_g[0][0] = 0x7f22f5880010
+UE[0]->mode = 0
+CPU Freq is 1.800097 
+frame_parms->N_RB_DL=25
+frame_parms->N_RB_UL=25
+frame_parms->Nid_cell=0
+frame_parms->Ncp=0
+frame_parms->Ncp_UL=0
+frame_parms->nushift=0
+frame_parms->frame_type=0
+frame_parms->tdd_config=3
+frame_parms->tdd_config_S=0
+frame_parms->mode1_flag=0
+frame_parms->nb_antenna_ports_eNB=1
+frame_parms->nb_antennas_tx=1
+frame_parms->nb_antennas_rx=1
+frame_parms->ofdm_symbol_size=512
+frame_parms->nb_prefix_samples=36
+frame_parms->nb_prefix_samples0=40
+frame_parms->first_carrier_offset=362
+frame_parms->samples_per_tti=7680
+frame_parms->symbols_per_tti=14
+HW: Configuring card 0, nb_antennas_tx/rx 1/1
+ETHERNET: Configuring UE ETH for 127.0.0.1:51000
+Card 0, channel 0, Setting tx_gain 70.000000, rx_gain 80.000000, tx_freq 2660000000.000000, rx_freq 2660000000.000000
+Card 0, channel 1, Setting tx_gain 70.000000, rx_gain 80.000000, tx_freq 0.000000, rx_freq 0.000000
+Card 0, channel 2, Setting tx_gain 70.000000, rx_gain 80.000000, tx_freq 0.000000, rx_freq 0.000000
+Card 0, channel 3, Setting tx_gain 70.000000, rx_gain 80.000000, tx_freq 0.000000, rx_freq 0.000000
+HW: Configuring card 1, nb_antennas_tx/rx 1/1
+ETHERNET: Configuring UE ETH for 127.0.0.1:51000
+Card 1, channel 0, Setting tx_gain 70.000000, rx_gain 80.000000, tx_freq 2660000000.000000, rx_freq 2660000000.000000
+Card 1, channel 1, Setting tx_gain 70.000000, rx_gain 80.000000, tx_freq 0.000000, rx_freq 0.000000
+Card 1, channel 2, Setting tx_gain 70.000000, rx_gain 80.000000, tx_freq 0.000000, rx_freq 0.000000
+Card 1, channel 3, Setting tx_gain 70.000000, rx_gain 80.000000, tx_freq 0.000000, rx_freq 0.000000
+HW: Configuring card 2, nb_antennas_tx/rx 1/1
+ETHERNET: Configuring UE ETH for 127.0.0.1:51000
+Card 2, channel 0, Setting tx_gain 70.000000, rx_gain 80.000000, tx_freq 2660000000.000000, rx_freq 2660000000.000000
+Card 2, channel 1, Setting tx_gain 70.000000, rx_gain 80.000000, tx_freq 0.000000, rx_freq 0.000000
+Card 2, channel 2, Setting tx_gain 70.000000, rx_gain 80.000000, tx_freq 0.000000, rx_freq 0.000000
+Card 2, channel 3, Setting tx_gain 70.000000, rx_gain 80.000000, tx_freq 0.000000, rx_freq 0.000000
+HW: Configuring card 3, nb_antennas_tx/rx 1/1
+ETHERNET: Configuring UE ETH for 127.0.0.1:51000
+Card 3, channel 0, Setting tx_gain 70.000000, rx_gain 80.000000, tx_freq 2660000000.000000, rx_freq 2660000000.000000
+Card 3, channel 1, Setting tx_gain 70.000000, rx_gain 80.000000, tx_freq 0.000000, rx_freq 0.000000
+Card 3, channel 2, Setting tx_gain 70.000000, rx_gain 80.000000, tx_freq 0.000000, rx_freq 0.000000
+Card 3, channel 3, Setting tx_gain 70.000000, rx_gain 80.000000, tx_freq 0.000000, rx_freq 0.000000
+HW: Configuring card 4, nb_antennas_tx/rx 1/1
+ETHERNET: Configuring UE ETH for 127.0.0.1:51000
+Card 4, channel 0, Setting tx_gain 70.000000, rx_gain 80.000000, tx_freq 2660000000.000000, rx_freq 2660000000.000000
+Card 4, channel 1, Setting tx_gain 70.000000, rx_gain 80.000000, tx_freq 0.000000, rx_freq 0.000000
+Card 4, channel 2, Setting tx_gain 70.000000, rx_gain 80.000000, tx_freq 0.000000, rx_freq 0.000000
+Card 4, channel 3, Setting tx_gain 70.000000, rx_gain 80.000000, tx_freq 0.000000, rx_freq 0.000000
+HW: Configuring card 5, nb_antennas_tx/rx 1/1
+ETHERNET: Configuring UE ETH for 127.0.0.1:51000
+Card 5, channel 0, Setting tx_gain 70.000000, rx_gain 80.000000, tx_freq 2660000000.000000, rx_freq 2660000000.000000
+Card 5, channel 1, Setting tx_gain 70.000000, rx_gain 80.000000, tx_freq 0.000000, rx_freq 0.000000
+Card 5, channel 2, Setting tx_gain 70.000000, rx_gain 80.000000, tx_freq 0.000000, rx_freq 0.000000
+Card 5, channel 3, Setting tx_gain 70.000000, rx_gain 80.000000, tx_freq 0.000000, rx_freq 0.000000
+HW: Configuring card 6, nb_antennas_tx/rx 1/1
+ETHERNET: Configuring UE ETH for 127.0.0.1:51000
+Card 6, channel 0, Setting tx_gain 70.000000, rx_gain 80.000000, tx_freq 2660000000.000000, rx_freq 2660000000.000000
+Card 6, channel 1, Setting tx_gain 70.000000, rx_gain 80.000000, tx_freq 0.000000, rx_freq 0.000000
+Card 6, channel 2, Setting tx_gain 70.000000, rx_gain 80.000000, tx_freq 0.000000, rx_freq 0.000000
+Card 6, channel 3, Setting tx_gain 70.000000, rx_gain 80.000000, tx_freq 0.000000, rx_freq 0.000000
+HW: Configuring card 7, nb_antennas_tx/rx 1/1
+ETHERNET: Configuring UE ETH for 127.0.0.1:51000
+Card 7, channel 0, Setting tx_gain 70.000000, rx_gain 80.000000, tx_freq 2660000000.000000, rx_freq 2660000000.000000
+Card 7, channel 1, Setting tx_gain 70.000000, rx_gain 80.000000, tx_freq 0.000000, rx_freq 0.000000
+Card 7, channel 2, Setting tx_gain 70.000000, rx_gain 80.000000, tx_freq 0.000000, rx_freq 0.000000
+Card 7, channel 3, Setting tx_gain 70.000000, rx_gain 80.000000, tx_freq 0.000000, rx_freq 0.000000
+[HW][I][main] CPU Affinity of main() function is...  CPU_0  CPU_1 
+[PHY][I][main] Intializing L2
+[MAC][I][l2_init] [MAIN] MAC_INIT_GLOBAL_PARAM IN...
+[MAC][I][mac_init_global_param] [MAIN] CALLING RLC_MODULE_INIT...
+[MAC][I][mac_init_global_param] [MAIN] RLC_MODULE_INIT OK, malloc16 for mac_rlc_xface...
+[MAC][I][mac_init_global_param] [MAIN] malloc16 OK, mac_rlc_xface @ 0x19fbb720
+[MAC][I][mac_init_global_param] [MAIN] RLC interface setup and init
+[PDCP][I][pdcp_layer_init] PDCP layer has been initialized
+[MAC][I][mac_init_global_param] [MAIN] Init Global Param Done
+[MAC][I][l2_init] [MAIN] init eNB MAC functions  
+[MAC][I][l2_init] [MAIN] init UE MAC functions 
+[MAC][I][l2_init] [MAIN] PHY Frame configuration 
+[MAC][I][mac_top_init] [MAIN] Init function start:Nb_UE_INST=1
+[MAC][I][ue_init_mac] [UE0] Applying default macMainConfig
+[MAC][I][mac_top_init] [MAIN] Init function start:Nb_eNB_INST=0
+[MAC][I][mac_top_init] [MAIN] calling RRC
+[RRC][I][fill_ue_capability] Allocating 408 bytes for UE_EUTRA_Capability
+[PHY][I][fill_ue_capability] [RRC]UE Capability encoded, 15 bytes (120 bits)
+[RRC][I][openair_rrc_top_init] [UE] eMBMS active state is 0 
+[MAC][I][mac_top_init] [MAIN][INIT] Init function finished
+ITTI tasks created
+Filling UE band info
+Band 3 (3) : DL 1805000000..1880000000 Hz, UL 1710000000..1785000000 Hz, Duplex FDD 
+Band 20 (20) : DL 791000000..821000000 Hz, UL 832000000..862000000 Hz, Duplex FDD 
+Band 7 (7) : DL 2620000000..2690000000 Hz, UL 2500000000..2570000000 Hz, Duplex FDD 
+Band 38 (38) : DL 2570000000..2630000000 Hz, UL 2570000000..2620000000 Hz, Duplex TDD 
+[NAS][I][user_api_initialize]  /home/esk/src/openairinterface5g/openair3/NAS/UE/API/USER/user_api.c:145  USR-API   - User's UDP socket 41 is BOUND to esk-NUC6-Serie-ue/10000
+[NAS][I][user_api_initialize]  /home/esk/src/openairinterface5g/openair3/NAS/UE/API/USER/user_api.c:168  USR-API   - Notification handlers successfully registered
+[1;31m[NAS][E][nas_user_initialize]  /home/esk/src/openairinterface5g/openair3/NAS/UE/nas_user.c:167  USR-MAIN  - Failed to read non volatile memory
+[0m

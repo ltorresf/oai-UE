@@ -1,0 +1,2 @@
+[  5%] Linking C executable usim
+[100%] Built target usim

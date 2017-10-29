@@ -39,6 +39,7 @@ void set_S_config(LTE_DL_FRAME_PARMS *fp) {
   
 }
 
+//LA: Initialize the parameters of the frame based on the inputs
 int init_frame_parms(LTE_DL_FRAME_PARMS *frame_parms,uint8_t osf)
 {
 
@@ -187,8 +188,8 @@ int init_frame_parms(LTE_DL_FRAME_PARMS *frame_parms,uint8_t osf)
     return(-1);
     break;
   }
-
-  printf("lte_parms.c: Setting N_RB_DL to %d, ofdm_symbol_size %d\n",frame_parms->N_RB_DL, frame_parms->ofdm_symbol_size);
+  LOG_I(PHY,"Setting N_RB_DL to %d, ofdm_symbol_size %d\n",frame_parms->N_RB_DL, frame_parms->ofdm_symbol_size);
+  //LA:printf("[lte_parms.c] Setting N_RB_DL to %d, ofdm_symbol_size %d\n",frame_parms->N_RB_DL, frame_parms->ofdm_symbol_size);
 
   if (frame_parms->frame_type == TDD) set_S_config(frame_parms);
 

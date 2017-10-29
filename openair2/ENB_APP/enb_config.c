@@ -258,7 +258,8 @@ typedef struct eutra_band_s {
 } eutra_band_t;
 
 static const eutra_band_t eutra_bands[] = {
-  { 1, 1920    * MHz, 1980    * MHz, 2110    * MHz, 2170    * MHz, FDD},
+//LA  { 1, 1920    * MHz, 1980    * MHz, 2110    * MHz, 2170    * MHz, FDD},
+  { 1, 2400    * MHz, 2440    * MHz, 2460    * MHz, 2500    * MHz, FDD},
   { 2, 1850    * MHz, 1910    * MHz, 1930    * MHz, 1990    * MHz, FDD},
   { 3, 1710    * MHz, 1785    * MHz, 1805    * MHz, 1880    * MHz, FDD},
   { 4, 1710    * MHz, 1755    * MHz, 2110    * MHz, 2155    * MHz, FDD},

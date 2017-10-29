@@ -184,20 +184,36 @@ int transmission_mode=1;
 
 int16_t           glog_level         = LOG_INFO;
 int16_t           glog_verbosity     = LOG_MED;
-int16_t           hw_log_level       = LOG_INFO;
-int16_t           hw_log_verbosity   = LOG_MED;
-int16_t           phy_log_level      = LOG_INFO;
-int16_t           phy_log_verbosity  = LOG_MED;
-int16_t           mac_log_level      = LOG_INFO;
-int16_t           mac_log_verbosity  = LOG_MED;
-int16_t           rlc_log_level      = LOG_INFO;
-int16_t           rlc_log_verbosity  = LOG_MED;
-int16_t           pdcp_log_level     = LOG_INFO;
-int16_t           pdcp_log_verbosity = LOG_MED;
-int16_t           rrc_log_level      = LOG_INFO;
-int16_t           rrc_log_verbosity  = LOG_MED;
-int16_t           opt_log_level      = LOG_INFO;
-int16_t           opt_log_verbosity  = LOG_MED;
+//LA:int16_t           glog_level         = LOG_DEBUG;
+//LA:int16_t           glog_verbosity     = LOG_FULL;
+//int16_t           hw_log_level       = LOG_INFO;
+//int16_t           hw_log_verbosity   = LOG_MED;
+int16_t           hw_log_level       = LOG_DEBUG;
+int16_t           hw_log_verbosity   = LOG_FULL;
+//int16_t           phy_log_level      = LOG_INFO;
+//int16_t           phy_log_verbosity  = LOG_MED;
+int16_t           phy_log_level      = LOG_DEBUG;
+int16_t           phy_log_verbosity  = LOG_FULL;
+//int16_t           mac_log_level      = LOG_INFO;
+//int16_t           mac_log_verbosity  = LOG_MED;
+int16_t           mac_log_level      = LOG_DEBUG;
+int16_t           mac_log_verbosity  = LOG_FULL;
+//int16_t           rlc_log_level      = LOG_INFO;
+//int16_t           rlc_log_verbosity  = LOG_MED;
+int16_t           rlc_log_level      = LOG_DEBUG;
+int16_t           rlc_log_verbosity  = LOG_FULL;
+//int16_t           pdcp_log_level     = LOG_INFO;
+//int16_t           pdcp_log_verbosity = LOG_MED;
+int16_t           pdcp_log_level     = LOG_DEBUG;
+int16_t           pdcp_log_verbosity = LOG_FULL;
+//int16_t           rrc_log_level      = LOG_INFO;
+//int16_t           rrc_log_verbosity  = LOG_MED;
+int16_t           rrc_log_level      = LOG_DEBUG;
+int16_t           rrc_log_verbosity  = LOG_FULL;
+//int16_t           opt_log_level      = LOG_INFO;
+//int16_t           opt_log_verbosity  = LOG_MED;
+int16_t           opt_log_level      = LOG_DEBUG;
+int16_t           opt_log_verbosity  = LOG_FULL;
 
 # if defined(ENABLE_USE_MME)
 int16_t           gtpu_log_level     = LOG_DEBUG;
@@ -1053,164 +1069,7 @@ static void get_options (int argc, char **argv) {
     if (UE_flag == 0)
         AssertFatal(conf_config_file_name != NULL,"Please provide a configuration file\n");
 
-    if ((UE_flag == 0) && (conf_config_file_name != NULL)) {
-        int i,j;
-
-        NB_eNB_INST = 1;
-
-        /* Read eNB configuration file */
-        enb_properties = enb_config_init(conf_config_file_name);
-
-        AssertFatal (NB_eNB_INST <= enb_properties->number,
-                     "Number of eNB is greater than eNB defined in configuration file %s (%d/%d)!",
-                     conf_config_file_name, NB_eNB_INST, enb_properties->number);
-
-        /* Update some simulation parameters */
-        for (i=0; i < enb_properties->number; i++) {
-            AssertFatal (MAX_NUM_CCs == enb_properties->properties[i]->nb_cc,
-                         "lte-softmodem compiled with MAX_NUM_CCs=%d, but only %d CCs configured for eNB %d!",
-                         MAX_NUM_CCs, enb_properties->properties[i]->nb_cc, i);
-            eth_params = (eth_params_t*)malloc(enb_properties->properties[i]->nb_rrh_gw * sizeof(eth_params_t));
-            memset(eth_params, 0, enb_properties->properties[i]->nb_rrh_gw * sizeof(eth_params_t));
-
-            for (j=0; j<enb_properties->properties[i]->nb_rrh_gw; j++) {
-
-                if (enb_properties->properties[i]->rrh_gw_config[j].active == 1 ) {
-                    local_remote_radio = BBU_REMOTE_RADIO_HEAD;
-                    (eth_params+j)->local_if_name             = enb_properties->properties[i]->rrh_gw_config[j].rrh_gw_if_name;
-                    (eth_params+j)->my_addr                   = enb_properties->properties[i]->rrh_gw_config[j].local_address;
-                    (eth_params+j)->my_port                   = enb_properties->properties[i]->rrh_gw_config[j].local_port;
-                    (eth_params+j)->remote_addr               = enb_properties->properties[i]->rrh_gw_config[j].remote_address;
-                    (eth_params+j)->remote_port               = enb_properties->properties[i]->rrh_gw_config[j].remote_port;
-
-                    if (enb_properties->properties[i]->rrh_gw_config[j].raw == 1) {
-                        (eth_params+j)->transp_preference       = ETH_RAW_MODE;
-                    } else if (enb_properties->properties[i]->rrh_gw_config[j].rawif4p5 == 1) {
-                        (eth_params+j)->transp_preference       = ETH_RAW_IF4p5_MODE;
-                    } else if (enb_properties->properties[i]->rrh_gw_config[j].udpif4p5 == 1) {
-                        (eth_params+j)->transp_preference       = ETH_UDP_IF4p5_MODE;
-                    } else if (enb_properties->properties[i]->rrh_gw_config[j].rawif5_mobipass == 1) {
-                        (eth_params+j)->transp_preference       = ETH_RAW_IF5_MOBIPASS;
-                    } else {
-                        (eth_params+j)->transp_preference       = ETH_UDP_MODE;
-                    }
-
-                    (eth_params+j)->iq_txshift                = enb_properties->properties[i]->rrh_gw_config[j].iq_txshift;
-                    (eth_params+j)->tx_sample_advance         = enb_properties->properties[i]->rrh_gw_config[j].tx_sample_advance;
-                    (eth_params+j)->tx_scheduling_advance     = enb_properties->properties[i]->rrh_gw_config[j].tx_scheduling_advance;
-                    if (enb_properties->properties[i]->rrh_gw_config[j].exmimo == 1) {
-                        (eth_params+j)->rf_preference          = EXMIMO_DEV;
-                    } else if (enb_properties->properties[i]->rrh_gw_config[j].usrp_b200 == 1) {
-                        (eth_params+j)->rf_preference          = USRP_B200_DEV;
-                    } else if (enb_properties->properties[i]->rrh_gw_config[j].usrp_x300 == 1) {
-                        (eth_params+j)->rf_preference          = USRP_X300_DEV;
-                    } else if (enb_properties->properties[i]->rrh_gw_config[j].bladerf == 1) {
-                        (eth_params+j)->rf_preference          = BLADERF_DEV;
-                    } else if (enb_properties->properties[i]->rrh_gw_config[j].lmssdr == 1) {
-                        //(eth_params+j)->rf_preference          = LMSSDR_DEV;
-                    } else {
-                        (eth_params+j)->rf_preference          = 0;
-                    }
-                    (eth_params+j)->if_compress               = enb_properties->properties[i]->rrh_gw_config[j].if_compress;
-                } else {
-                    local_remote_radio = BBU_LOCAL_RADIO_HEAD;
-                }
-
-            }
-
-            for (CC_id=0; CC_id<MAX_NUM_CCs; CC_id++) {
-
-
-                node_function[CC_id]  = enb_properties->properties[i]->cc_node_function[CC_id];
-                node_timing[CC_id]    = enb_properties->properties[i]->cc_node_timing[CC_id];
-                node_synch_ref[CC_id] = enb_properties->properties[i]->cc_node_synch_ref[CC_id];
-
-                frame_parms[CC_id]->frame_type =       enb_properties->properties[i]->frame_type[CC_id];
-                frame_parms[CC_id]->tdd_config =       enb_properties->properties[i]->tdd_config[CC_id];
-                frame_parms[CC_id]->tdd_config_S =     enb_properties->properties[i]->tdd_config_s[CC_id];
-                frame_parms[CC_id]->Ncp =              enb_properties->properties[i]->prefix_type[CC_id];
-
-                //for (j=0; j < enb_properties->properties[i]->nb_cc; j++ ){
-                frame_parms[CC_id]->Nid_cell            =  enb_properties->properties[i]->Nid_cell[CC_id];
-                frame_parms[CC_id]->N_RB_DL             =  enb_properties->properties[i]->N_RB_DL[CC_id];
-                frame_parms[CC_id]->N_RB_UL             =  enb_properties->properties[i]->N_RB_DL[CC_id];
-                frame_parms[CC_id]->nb_antennas_tx      =  enb_properties->properties[i]->nb_antennas_tx[CC_id];
-                frame_parms[CC_id]->nb_antenna_ports_eNB  =  enb_properties->properties[i]->nb_antenna_ports[CC_id];
-                frame_parms[CC_id]->nb_antennas_rx      =  enb_properties->properties[i]->nb_antennas_rx[CC_id];
-
-                frame_parms[CC_id]->prach_config_common.prach_ConfigInfo.prach_ConfigIndex = enb_properties->properties[i]->prach_config_index[CC_id];
-                frame_parms[CC_id]->prach_config_common.prach_ConfigInfo.prach_FreqOffset  = enb_properties->properties[i]->prach_freq_offset[CC_id];
-
-                frame_parms[CC_id]->mode1_flag         = (frame_parms[CC_id]->nb_antenna_ports_eNB == 1) ? 1 : 0;
-                frame_parms[CC_id]->threequarter_fs    = threequarter_fs;
-
-                //} // j
-            }
-
-
-            init_all_otg(0);
-            g_otg->seed = 0;
-            init_seeds(g_otg->seed);
-
-            for (k=0; k<enb_properties->properties[i]->num_otg_elements; k++) {
-                j=enb_properties->properties[i]->otg_ue_id[k]; // ue_id
-                g_otg->application_idx[i][j] = 1;
-                //g_otg->packet_gen_type=SUBSTRACT_STRING;
-                g_otg->background[i][j][0] =enb_properties->properties[i]->otg_bg_traffic[k];
-                g_otg->application_type[i][j][0] =enb_properties->properties[i]->otg_app_type[k];// BCBR; //MCBR, BCBR
-
-                printf("[OTG] configuring traffic type %d for  eNB %d UE %d (Background traffic is %s)\n",
-                       g_otg->application_type[i][j][0], i, j,(g_otg->background[i][j][0]==1)?"Enabled":"Disabled");
-            }
-
-            init_predef_traffic(enb_properties->properties[i]->num_otg_elements, 1);
-
-
-            glog_level                     = enb_properties->properties[i]->glog_level;
-            glog_verbosity                 = enb_properties->properties[i]->glog_verbosity;
-            hw_log_level                   = enb_properties->properties[i]->hw_log_level;
-            hw_log_verbosity               = enb_properties->properties[i]->hw_log_verbosity ;
-            phy_log_level                  = enb_properties->properties[i]->phy_log_level;
-            phy_log_verbosity              = enb_properties->properties[i]->phy_log_verbosity;
-            mac_log_level                  = enb_properties->properties[i]->mac_log_level;
-            mac_log_verbosity              = enb_properties->properties[i]->mac_log_verbosity;
-            rlc_log_level                  = enb_properties->properties[i]->rlc_log_level;
-            rlc_log_verbosity              = enb_properties->properties[i]->rlc_log_verbosity;
-            pdcp_log_level                 = enb_properties->properties[i]->pdcp_log_level;
-            pdcp_log_verbosity             = enb_properties->properties[i]->pdcp_log_verbosity;
-            rrc_log_level                  = enb_properties->properties[i]->rrc_log_level;
-            rrc_log_verbosity              = enb_properties->properties[i]->rrc_log_verbosity;
-# if defined(ENABLE_USE_MME)
-            gtpu_log_level                 = enb_properties->properties[i]->gtpu_log_level;
-            gtpu_log_verbosity             = enb_properties->properties[i]->gtpu_log_verbosity;
-            udp_log_level                  = enb_properties->properties[i]->udp_log_level;
-            udp_log_verbosity              = enb_properties->properties[i]->udp_log_verbosity;
-#endif
-#if defined (ENABLE_SECURITY)
-            osa_log_level                  = enb_properties->properties[i]->osa_log_level;
-            osa_log_verbosity              = enb_properties->properties[i]->osa_log_verbosity;
-#endif
-
-            // adjust the log
-            for (CC_id=0; CC_id<MAX_NUM_CCs; CC_id++) {
-                for (k = 0 ; k < 4; k++) {
-                    downlink_frequency[CC_id][k]      =       enb_properties->properties[i]->downlink_frequency[CC_id];
-                    uplink_frequency_offset[CC_id][k] =  enb_properties->properties[i]->uplink_frequency_offset[CC_id];
-                    rx_gain[CC_id][k]                 =  (double)enb_properties->properties[i]->rx_gain[CC_id];
-                    tx_gain[CC_id][k]                 =  (double)enb_properties->properties[i]->tx_gain[CC_id];
-                }
-
-                printf("Downlink frequency/ uplink offset of CC_id %d set to %ju/%d\n", CC_id,
-                       enb_properties->properties[i]->downlink_frequency[CC_id],
-                       enb_properties->properties[i]->uplink_frequency_offset[CC_id]);
-
-            } // CC_id
-        }// i
-
-        //this is needed for phy-test option
-        transmission_mode = enb_properties->properties[0]->ue_TransmissionMode[0]+1;
-
-    } else if (UE_flag == 1) {
+    if (UE_flag == 1) {
         if (conf_config_file_name != NULL) {
 
             // Here the configuration file is the XER encoded UE capabilities
@@ -1381,6 +1240,7 @@ void init_openair0() {
 }
 
 int main( int argc, char **argv ) {
+	printf("\n[main]\n");
     int i,j,k,aa,re;
 #if defined (XFORMS)
     void *status;
@@ -1449,40 +1309,6 @@ int main( int argc, char **argv ) {
         set_comp_log(NAS,     LOG_INFO,   LOG_HIGH, 1);
 # endif
 #endif
-    } else {
-        printf("configuring for eNB\n");
-
-        set_comp_log(HW,      hw_log_level, hw_log_verbosity, 1);
-        set_comp_log(PHY,     phy_log_level,   phy_log_verbosity, 1);
-        if (opt_enabled == 1 )
-            set_comp_log(OPT,   opt_log_level,      opt_log_verbosity, 1);
-        set_comp_log(MAC,     mac_log_level,  mac_log_verbosity, 1);
-        set_comp_log(RLC,     rlc_log_level,   rlc_log_verbosity, 1);
-        set_comp_log(PDCP,    pdcp_log_level,  pdcp_log_verbosity, 1);
-        set_comp_log(RRC,     rrc_log_level,  rrc_log_verbosity, 1);
-#if defined(ENABLE_ITTI)
-        set_comp_log(EMU,     LOG_INFO,   LOG_MED, 1);
-# if defined(ENABLE_USE_MME)
-        set_comp_log(UDP_,    udp_log_level,   udp_log_verbosity, 1);
-        set_comp_log(GTPU,    gtpu_log_level,   gtpu_log_verbosity, 1);
-        set_comp_log(S1AP,    LOG_DEBUG,   LOG_HIGH, 1);
-        set_comp_log(SCTP,    LOG_INFO,   LOG_HIGH, 1);
-# endif
-#if defined(ENABLE_SECURITY)
-        set_comp_log(OSA,    osa_log_level,   osa_log_verbosity, 1);
-#endif
-#endif
-#ifdef LOCALIZATION
-        set_comp_log(LOCALIZE, LOG_DEBUG, LOG_LOW, 1);
-        set_component_filelog(LOCALIZE);
-#endif
-        set_comp_log(ENB_APP, LOG_INFO, LOG_HIGH, 1);
-        set_comp_log(OTG,     LOG_INFO,   LOG_HIGH, 1);
-
-        if (online_log_messages == 1) {
-            set_component_filelog(RRC);
-            set_component_filelog(PDCP);
-        }
     }
 
     if (ouput_vcd) {
@@ -1553,7 +1379,7 @@ int main( int argc, char **argv ) {
       frame_parms[CC_id]->nb_antennas_rx     = nb_antenna_rx;
       frame_parms[CC_id]->nb_antenna_ports_eNB = 1; //initial value overwritten by initial sync later
 
-      LOG_I(PHY,"Set nb_rx_antenna %d , nb_tx_antenna %d \n",frame_parms[CC_id]->nb_antennas_rx, frame_parms[CC_id]->nb_antennas_tx);
+      LOG_I(PHY,"CC_id = %d. Set nb_rx_antenna %d , nb_tx_antenna %d \n",CC_id,frame_parms[CC_id]->nb_antennas_rx, frame_parms[CC_id]->nb_antennas_tx);
     }
 
     init_ul_hopping(frame_parms[CC_id]);
@@ -1644,68 +1470,6 @@ int main( int argc, char **argv ) {
         }
 
         //  printf("tx_max_power = %d -> amp %d\n",tx_max_power,get_tx_amp(tx_max_poHwer,tx_max_power));
-    } else {
-        //this is eNB
-        PHY_vars_eNB_g = malloc(sizeof(PHY_VARS_eNB**));
-        PHY_vars_eNB_g[0] = malloc(sizeof(PHY_VARS_eNB*));
-
-        for (CC_id=0; CC_id<MAX_NUM_CCs; CC_id++) {
-            PHY_vars_eNB_g[0][CC_id] = init_lte_eNB(frame_parms[CC_id],0,frame_parms[CC_id]->Nid_cell,node_function[CC_id],abstraction_flag);
-            PHY_vars_eNB_g[0][CC_id]->ue_dl_rb_alloc=0x1fff;
-            PHY_vars_eNB_g[0][CC_id]->target_ue_dl_mcs=target_dl_mcs;
-            PHY_vars_eNB_g[0][CC_id]->ue_ul_nb_rb=6;
-            PHY_vars_eNB_g[0][CC_id]->target_ue_ul_mcs=target_ul_mcs;
-            // initialization for phy-test
-            for (k=0; k<NUMBER_OF_UE_MAX; k++) {
-                PHY_vars_eNB_g[0][CC_id]->transmission_mode[k] = transmission_mode;
-                if (transmission_mode==7)
-                    lte_gold_ue_spec_port5(PHY_vars_eNB_g[0][CC_id]->lte_gold_uespec_port5_table[k],frame_parms[CC_id]->Nid_cell,0x1235+k);
-            }
-            if ((transmission_mode==1) || (transmission_mode==7)) {
-                for (j=0; j<frame_parms[CC_id]->nb_antennas_tx; j++)
-                    for (re=0; re<frame_parms[CC_id]->ofdm_symbol_size; re++)
-                        PHY_vars_eNB_g[0][CC_id]->common_vars.beam_weights[0][0][j][re] = 0x00007fff/frame_parms[CC_id]->nb_antennas_tx;
-            }
-
-            if (phy_test==1) PHY_vars_eNB_g[0][CC_id]->mac_enabled = 0;
-            else PHY_vars_eNB_g[0][CC_id]->mac_enabled = 1;
-
-            if (PHY_vars_eNB_g[0][CC_id]->mac_enabled == 0) { //set default parameters for testing mode
-                for (i=0; i<NUMBER_OF_UE_MAX; i++) {
-                    PHY_vars_eNB_g[0][CC_id]->pusch_config_dedicated[i].betaOffset_ACK_Index = beta_ACK;
-                    PHY_vars_eNB_g[0][CC_id]->pusch_config_dedicated[i].betaOffset_RI_Index  = beta_RI;
-                    PHY_vars_eNB_g[0][CC_id]->pusch_config_dedicated[i].betaOffset_CQI_Index = beta_CQI;
-
-                    PHY_vars_eNB_g[0][CC_id]->scheduling_request_config[i].sr_PUCCH_ResourceIndex = i;
-                    PHY_vars_eNB_g[0][CC_id]->scheduling_request_config[i].sr_ConfigIndex = 7+(i%3);
-                    PHY_vars_eNB_g[0][CC_id]->scheduling_request_config[i].dsr_TransMax = sr_n4;
-                }
-            }
-
-            compute_prach_seq(&PHY_vars_eNB_g[0][CC_id]->frame_parms.prach_config_common,
-                              PHY_vars_eNB_g[0][CC_id]->frame_parms.frame_type,
-                              PHY_vars_eNB_g[0][CC_id]->X_u);
-
-
-            PHY_vars_eNB_g[0][CC_id]->rx_total_gain_dB = (int)rx_gain[CC_id][0];
-
-            if (frame_parms[CC_id]->frame_type==FDD) {
-                PHY_vars_eNB_g[0][CC_id]->N_TA_offset = 0;
-            } else {
-                if (frame_parms[CC_id]->N_RB_DL == 100)
-                    PHY_vars_eNB_g[0][CC_id]->N_TA_offset = 624;
-                else if (frame_parms[CC_id]->N_RB_DL == 50)
-                    PHY_vars_eNB_g[0][CC_id]->N_TA_offset = 624/2;
-                else if (frame_parms[CC_id]->N_RB_DL == 25)
-                    PHY_vars_eNB_g[0][CC_id]->N_TA_offset = 624/4;
-            }
-
-        }
-
-
-        NB_eNB_INST=1;
-        NB_INST=1;
-
     }
 
     fill_modeled_runtime_table(runtime_phy_rx,runtime_phy_tx);
@@ -1873,16 +1637,6 @@ int main( int argc, char **argv ) {
             PHY_vars_UE_g[0][CC_id]->rf_map.card=0;
             PHY_vars_UE_g[0][CC_id]->rf_map.chain=CC_id+chain_offset;
         }
-    } else {
-        printf("Initializing eNB threads\n");
-        init_eNB(node_function,node_timing,1,eth_params,single_thread_flag,wait_for_sync);
-
-        number_of_cards = 1;
-
-        for(CC_id=0; CC_id<MAX_NUM_CCs; CC_id++) {
-            PHY_vars_eNB_g[0][CC_id]->rf_map.card=0;
-            PHY_vars_eNB_g[0][CC_id]->rf_map.chain=CC_id+chain_offset;
-        }
     }
 
     // connect the TX/RX buffers
@@ -1913,21 +1667,6 @@ int main( int argc, char **argv ) {
                 printf("error reading from file\n");
         }
         //p_exmimo_config->framing.tdd_config = TXRXSWITCH_TESTRX;
-    } else {
-
-
-
-
-
-        printf("Setting eNB buffer to all-RX\n");
-
-        // Set LSBs for antenna switch (ExpressMIMO)
-        for (CC_id=0; CC_id<MAX_NUM_CCs; CC_id++) {
-            PHY_vars_eNB_g[0][CC_id]->hw_timing_advance = 0;
-            for (i=0; i<frame_parms[CC_id]->samples_per_tti*10; i++)
-                for (aa=0; aa<frame_parms[CC_id]->nb_antennas_tx; aa++)
-                    PHY_vars_eNB_g[0][CC_id]->common_vars.txdata[0][aa][i] = 0x00010001;
-        }
     }
     sleep(3);
 
@@ -1998,13 +1737,6 @@ int main( int argc, char **argv ) {
     if (UE_flag==1) {
         if (PHY_vars_UE_g[0][0]->rfdevice.trx_end_func)
             PHY_vars_UE_g[0][0]->rfdevice.trx_end_func(&PHY_vars_UE_g[0][0]->rfdevice);
-    } else {
-        for(CC_id=0; CC_id<MAX_NUM_CCs; CC_id++) {
-            if (PHY_vars_eNB_g[0][CC_id]->rfdevice.trx_end_func)
-                PHY_vars_eNB_g[0][CC_id]->rfdevice.trx_end_func(&PHY_vars_eNB_g[0][CC_id]->rfdevice);
-            if (PHY_vars_eNB_g[0][CC_id]->ifdevice.trx_end_func)
-                PHY_vars_eNB_g[0][CC_id]->ifdevice.trx_end_func(&PHY_vars_eNB_g[0][CC_id]->ifdevice);
-        }
     }
     if (ouput_vcd)
         VCD_SIGNAL_DUMPER_CLOSE();

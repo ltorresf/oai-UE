@@ -38,7 +38,7 @@
 #include "RRC/LITE/extern.h"
 #include "PHY_INTERFACE/extern.h"
 #endif
-#define DEBUG_PHY
+#define DEBUG_PHY 1
 
 int* sync_corr_ue0 = NULL;
 int* sync_corr_ue1 = NULL;

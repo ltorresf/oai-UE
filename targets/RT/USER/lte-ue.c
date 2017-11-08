@@ -182,6 +182,7 @@ void init_UE(int nb_inst)
 {
 	printf("[init_UE]\n");
   int inst;
+  //LA: In our case, nb_inst = 1 (only run once)
   for (inst=0; inst < nb_inst; inst++) {
     //    UE->rfdevice.type      = NONE_DEV;
     PHY_VARS_UE *UE = PHY_vars_UE_g[inst][0];
@@ -310,8 +311,8 @@ static void *UE_thread_synch(void *arg) {
         switch (sync_mode) {
         case pss:
         {
-        	LOG_I(PHY, "Running Initial Synch (mode = %d) [0:normal_txrx] (sync_mode = %d) [pss=0,pbch=1,si=2]\n",UE->mode,sync_mode);
-            LOG_I(PHY,"[SCHED][UE] Scanning band %d (%d of %d), freq %u MHz\n",bands_to_scan.band_info[current_band].band, current_band+1,bands_to_scan.nbands,(bands_to_scan.band_info[current_band].dl_min+current_offset)/1000000);
+        	LOG_I(PHY, "Running Initial Synch (UE->mode = %d) [0:normal_txrx] (sync_mode = %d) [pss=0,pbch=1,si=2]\n",UE->mode,sync_mode);
+            LOG_I(PHY,"[SCHED][UE] Scanning band %d (%d of %d), central freq = %u MHz\n",bands_to_scan.band_info[current_band].band, current_band+1,bands_to_scan.nbands,(bands_to_scan.band_info[current_band].dl_min+current_offset)/1000000);
             lte_sync_timefreq(UE,current_band,bands_to_scan.band_info[current_band].dl_min+current_offset);
             current_offset += 20000000; // increase by 20 MHz
 

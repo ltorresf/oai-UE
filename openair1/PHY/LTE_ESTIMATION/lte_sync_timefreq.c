@@ -63,6 +63,9 @@ void lte_sync_timefreq(PHY_VARS_UE *ue,int band,unsigned int DL_freq) {
   int maxcorr[3],minamp,pos=0,pssind;
   int16_t *pss6144_0 = NULL, *pss6144_1 = NULL, *pss6144_2 = NULL;
 
+  //LA:
+  int a;
+
   /*  char fname[100],vname[100];*/
 
 
@@ -75,6 +78,7 @@ void lte_sync_timefreq(PHY_VARS_UE *ue,int band,unsigned int DL_freq) {
     //compute frequency-domain representation of 6144-sample chunk
 
     rxp = &ue->common_vars.rxdata[0][i];
+    LOG_I( HW,"Received time-domain data: { %d  %d  %d  %d  %d  %d  %d  %d }\n",rxp[0],rxp[1],rxp[2],rxp[3],rxp[4],rxp[5],rxp[6],rxp[7]);
     sp=spectrum;
 
     while (1) {
@@ -88,9 +92,9 @@ void lte_sync_timefreq(PHY_VARS_UE *ue,int band,unsigned int DL_freq) {
       //write_output("pss0_6144.m","pss0",pss6144_0_0,256,1,1);
 
 
-/*
-      printf("i %d: sp %p\n",i,sp);
-      if (i==0) {//(i==12288) {
+
+      printf("i = %d.\n",i);
+/*      if (i==0) {//(i==12288) {
         write_output("scan6144F.m","s6144F",sp,6144,1,1);
         write_output("scan6144.m","s6144",rxp,6144,1,1);
       write_output("pss0_6144.m","pss0",pss6144_0_0,256,1,1);
@@ -110,12 +114,14 @@ void lte_sync_timefreq(PHY_VARS_UE *ue,int band,unsigned int DL_freq) {
             pss6144_1 = &pss6144_1_0[0];
             pss6144_2 = &pss6144_2_0[0];
             sp2 = (f<0) ? (__m128i*)&sp[12288+(f<<1)] : (__m128i*)&sp[(f<<1)];
+            a = (f<0) ? (12288+(f<<1)) : (f<<1);
 
             LOG_I( HW, "No split. case %d, f = %d.\n",f&3,f);
         	  LOG_I( HW, "pss6144_0 = {%d,%d,%d,%d,%d,%d,%d}.\n",(int16_t *)pss6144_0[0],(int16_t *)pss6144_0[1],(int16_t *)pss6144_0[2],(int16_t *)pss6144_0[3],(int16_t *)pss6144_0[4],(int16_t *)pss6144_0[5],(int16_t *)pss6144_0[6]);
         	  LOG_I( HW, "pss6144_1 = {%d,%d,%d,%d,%d,%d,%d}.\n",(int16_t *)pss6144_1[0],(int16_t *)pss6144_1[1],(int16_t *)pss6144_1[2],(int16_t *)pss6144_1[3],(int16_t *)pss6144_1[4],(int16_t *)pss6144_1[5],(int16_t *)pss6144_1[6]);
         	  LOG_I( HW, "pss6144_2 = {%d,%d,%d,%d,%d,%d,%d}.\n",(int16_t *)pss6144_2[0],(int16_t *)pss6144_2[1],(int16_t *)pss6144_2[2],(int16_t *)pss6144_2[3],(int16_t *)pss6144_2[4],(int16_t *)pss6144_2[5],(int16_t *)pss6144_2[6]);
-            LOG_I( HW, "sp2 = %d, index = %d.\n",(__m128i)sp2[0],(f<0) ? (12288+(f<<1)) : ((f<<1)));
+            //LOG_I( HW, "sp2 = %d, index = %d.\n",(__m128i)sp2[0],(f<0) ? (12288+(f<<1)) : ((f<<1)));
+            LOG_I( HW, "sp2 (address) = %d, index of sp = %d.\n",sp2,a);
             printf("----------------------------------------------------\n");
             break;
 
@@ -124,13 +130,15 @@ void lte_sync_timefreq(PHY_VARS_UE *ue,int band,unsigned int DL_freq) {
             pss6144_1 = &pss6144_1_1[0];
             pss6144_2 = &pss6144_2_1[0];
             sp2 = (f<0) ? (__m128i*)&sp[12286+(f<<1)] : (__m128i*)&sp[-2+(f<<1)];
+            a = (f<0) ? (12286+(f<<1)) : (-2+(f<<1));
 
 
-      	  LOG_I( HW, "No split. case %d, f = %d.\n",f&3,f);
-      	  LOG_I( HW, "pss6144_0 = {%d,%d,%d,%d,%d,%d,%d}.\n",(int16_t *)pss6144_0[0],(int16_t *)pss6144_0[1],(int16_t *)pss6144_0[2],(int16_t *)pss6144_0[3],(int16_t *)pss6144_0[4],(int16_t *)pss6144_0[5],(int16_t *)pss6144_0[6]);
-      	  LOG_I( HW, "pss6144_1 = {%d,%d,%d,%d,%d,%d,%d}.\n",(int16_t *)pss6144_1[0],(int16_t *)pss6144_1[1],(int16_t *)pss6144_1[2],(int16_t *)pss6144_1[3],(int16_t *)pss6144_1[4],(int16_t *)pss6144_1[5],(int16_t *)pss6144_1[6]);
-      	  LOG_I( HW, "pss6144_2 = {%d,%d,%d,%d,%d,%d,%d}.\n",(int16_t *)pss6144_2[0],(int16_t *)pss6144_2[1],(int16_t *)pss6144_2[2],(int16_t *)pss6144_2[3],(int16_t *)pss6144_2[4],(int16_t *)pss6144_2[5],(int16_t *)pss6144_2[6]);
-      	LOG_I( HW, "sp2 = %d, index = %d.\n",(__m128i)sp2[0],(f<0) ? (12286+(f<<1)) : (-2+(f<<1)));
+              LOG_I( HW, "No split. case %d, f = %d.\n",f&3,f);
+      	  	  LOG_I( HW, "pss6144_0 = {%d,%d,%d,%d,%d,%d,%d}.\n",(int16_t *)pss6144_0[0],(int16_t *)pss6144_0[1],(int16_t *)pss6144_0[2],(int16_t *)pss6144_0[3],(int16_t *)pss6144_0[4],(int16_t *)pss6144_0[5],(int16_t *)pss6144_0[6]);
+      	  	  LOG_I( HW, "pss6144_1 = {%d,%d,%d,%d,%d,%d,%d}.\n",(int16_t *)pss6144_1[0],(int16_t *)pss6144_1[1],(int16_t *)pss6144_1[2],(int16_t *)pss6144_1[3],(int16_t *)pss6144_1[4],(int16_t *)pss6144_1[5],(int16_t *)pss6144_1[6]);
+      	  	  LOG_I( HW, "pss6144_2 = {%d,%d,%d,%d,%d,%d,%d}.\n",(int16_t *)pss6144_2[0],(int16_t *)pss6144_2[1],(int16_t *)pss6144_2[2],(int16_t *)pss6144_2[3],(int16_t *)pss6144_2[4],(int16_t *)pss6144_2[5],(int16_t *)pss6144_2[6]);
+      	//LOG_I( HW, "sp2 = %d, index = %d.\n",(__m128i)sp2[0],(f<0) ? (12286+(f<<1)) : (-2+(f<<1)));
+      	LOG_I( HW, "sp2 (address) = %d, index of sp = %d.\n",sp2,a);
       	printf("----------------------------------------------------\n");
             break;
 
@@ -139,12 +147,14 @@ void lte_sync_timefreq(PHY_VARS_UE *ue,int band,unsigned int DL_freq) {
             pss6144_1 = &pss6144_1_2[0];
             pss6144_2 = &pss6144_2_2[0];
             sp2 = (f<0) ? (__m128i*)&sp[12284+(f<<1)] : (__m128i*)&sp[-4+(f<<1)];
+            a = (f<0) ? (12284+(f<<1)) : (-4+(f<<1));
 
       	  LOG_I( HW, "No split. case %d, f = %d.\n",f&3,f);
       	  LOG_I( HW, "pss6144_0 = {%d,%d,%d,%d,%d,%d,%d}.\n",(int16_t *)pss6144_0[0],(int16_t *)pss6144_0[1],(int16_t *)pss6144_0[2],(int16_t *)pss6144_0[3],(int16_t *)pss6144_0[4],(int16_t *)pss6144_0[5],(int16_t *)pss6144_0[6]);
       	  LOG_I( HW, "pss6144_1 = {%d,%d,%d,%d,%d,%d,%d}.\n",(int16_t *)pss6144_1[0],(int16_t *)pss6144_1[1],(int16_t *)pss6144_1[2],(int16_t *)pss6144_1[3],(int16_t *)pss6144_1[4],(int16_t *)pss6144_1[5],(int16_t *)pss6144_1[6]);
       	  LOG_I( HW, "pss6144_2 = {%d,%d,%d,%d,%d,%d,%d}.\n",(int16_t *)pss6144_2[0],(int16_t *)pss6144_2[1],(int16_t *)pss6144_2[2],(int16_t *)pss6144_2[3],(int16_t *)pss6144_2[4],(int16_t *)pss6144_2[5],(int16_t *)pss6144_2[6]);
-      	LOG_I( HW, "sp2 = %d, index = %d.\n",(__m128i)sp2[0],(f<0) ? (12284+(f<<1)) : (-4+(f<<1)));
+      	//LOG_I( HW, "sp2 = %d, index = %d.\n",(__m128i)sp2[0],(f<0) ? (12284+(f<<1)) : (-4+(f<<1)));
+      	LOG_I( HW, "sp2 (address) = %d, index of sp = %d.\n",sp2,a);
       	printf("----------------------------------------------------\n");
             break;
 
@@ -153,12 +163,14 @@ void lte_sync_timefreq(PHY_VARS_UE *ue,int band,unsigned int DL_freq) {
             pss6144_1 = &pss6144_1_3[0];
             pss6144_2 = &pss6144_2_3[0];
             sp2 = (f<0) ? (__m128i*)&sp[12282+(f<<1)] : (__m128i*)&sp[-6+(f<<1)];
+            a = (f<0) ? (12282+(f<<1)) : (-6+(f<<1));
 
       	  LOG_I( HW, "No split. case %d, f = %d.\n",f&3,f);
       	  LOG_I( HW, "pss6144_0 = {%d,%d,%d,%d,%d,%d,%d}.\n",(int16_t *)pss6144_0[0],(int16_t *)pss6144_0[1],(int16_t *)pss6144_0[2],(int16_t *)pss6144_0[3],(int16_t *)pss6144_0[4],(int16_t *)pss6144_0[5],(int16_t *)pss6144_0[6]);
       	  LOG_I( HW, "pss6144_1 = {%d,%d,%d,%d,%d,%d,%d}.\n",(int16_t *)pss6144_1[0],(int16_t *)pss6144_1[1],(int16_t *)pss6144_1[2],(int16_t *)pss6144_1[3],(int16_t *)pss6144_1[4],(int16_t *)pss6144_1[5],(int16_t *)pss6144_1[6]);
       	  LOG_I( HW, "pss6144_2 = {%d,%d,%d,%d,%d,%d,%d}.\n",(int16_t *)pss6144_2[0],(int16_t *)pss6144_2[1],(int16_t *)pss6144_2[2],(int16_t *)pss6144_2[3],(int16_t *)pss6144_2[4],(int16_t *)pss6144_2[5],(int16_t *)pss6144_2[6]);
-      	LOG_I( HW, "sp2 = %d, index = %d.\n",(__m128i)sp2[0],(f<0) ? (12282+(f<<1)) : (-6+(f<<1)));
+      	//LOG_I( HW, "sp2 = %d, index = %d.\n",(__m128i)sp2[0],(f<0) ? (12282+(f<<1)) : (-6+(f<<1)));
+      	LOG_I( HW, "sp2 (address) = %d, index of sp = %d.\n",sp2,a);
       	printf(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n");
             break;
           }
@@ -166,24 +178,71 @@ void lte_sync_timefreq(PHY_VARS_UE *ue,int band,unsigned int DL_freq) {
           re256=32;
 
           for (re = 0; re<256/4; re++) {  // loop over 256 points of upsampled PSS
-            //      printf("f %d, re %d\n",f,re);
+        	LOG_I( HW, "f = %d, re = %d\n",f,re);
             s = sp2[re];
-            mmtmp00 = _mm_srai_epi32(_mm_madd_epi16(((__m128i*)pss6144_0)[re],s),15);
+/*            mmtmp00 = _mm_srai_epi32(_mm_madd_epi16(((__m128i*)pss6144_0)[re],s),15);
             mmtmp01 = _mm_srai_epi32(_mm_madd_epi16(((__m128i*)pss6144_1)[re],s),15);
-            mmtmp02 = _mm_srai_epi32(_mm_madd_epi16(((__m128i*)pss6144_2)[re],s),15);
+            mmtmp02 = _mm_srai_epi32(_mm_madd_epi16(((__m128i*)pss6144_2)[re],s),15);*/
 
+            //LOG_I( HW, "Initial data:\n");
+            LOG_I( HW, "{s0} s = [ %d %d %d %d %d %d %d %d ]\n",s[0],s[1],s[2],s[3],s[4],s[5],s[6],s[7]);
+            LOG_I( HW, "{s0} pss6144_0 = [ %d %d %d %d %d %d %d %d ]\n",pss6144_0[re],pss6144_0[re+1],pss6144_0[re+2],pss6144_0[re+3],pss6144_0[re+4],pss6144_0[re+5],pss6144_0[re+6],pss6144_0[re+7]);
+            LOG_I( HW, "{s0} pss6144_1 = [ %d %d %d %d %d %d %d %d ]\n",pss6144_1[re],pss6144_1[re+1],pss6144_1[re+2],pss6144_1[re+3],pss6144_1[re+4],pss6144_1[re+5],pss6144_1[re+6],pss6144_1[re+7]);
+            LOG_I( HW, "{s0} pss6144_2 = [ %d %d %d %d %d %d %d %d ]\n",pss6144_2[re],pss6144_2[re+1],pss6144_2[re+2],pss6144_2[re+3],pss6144_2[re+4],pss6144_2[re+5],pss6144_2[re+6],pss6144_2[re+7]);
+
+            //returns four 32-bit values of the type: a0*b0+a1*b1
+            mmtmp00 = _mm_madd_epi16(((__m128i*)pss6144_0)[re],s);
+            mmtmp01 = _mm_madd_epi16(((__m128i*)pss6144_1)[re],s);
+            mmtmp02 = _mm_madd_epi16(((__m128i*)pss6144_2)[re],s);
+
+            //LOG_I( HW, "Four 32-bit values of the type: s[0]*pss6144_x[0]+s[1]*pss6144_x[1]:\n");
+            LOG_I( HW, "{s1} _mm_madd_epi16_0 = [ %d %d %d %d]\n",mmtmp00[0],mmtmp00[1],mmtmp00[2],mmtmp00[3]);
+            LOG_I( HW, "{s1} _mm_madd_epi16_1 = [ %d %d %d %d]\n",mmtmp01[0],mmtmp01[1],mmtmp01[2],mmtmp01[3]);
+            LOG_I( HW, "{s1} _mm_madd_epi16_2 = [ %d %d %d %d]\n",mmtmp02[0],mmtmp02[1],mmtmp02[2],mmtmp02[3]);
+
+            //shifts the four 32-bit values in mmtmp to the right by 15 bits (division by 2^15)
+            mmtmp00 = _mm_srai_epi32(mmtmp00,15);
+            mmtmp01 = _mm_srai_epi32(mmtmp01,15);
+            mmtmp02 = _mm_srai_epi32(mmtmp02,15);
+
+            //LOG_I( HW, "shifting the four 32-bit values to the right by 15 bits (division by 2^15):\n");
+            LOG_I( HW, "{s2} _mm_srai_epi32_0 = [ %d %d %d %d]\n",mmtmp00[0],mmtmp00[1],mmtmp00[2],mmtmp00[3]);
+            LOG_I( HW, "{s2} _mm_srai_epi32_1 = [ %d %d %d %d]\n",mmtmp01[0],mmtmp01[1],mmtmp01[2],mmtmp01[3]);
+            LOG_I( HW, "{s2} _mm_srai_epi32_2 = [ %d %d %d %d]\n",mmtmp02[0],mmtmp02[1],mmtmp02[2],mmtmp02[3]);
+
+            //shuffles  the lower four 16-bit elements of array s
             s = _mm_shufflelo_epi16(s,_MM_SHUFFLE(2,3,0,1));
+            LOG_I( HW, "{s3} [_mm_shufflelo_epi16] s = [ %d %d %d %d %d %d %d %d ]\n",s[0],s[1],s[2],s[3],s[4],s[5],s[6],s[7]);
+
+            //shuffles  the lower four 16-bit elements of array s
             s = _mm_shufflehi_epi16(s,_MM_SHUFFLE(2,3,0,1));
+            LOG_I( HW, "{s4} [_mm_shufflehi_epi16] s = [ %d %d %d %d %d %d %d %d ]\n",s[0],s[1],s[2],s[3],s[4],s[5],s[6],s[7]);
+
+            //changes the sign of s based on the pattern: {-1,1,-1,1,-1,1,-1,1}
             s = _mm_sign_epi16(s,*(__m128i*)&conjugate[0]);
-            mmtmp10 = _mm_srai_epi32(_mm_madd_epi16(((__m128i*)pss6144_0)[re],s),15);
-            mmtmp11 = _mm_srai_epi32(_mm_madd_epi16(((__m128i*)pss6144_1)[re],s),15);
-            mmtmp12 = _mm_srai_epi32(_mm_madd_epi16(((__m128i*)pss6144_2)[re],s),15);
+            LOG_I( HW, "{s5} [_mm_sign_epi16] s = [ %d %d %d %d %d %d %d %d ]\n",s[0],s[1],s[2],s[3],s[4],s[5],s[6],s[7]);
+
+            //?
+            mmtmp10 = _mm_madd_epi16(((__m128i*)pss6144_0)[re],s);
+            mmtmp11 = _mm_madd_epi16(((__m128i*)pss6144_1)[re],s);
+			mmtmp12 = _mm_madd_epi16(((__m128i*)pss6144_2)[re],s);
+			//LOG_I( HW, "Four 32-bit values of the type: s[0]*pss6144_x[0]+s[1]*pss6144_x[1]:\n");
+			LOG_I( HW, "{s6} _mm_madd_epi16_0 = [ %d %d %d %d]\n",mmtmp10[0],mmtmp10[1],mmtmp10[2],mmtmp10[3]);
+			LOG_I( HW, "{s6} _mm_madd_epi16_1 = [ %d %d %d %d]\n",mmtmp11[0],mmtmp11[1],mmtmp11[2],mmtmp11[3]);
+			LOG_I( HW, "{s6} _mm_madd_epi16_2 = [ %d %d %d %d]\n",mmtmp12[0],mmtmp12[1],mmtmp12[2],mmtmp12[3]);
+
+            mmtmp10 = _mm_srai_epi32(mmtmp10,15);
+            mmtmp11 = _mm_srai_epi32(mmtmp11,15);
+            mmtmp12 = _mm_srai_epi32(mmtmp12,15);
+            LOG_I( HW, "{s7} _mm_srai_epi32_0 = [ %d %d %d %d]\n",mmtmp10[0],mmtmp10[1],mmtmp10[2],mmtmp10[3]);
+			LOG_I( HW, "{s7} _mm_srai_epi32_1 = [ %d %d %d %d]\n",mmtmp11[0],mmtmp11[1],mmtmp11[2],mmtmp11[3]);
+			LOG_I( HW, "{s7} _mm_srai_epi32_2 = [ %d %d %d %d]\n",mmtmp12[0],mmtmp12[1],mmtmp12[2],mmtmp12[3]);
 
             autocorr0[re256] = _mm_packs_epi32(_mm_unpacklo_epi32(mmtmp00,mmtmp10),_mm_unpackhi_epi32(mmtmp00,mmtmp10));
             autocorr1[re256] = _mm_packs_epi32(_mm_unpacklo_epi32(mmtmp01,mmtmp11),_mm_unpackhi_epi32(mmtmp01,mmtmp11));
             autocorr2[re256] = _mm_packs_epi32(_mm_unpacklo_epi32(mmtmp02,mmtmp12),_mm_unpackhi_epi32(mmtmp02,mmtmp12));
 
-            re256 = (re256+1)&0x3f;
+            re256 = (re256+1)&0x3f; //six LSB only considered 0x3f = 0b111111
           }
         } else { // Split around DC, this is the negative frequencies
           //printf("split around DC, f %d (f/4 %d, f&3 %d)\n",f,f>>2,f&3);
@@ -195,13 +254,14 @@ void lte_sync_timefreq(PHY_VARS_UE *ue,int band,unsigned int DL_freq) {
             pss6144_1 = &pss6144_1_0[0];
             pss6144_2 = &pss6144_2_0[0];
             sp2 = (__m128i*)&sp[12288+(f<<1)];
+            a = (12288+(f<<1));
 
 
       	  LOG_I( HW, "split around DC, case %d, f = %d.\n",f&3,f);
       	  LOG_I( HW, "pss6144_0 = {%d,%d,%d,%d,%d,%d,%d}.\n",(int16_t *)pss6144_0[0],(int16_t *)pss6144_0[1],(int16_t *)pss6144_0[2],(int16_t *)pss6144_0[3],(int16_t *)pss6144_0[4],(int16_t *)pss6144_0[5],(int16_t *)pss6144_0[6]);
       	  LOG_I( HW, "pss6144_1 = {%d,%d,%d,%d,%d,%d,%d}.\n",(int16_t *)pss6144_1[0],(int16_t *)pss6144_1[1],(int16_t *)pss6144_1[2],(int16_t *)pss6144_1[3],(int16_t *)pss6144_1[4],(int16_t *)pss6144_1[5],(int16_t *)pss6144_1[6]);
       	  LOG_I( HW, "pss6144_2 = {%d,%d,%d,%d,%d,%d,%d}.\n",(int16_t *)pss6144_2[0],(int16_t *)pss6144_2[1],(int16_t *)pss6144_2[2],(int16_t *)pss6144_2[3],(int16_t *)pss6144_2[4],(int16_t *)pss6144_2[5],(int16_t *)pss6144_2[6]);
-      	LOG_I( HW, "sp2 = %d, index = %d.\n",(__m128i *)sp2,12288+(f<<1));
+      	LOG_I( HW, "sp2 (address)= %d, index = %d.\n",sp2,a);
       	printf("----------------------------------------------------\n");
             break;
 
@@ -210,12 +270,13 @@ void lte_sync_timefreq(PHY_VARS_UE *ue,int band,unsigned int DL_freq) {
             pss6144_1 = &pss6144_1_1[0];
             pss6144_2 = &pss6144_2_1[0];
             sp2 = (__m128i*)&sp[12286+(f<<1)];
+            a = (12286+(f<<1));
 
         	  LOG_I( HW, "split around DC, case %d, f = %d.\n",f&3,f);
           	  LOG_I( HW, "pss6144_0 = {%d,%d,%d,%d,%d,%d,%d}.\n",(int16_t *)pss6144_0[0],(int16_t *)pss6144_0[1],(int16_t *)pss6144_0[2],(int16_t *)pss6144_0[3],(int16_t *)pss6144_0[4],(int16_t *)pss6144_0[5],(int16_t *)pss6144_0[6]);
           	  LOG_I( HW, "pss6144_1 = {%d,%d,%d,%d,%d,%d,%d}.\n",(int16_t *)pss6144_1[0],(int16_t *)pss6144_1[1],(int16_t *)pss6144_1[2],(int16_t *)pss6144_1[3],(int16_t *)pss6144_1[4],(int16_t *)pss6144_1[5],(int16_t *)pss6144_1[6]);
           	  LOG_I( HW, "pss6144_2 = {%d,%d,%d,%d,%d,%d,%d}.\n",(int16_t *)pss6144_2[0],(int16_t *)pss6144_2[1],(int16_t *)pss6144_2[2],(int16_t *)pss6144_2[3],(int16_t *)pss6144_2[4],(int16_t *)pss6144_2[5],(int16_t *)pss6144_2[6]);
-        	  LOG_I( HW, "sp2 = %d, index = %d.\n",(__m128i *)sp2,12286+(f<<1));
+        	  LOG_I( HW, "sp2 (address) = %d, index = %d.\n",sp2,a);
         	  printf("----------------------------------------------------\n");
             break;
 
@@ -224,12 +285,13 @@ void lte_sync_timefreq(PHY_VARS_UE *ue,int band,unsigned int DL_freq) {
             pss6144_1 = &pss6144_1_2[0];
             pss6144_2 = &pss6144_2_2[0];
             sp2 = (__m128i*)&sp[12284+(f<<1)];
+            a = (12284+(f<<1));
 
         	  LOG_I( HW, "split around DC, case %d, f = %d.\n",f&3,f);
           	  LOG_I( HW, "pss6144_0 = {%d,%d,%d,%d,%d,%d,%d}.\n",(int16_t *)pss6144_0[0],(int16_t *)pss6144_0[1],(int16_t *)pss6144_0[2],(int16_t *)pss6144_0[3],(int16_t *)pss6144_0[4],(int16_t *)pss6144_0[5],(int16_t *)pss6144_0[6]);
           	  LOG_I( HW, "pss6144_1 = {%d,%d,%d,%d,%d,%d,%d}.\n",(int16_t *)pss6144_1[0],(int16_t *)pss6144_1[1],(int16_t *)pss6144_1[2],(int16_t *)pss6144_1[3],(int16_t *)pss6144_1[4],(int16_t *)pss6144_1[5],(int16_t *)pss6144_1[6]);
           	  LOG_I( HW, "pss6144_2 = {%d,%d,%d,%d,%d,%d,%d}.\n",(int16_t *)pss6144_2[0],(int16_t *)pss6144_2[1],(int16_t *)pss6144_2[2],(int16_t *)pss6144_2[3],(int16_t *)pss6144_2[4],(int16_t *)pss6144_2[5],(int16_t *)pss6144_2[6]);
-        	  LOG_I( HW, "sp2 = %d, index = %d.\n",(__m128i *)sp2,12284+(f<<1));
+        	  LOG_I( HW, "sp2 (address) = %d, index = %d.\n",sp2,a);
         	  printf("----------------------------------------------------\n");
             break;
 
@@ -238,12 +300,13 @@ void lte_sync_timefreq(PHY_VARS_UE *ue,int band,unsigned int DL_freq) {
             pss6144_1 = &pss6144_1_3[0];
             pss6144_2 = &pss6144_2_3[0];
             sp2 = (__m128i*)&sp[12282+(f<<1)];
+            a = (12282+(f<<1));
 
         	  LOG_I( HW, "split around DC, case %d, f = %d.\n",f&3,f);
           	  LOG_I( HW, "pss6144_0 = {%d,%d,%d,%d,%d,%d,%d}.\n",(int16_t *)pss6144_0[0],(int16_t *)pss6144_0[1],(int16_t *)pss6144_0[2],(int16_t *)pss6144_0[3],(int16_t *)pss6144_0[4],(int16_t *)pss6144_0[5],(int16_t *)pss6144_0[6]);
           	  LOG_I( HW, "pss6144_1 = {%d,%d,%d,%d,%d,%d,%d}.\n",(int16_t *)pss6144_1[0],(int16_t *)pss6144_1[1],(int16_t *)pss6144_1[2],(int16_t *)pss6144_1[3],(int16_t *)pss6144_1[4],(int16_t *)pss6144_1[5],(int16_t *)pss6144_1[6]);
           	  LOG_I( HW, "pss6144_2 = {%d,%d,%d,%d,%d,%d,%d}.\n",(int16_t *)pss6144_2[0],(int16_t *)pss6144_2[1],(int16_t *)pss6144_2[2],(int16_t *)pss6144_2[3],(int16_t *)pss6144_2[4],(int16_t *)pss6144_2[5],(int16_t *)pss6144_2[6]);
-        	  LOG_I( HW, "sp2 = %d, index = %d.\n",(__m128i *)sp2,12282+(f<<1));
+        	  LOG_I( HW, "sp2 (address) = %d, index = %d.\n",sp2,a);
         	  printf(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n");
 
             break;

@@ -3,7 +3,7 @@
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
  * The OpenAirInterface Software Alliance licenses this file to You under
- * the OAI Public License, Version 1.1  (the "License"); you may not use this file
+ * the OAI Public License, Version 1.0  (the "License"); you may not use this file
  * except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -55,7 +55,8 @@ void lte_param_init(unsigned char N_tx_port_eNB,
   UE = malloc(sizeof(PHY_VARS_UE));
   memset((void*)eNB,0,sizeof(PHY_VARS_eNB));
   memset((void*)UE,0,sizeof(PHY_VARS_UE));
-
+  //PHY_config = malloc(sizeof(PHY_CONFIG));
+  mac_xface = malloc(sizeof(MAC_xface));
 
   srand(0);
   randominit(0);
@@ -81,6 +82,7 @@ void lte_param_init(unsigned char N_tx_port_eNB,
   //  frame_parms->Bsrs = 0;
   //  frame_parms->kTC = 0;44
   //  frame_parms->n_RRC = 0;
+  frame_parms->mode1_flag = (transmission_mode == 1 || transmission_mode ==7)? 1 : 0;
 
   init_frame_parms(frame_parms,osf);
 
@@ -95,7 +97,7 @@ void lte_param_init(unsigned char N_tx_port_eNB,
   eNB->transmission_mode[0] = transmission_mode;
   UE->transmission_mode[0] = transmission_mode;
 
-  init_lte_top(frame_parms);
+  phy_init_lte_top(frame_parms);
   dump_frame_parms(frame_parms);
 
   UE->measurements.n_adj_cells=0;
@@ -105,7 +107,7 @@ void lte_param_init(unsigned char N_tx_port_eNB,
   for (i=0; i<3; i++)
     lte_gold(frame_parms,UE->lte_gold_table[i],Nid_cell+i);
 
-  init_lte_ue(UE,1,0);
+  phy_init_lte_ue(UE,1,0);
   phy_init_lte_eNB(eNB,0,0);
 
   generate_pcfich_reg_mapping(&UE->frame_parms);

@@ -3,7 +3,7 @@
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
  * The OpenAirInterface Software Alliance licenses this file to You under
- * the OAI Public License, Version 1.1  (the "License"); you may not use this file
+ * the OAI Public License, Version 1.0  (the "License"); you may not use this file
  * except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -30,6 +30,9 @@
 * \warning
 */
 #include "PHY/defs.h"
+
+//uint16_t pcfich_reg[4];
+//uint8_t pcfich_first_reg_idx = 0;
 
 //#define DEBUG_PCFICH
 
@@ -66,10 +69,9 @@ void generate_pcfich_reg_mapping(LTE_DL_FRAME_PARMS *frame_parms)
     first_reg = pcfich_reg[3];
   }
 
-
-  //#ifdef DEBUG_PCFICH
+  #ifdef DEBUG_PCFICH
   printf("pcfich_reg : %d,%d,%d,%d\n",pcfich_reg[0],pcfich_reg[1],pcfich_reg[2],pcfich_reg[3]);
-  //#endif
+  #endif
 }
 
 void pcfich_scrambling(LTE_DL_FRAME_PARMS *frame_parms,
@@ -93,6 +95,7 @@ void pcfich_scrambling(LTE_DL_FRAME_PARMS *frame_parms,
     }
 
     bt[i] = (b[i]&1) ^ ((s>>(i&0x1f))&1);
+    //    printf("scrambling %d : b %d => bt %d, c %d\n",i,b[i],bt[i],((s>>(i&0x1f))&1));
   }
 }
 
@@ -119,6 +122,7 @@ void pcfich_unscrambling(LTE_DL_FRAME_PARMS *frame_parms,
     if (((s>>(i&0x1f))&1) == 1)
       d[i]=-d[i];
 
+    //    printf("scrambling %d : b %d => bt %d, c %d\n",i,b[i],bt[i],((s>>(i&0x1f))&1));
   }
 }
 
@@ -144,8 +148,7 @@ void generate_pcfich(uint8_t num_pdcch_symbols,
 
   int nushiftmod3 = frame_parms->nushift%3;
 #ifdef DEBUG_PCFICH
-  LOG_D(PHY,"Generating PCFICH in subfrmae %d for %d PDCCH symbols, AMP %d, p %d, Ncp %d\n",
-	subframe,num_pdcch_symbols,amp,frame_parms->nb_antenna_ports_eNB,frame_parms->Ncp);
+  msg("[PHY] Generating PCFICH for %d PDCCH symbols, AMP %d\n",num_pdcch_symbols,amp);
 #endif
 
   // scrambling
@@ -153,12 +156,12 @@ void generate_pcfich(uint8_t num_pdcch_symbols,
     pcfich_scrambling(frame_parms,subframe,pcfich_b[num_pdcch_symbols-1],pcfich_bt);
 
   // modulation
-  if (frame_parms->nb_antenna_ports_eNB==1)
+  if (frame_parms->mode1_flag==1)
     gain_lin_QPSK = (int16_t)((amp*ONE_OVER_SQRT2_Q15)>>15);
   else
     gain_lin_QPSK = amp/2;
 
-  if (frame_parms->nb_antenna_ports_eNB==1) { // SISO
+  if (frame_parms->mode1_flag) { // SISO
 
     for (i=0; i<16; i++) {
       ((int16_t*)(&(pcfich_d[0][i])))[0]   = ((pcfich_bt[2*i] == 1) ? -gain_lin_QPSK : gain_lin_QPSK);
@@ -200,6 +203,7 @@ void generate_pcfich(uint8_t num_pdcch_symbols,
     if (reg_offset>=frame_parms->ofdm_symbol_size)
       reg_offset=1 + reg_offset-frame_parms->ofdm_symbol_size;
 
+    //    printf("mapping pcfich reg_offset %d\n",reg_offset);
     for (i=0; i<6; i++) {
       if ((i!=nushiftmod3)&&(i!=(nushiftmod3+3))) {
         txdataF[0][symbol_offset+reg_offset+i] = pcfich_d[0][m];
@@ -239,16 +243,17 @@ uint8_t rx_pcfich(LTE_DL_FRAME_PARMS *frame_parms,
   for (pcfich_quad=0; pcfich_quad<4; pcfich_quad++) {
     reg_offset = (pcfich_reg[pcfich_quad]*4);
 
+    //    if (frame_parms->mode1_flag==1) {  // SISO
     for (i=0; i<4; i++) {
 
       pcfich_d_ptr[0] = ((int16_t*)&rxdataF_comp[0][reg_offset+i])[0]; // RE component
       pcfich_d_ptr[1] = ((int16_t*)&rxdataF_comp[0][reg_offset+i])[1]; // IM component
-#ifdef DEBUG_PCFICH      
-      printf("rx_pcfich: quad %d, i %d, offset %d =>  (%d,%d) => pcfich_d_ptr[0] %d \n",pcfich_quad,i,reg_offset+i,
+      /*
+          printf("rx_pcfich: quad %d, i %d, offset %d => m%d (%d,%d) => pcfich_d_ptr[0] %d \n",pcfich_quad,i,reg_offset+i,m,
              ((int16_t*)&rxdataF_comp[0][reg_offset+i])[0],
              ((int16_t*)&rxdataF_comp[0][reg_offset+i])[1],
              pcfich_d_ptr[0]);
-#endif
+      */
       pcfich_d_ptr+=2;
     }
 
@@ -291,12 +296,12 @@ uint8_t rx_pcfich(LTE_DL_FRAME_PARMS *frame_parms,
     metric = 0;
 
     for (j=0; j<32; j++) {
-      //      printf("pcfich_b[%d][%d] %d => pcfich_d[%d] %d\n",i,j,pcfich_b[i][j],j,pcfich_d[j]);
+      //printf("pcfich_b[%d][%d] %d => pcfich_d[%d] %d\n",i,j,pcfich_b[i][j],j,pcfich_d[j]);
       metric += (int32_t)(((pcfich_b[i][j]==0) ? (pcfich_d[j]) : (-pcfich_d[j])));
     }
 
 #ifdef DEBUG_PCFICH
-    printf("metric %d : %d\n",i,metric);
+    msg("metric %d : %d\n",i,metric);
 #endif
 
     if (metric > old_metric) {
@@ -306,7 +311,7 @@ uint8_t rx_pcfich(LTE_DL_FRAME_PARMS *frame_parms,
   }
 
 #ifdef DEBUG_PCFICH
-  printf("[PHY] PCFICH detected for %d PDCCH symbols\n",num_pdcch_symbols);
+  msg("[PHY] PCFICH detected for %d PDCCH symbols\n",num_pdcch_symbols);
 #endif
   return(num_pdcch_symbols);
 }

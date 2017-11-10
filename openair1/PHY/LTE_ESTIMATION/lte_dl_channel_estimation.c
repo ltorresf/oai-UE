@@ -3,7 +3,7 @@
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
  * The OpenAirInterface Software Alliance licenses this file to You under
- * the OAI Public License, Version 1.1  (the "License"); you may not use this file
+ * the OAI Public License, Version 1.0  (the "License"); you may not use this file
  * except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -78,7 +78,7 @@ int lte_dl_channel_estimation(PHY_VARS_UE *ue,
   else if ((p==1) && (l>0))
     nu = 0;
   else {
-    LOG_E(PHY,"lte_dl_channel_estimation: p %d, l %d -> ERROR\n",p,l);
+    msg("lte_dl_channel_estimation: p %d, l %d -> ERROR\n",p,l);
     return(-1);
   }
 
@@ -170,7 +170,7 @@ int lte_dl_channel_estimation(PHY_VARS_UE *ue,
     break;
 
   default:
-    LOG_E(PHY,"lte_dl_channel_estimation: k=%d -> ERROR\n",k);
+    msg("lte_dl_channel_estimation: k=%d -> ERROR\n",k);
     return(-1);
     break;
   }
@@ -625,7 +625,7 @@ int lte_dl_channel_estimation(PHY_VARS_UE *ue,
 
       }
     } else {
-      LOG_E(PHY,"channel estimation not implemented for ue->frame_parms.N_RB_DL = %d\n",ue->frame_parms.N_RB_DL);
+      msg("channel estimation not implemented for ue->frame_parms.N_RB_DL = %d\n",ue->frame_parms.N_RB_DL);
     }
 
 
@@ -811,10 +811,11 @@ int lte_dl_channel_estimation(PHY_VARS_UE *ue,
               }
           }
   }
-
-  T(T_UE_PHY_DL_CHANNEL_ESTIMATE, T_INT(eNB_id),
-    T_INT(ue->proc.proc_rxtx[ue->current_thread_id[Ns>>1]].frame_rx%1024), T_INT(ue->proc.proc_rxtx[ue->current_thread_id[Ns>>1]].subframe_rx),
-    T_INT(0), T_BUFFER(&ue->common_vars.common_vars_rx_data_per_thread[ue->current_thread_id[Ns>>1]].dl_ch_estimates_time[eNB_offset][0][0], 512  * 4));
+#if T_TRACER
+        T(T_UE_PHY_DL_CHANNEL_ESTIMATE, T_INT(eNB_id), T_INT(ue->Mod_id),
+          T_INT(ue->proc.proc_rxtx[ue->current_thread_id[Ns>>1]].frame_rx%1024), T_INT(ue->proc.proc_rxtx[ue->current_thread_id[Ns>>1]].subframe_rx),
+          T_INT(0), T_BUFFER(&ue->common_vars.common_vars_rx_data_per_thread[ue->current_thread_id[Ns>>1]].dl_ch_estimates_time[eNB_offset][0][0], 512  * 4));
+#endif
 
   return(0);
 }

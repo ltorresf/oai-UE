@@ -3,7 +3,7 @@
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
  * The OpenAirInterface Software Alliance licenses this file to You under
- * the OAI Public License, Version 1.1  (the "License"); you may not use this file
+ * the OAI Public License, Version 1.0  (the "License"); you may not use this file
  * except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -46,6 +46,9 @@
 //#define DEBUG_PBCH_ENCODING
 //#define INTERFERENCE_MITIGATION 1
 
+#ifdef OPENAIR2
+#include "PHY_INTERFACE/defs.h"
+#endif
 
 #define PBCH_A 24
 
@@ -60,7 +63,7 @@ int allocate_pbch_REs_in_RB(LTE_DL_FRAME_PARMS *frame_parms,
                             uint32_t *re_allocated)
 {
 
-  MIMO_mode_t mimo_mode   = (frame_parms->nb_antenna_ports_eNB==1)?SISO:ALAMOUTI;
+  MIMO_mode_t mimo_mode   = (frame_parms->mode1_flag==1)?SISO:ALAMOUTI;
 
 
   uint32_t tti_offset;
@@ -207,14 +210,14 @@ int generate_pbch(LTE_eNB_PBCH *eNB_pbch,
 
     //  pbch_data[i] = ((char*) &crc)[0];
     //  pbch_data[i+1] = ((char*) &crc)[1];
-    //#ifdef DEBUG_PBCH
+#ifdef DEBUG_PBCH
 
     for (i=0; i<(PBCH_A>>3); i++)
-      LOG_D(PHY,"[PBCH] pbch_data[%d] = %x\n",i,pbch_a[i]);
+      msg("[PBCH] pbch_data[%d] = %x\n",i,pbch_a[i]);
 
-    //#endif
+#endif
 
-    if (frame_parms->nb_antenna_ports_eNB == 1)
+    if (frame_parms->mode1_flag == 1)
       amask = 0x0000;
     else {
       switch (frame_parms->nb_antenna_ports_eNB) {
@@ -237,7 +240,7 @@ int generate_pbch(LTE_eNB_PBCH *eNB_pbch,
 #ifdef DEBUG_PBCH_ENCODING
 
     for (i=0; i<16+PBCH_A; i++)
-      LOG_D(PHY,"%d : (%d,%d,%d)\n",i,*(eNB_pbch->pbch_d+96+(3*i)),*(eNB_pbch->pbch_d+97+(3*i)),*(eNB_pbch->pbch_d+98+(3*i)));
+      msg("%d : (%d,%d,%d)\n",i,*(eNB_pbch->pbch_d+96+(3*i)),*(eNB_pbch->pbch_d+97+(3*i)),*(eNB_pbch->pbch_d+98+(3*i)));
 
 #endif //DEBUG_PBCH_ENCODING
 
@@ -268,19 +271,19 @@ int generate_pbch(LTE_eNB_PBCH *eNB_pbch,
       #endif //DEBUG_PBCH
     */
 #ifdef DEBUG_PBCH_ENCODING
-    LOG_D(PHY,"Doing PBCH interleaving for %d coded bits, e %p\n",pbch_D,eNB_pbch->pbch_e);
+    msg("Doing PBCH interleaving for %d coded bits, e %p\n",pbch_D,eNB_pbch->pbch_e);
 #endif
     RCC = sub_block_interleaving_cc(pbch_D,eNB_pbch->pbch_d+96,eNB_pbch->pbch_w);
 
     lte_rate_matching_cc(RCC,pbch_E,eNB_pbch->pbch_w,eNB_pbch->pbch_e);
 
 #ifdef DEBUG_PBCH_ENCODING
-    LOG_D(PHY,"PBCH_e:\n");
+    msg("PBCH_e:\n");
 
     for (i=0; i<pbch_E; i++)
-      LOG_D(PHY,"%d %d\n",i,*(eNB_pbch->pbch_e+i));
+      msg("%d %d\n",i,*(eNB_pbch->pbch_e+i));
 
-    LOG_D(PHY,"\n");
+    msg("\n");
 #endif
 
 
@@ -348,7 +351,7 @@ int generate_pbch(LTE_eNB_PBCH *eNB_pbch,
     }
 
 #ifdef DEBUG_PBCH
-    LOG_D(PHY,"[PBCH] l=%d, pilots=%d\n",l,pilots);
+    msg("[PBCH] l=%d, pilots=%d\n",l,pilots);
 #endif
 
 
@@ -358,7 +361,7 @@ int generate_pbch(LTE_eNB_PBCH *eNB_pbch,
     for (rb=0; rb<6; rb++) {
 
 #ifdef DEBUG_PBCH
-      LOG_D(PHY,"RB %d, jj %d, re_offset %d, symbol_offset %d, pilots %d, nushift %d\n",rb,jj,re_offset, symbol_offset, pilots,frame_parms->nushift);
+      msg("RB %d, jj %d, re_offset %d, symbol_offset %d, pilots %d, nushift %d\n",rb,jj,re_offset, symbol_offset, pilots,frame_parms->nushift);
 #endif
       allocate_pbch_REs_in_RB(frame_parms,
                               txdataF,
@@ -392,7 +395,7 @@ int generate_pbch(LTE_eNB_PBCH *eNB_pbch,
     printf("%d=>(%d,%d)",i,((short*)&txdataF[0][frame_parms->ofdm_symbol_size*(nsymb>>1)+i])[0],
            ((short*)&txdataF[0][frame_parms->ofdm_symbol_size*(nsymb>>1)+i])[1]);
 
-    if (frame_parms->nb_antenna_ports_eNB!=1) {
+    if (frame_parms->mode1_flag==0) {
       printf("(%d,%d)\n",((short*)&txdataF[1][frame_parms->ofdm_symbol_size*(nsymb>>1)+i])[0],
              ((short*)&txdataF[1][frame_parms->ofdm_symbol_size*(nsymb>>1)+i])[1]);
     } else {
@@ -790,6 +793,7 @@ void pbch_unscrambling(LTE_DL_FRAME_PARMS *frame_parms,
 
     // take the quarter of the PBCH that corresponds to this frame
     if ((i>=(frame_mod4*(length>>2))) && (i<((1+frame_mod4)*(length>>2)))) {
+      //      if (((s>>(i%32))&1)==1)
 
       if (((s>>(i%32))&1)==0)
         llr[i] = -llr[i];
@@ -885,7 +889,7 @@ uint16_t rx_pbch(LTE_UE_COMMON *lte_ue_common_vars,
   pbch_E  = (frame_parms->Ncp==0) ? 1920 : 1728; //RE/RB * #RB * bits/RB (QPSK)
   pbch_e_rx = &lte_ue_pbch_vars->llr[frame_mod4*(pbch_E>>2)];
 #ifdef DEBUG_PBCH
-  LOG_D(PHY,"[PBCH] starting symbol loop (Ncp %d, frame_mod4 %d,mimo_mode %d\n",frame_parms->Ncp,frame_mod4,mimo_mode);
+  msg("[PBCH] starting symbol loop (Ncp %d, frame_mod4 %d,mimo_mode %d\n",frame_parms->Ncp,frame_mod4,mimo_mode);
 #endif
 
   // clear LLR buffer
@@ -894,7 +898,7 @@ uint16_t rx_pbch(LTE_UE_COMMON *lte_ue_common_vars,
   for (symbol=(nsymb>>1); symbol<(nsymb>>1)+4; symbol++) {
 
 #ifdef DEBUG_PBCH
-    LOG_D(PHY,"[PBCH] starting extract\n");
+    msg("[PBCH] starting extract\n");
 #endif
     pbch_extract(lte_ue_common_vars->common_vars_rx_data_per_thread[0].rxdataF,
                  lte_ue_common_vars->common_vars_rx_data_per_thread[0].dl_ch_estimates[eNB_id],
@@ -904,8 +908,8 @@ uint16_t rx_pbch(LTE_UE_COMMON *lte_ue_common_vars,
                  high_speed_flag,
                  frame_parms);
 #ifdef DEBUG_PBCH
-    LOG_D(PHY,"[PHY] PBCH Symbol %d\n",symbol);
-    LOG_D(PHY,"[PHY] PBCH starting channel_level\n");
+    msg("[PHY] PBCH Symbol %d\n",symbol);
+    msg("[PHY] PBCH starting channel_level\n");
 #endif
 
     max_h = pbch_channel_level(lte_ue_pbch_vars->dl_ch_estimates_ext,
@@ -914,7 +918,7 @@ uint16_t rx_pbch(LTE_UE_COMMON *lte_ue_common_vars,
     log2_maxh = 3+(log2_approx(max_h)/2);
 
 #ifdef DEBUG_PBCH
-    LOG_D(PHY,"[PHY] PBCH log2_maxh = %d (%d)\n",log2_maxh,max_h);
+    msg("[PHY] PBCH log2_maxh = %d (%d)\n",log2_maxh,max_h);
 #endif
 
     pbch_channel_compensation(lte_ue_pbch_vars->rxdataF_ext,
@@ -932,8 +936,10 @@ uint16_t rx_pbch(LTE_UE_COMMON *lte_ue_common_vars,
 
     if (mimo_mode == ALAMOUTI) {
       pbch_alamouti(frame_parms,lte_ue_pbch_vars->rxdataF_comp,symbol);
+      //  msg("[PBCH][RX] Alamouti receiver not yet implemented!\n");
+      //  return(-1);
     } else if (mimo_mode != SISO) {
-      LOG_D(PHY,"[PBCH][RX] Unsupported MIMO mode\n");
+      msg("[PBCH][RX] Unsupported MIMO mode\n");
       return(-1);
     }
 
@@ -960,7 +966,7 @@ uint16_t rx_pbch(LTE_UE_COMMON *lte_ue_common_vars,
 
   //un-scrambling
 #ifdef DEBUG_PBCH
-  LOG_D(PHY,"[PBCH] doing unscrambling\n");
+  msg("[PBCH] doing unscrambling\n");
 #endif
 
 
@@ -973,7 +979,7 @@ uint16_t rx_pbch(LTE_UE_COMMON *lte_ue_common_vars,
 
   //un-rate matching
 #ifdef DEBUG_PBCH
-  LOG_D(PHY,"[PBCH] doing un-rate-matching\n");
+  msg("[PBCH] doing un-rate-matching\n");
 #endif
 
 
@@ -1002,12 +1008,12 @@ uint16_t rx_pbch(LTE_UE_COMMON *lte_ue_common_vars,
 #ifdef DEBUG_PBCH
 
   for (i=0; i<(PBCH_A>>3); i++)
-    LOG_I(PHY,"[PBCH] pbch_a[%d] = %x\n",i,decoded_output[i]);
+    msg("[PBCH] pbch_a[%d] = %x\n",i,decoded_output[i]);
 
 #endif //DEBUG_PBCH
 
 #ifdef DEBUG_PBCH
-  LOG_I(PHY,"PBCH CRC %x : %x\n",
+  msg("PBCH CRC %x : %x\n",
       crc16(pbch_a,PBCH_A),
       ((uint16_t)pbch_a[PBCH_A>>3]<<8)+pbch_a[(PBCH_A>>3)+1]);
 #endif
@@ -1059,8 +1065,8 @@ uint16_t rx_pbch_emul(PHY_VARS_UE *phy_vars_ue,
 
   if (pbch_phase == (frame_rx % 4)) {
     if (uniformrandom() >= bler) {
-      memcpy(phy_vars_ue->pbch_vars[eNB_id]->decoded_output,RC.eNB[eNB_id][CC_id]->pbch_pdu,PBCH_PDU_SIZE);
-      return(RC.eNB[eNB_id][CC_id]->frame_parms.nb_antenna_ports_eNB);
+      memcpy(phy_vars_ue->pbch_vars[eNB_id]->decoded_output,PHY_vars_eNB_g[eNB_id][CC_id]->pbch_pdu,PBCH_PDU_SIZE);
+      return(PHY_vars_eNB_g[eNB_id][CC_id]->frame_parms.nb_antenna_ports_eNB);
     } else
       return(-1);
   } else

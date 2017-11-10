@@ -3,7 +3,7 @@
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
  * The OpenAirInterface Software Alliance licenses this file to You under
- * the OAI Public License, Version 1.1  (the "License"); you may not use this file
+ * the OAI Public License, Version 1.0  (the "License"); you may not use this file
  * except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -568,8 +568,8 @@ uint32_t ulsch_encoding(uint8_t *a,
                                           get_Qm_ul(ulsch->harq_processes[harq_pid]->mcs),
                                           1,
                                           r,
-                                          ulsch->harq_processes[harq_pid]->nb_rb);
-                                          //ulsch->harq_processes[harq_pid]->mcs);                       // r
+                                          ulsch->harq_processes[harq_pid]->nb_rb,
+                                          ulsch->harq_processes[harq_pid]->mcs);                       // r
       stop_meas(rm_stats);
 #ifdef DEBUG_ULSCH_CODING
 

@@ -3,7 +3,7 @@
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
  * The OpenAirInterface Software Alliance licenses this file to You under
- * the OAI Public License, Version 1.1  (the "License"); you may not use this file
+ * the OAI Public License, Version 1.0  (the "License"); you may not use this file
  * except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -117,20 +117,15 @@ uint32_t get_RSSI (uint8_t Mod_id,uint8_t CC_id)
 
   return 0xFFFFFFFF;
 }
-double get_RSRP(uint8_t Mod_id,uint8_t CC_id,uint8_t eNB_index)
+uint32_t get_RSRP(uint8_t Mod_id,uint8_t CC_id,uint8_t eNB_index)
 {
-
-  AssertFatal(PHY_vars_UE_g!=NULL,"PHY_vars_UE_g is null\n");
-  AssertFatal(PHY_vars_UE_g[Mod_id]!=NULL,"PHY_vars_UE_g[%d] is null\n",Mod_id);
-  AssertFatal(PHY_vars_UE_g[Mod_id][CC_id]!=NULL,"PHY_vars_UE_g[%d][%d] is null\n",Mod_id,CC_id);
 
   PHY_VARS_UE *ue = PHY_vars_UE_g[Mod_id][CC_id];
 
   if (ue)
-    return ((dB_fixed_times10(ue->measurements.rsrp[eNB_index]))/10.0-
-	    get_rx_total_gain_dB(Mod_id,0) -
-	    10*log10(ue->frame_parms.N_RB_DL*12));
-  return -140.0;
+    return ue->measurements.rsrp[eNB_index];
+
+  return 0xFFFFFFFF;
 }
 
 uint32_t get_RSRQ(uint8_t Mod_id,uint8_t CC_id,uint8_t eNB_index)
@@ -349,10 +344,10 @@ void ue_rrc_measurements(PHY_VARS_UE *ue,
 
       for (l=0,nu=0; l<=(4-ue->frame_parms.Ncp); l+=(4-ue->frame_parms.Ncp),nu=3) {
         k = (nu + nushift)%6;
-	//#ifdef DEBUG_MEAS_RRC
-        LOG_D(PHY,"[UE %d] Frame %d subframe %d Doing ue_rrc_measurements rsrp/rssi (Nid_cell %d, nushift %d, eNB_offset %d, k %d, l %d)\n",ue->Mod_id,ue->proc.proc_rxtx[subframe&1].frame_rx,subframe,Nid_cell,nushift,
+#ifdef DEBUG_MEAS_RRC
+        LOG_I(PHY,"[UE %d] Frame %d subframe %d Doing ue_rrc_measurements rsrp/rssi (Nid_cell %d, nushift %d, eNB_offset %d, k %d, l %d)\n",ue->Mod_id,ue->proc.proc_rxtx[subframe&1].frame_rx,subframe,Nid_cell,nushift,
               eNB_offset,k,l);
-	//#endif
+#endif
 
         for (aarx=0; aarx<ue->frame_parms.nb_antennas_rx; aarx++) {
           rxF = (int16_t *)&ue->common_vars.common_vars_rx_data_per_thread[ue->current_thread_id[subframe]].rxdataF[aarx][(l*ue->frame_parms.ofdm_symbol_size)];
@@ -427,19 +422,18 @@ void ue_rrc_measurements(PHY_VARS_UE *ue,
 
     }
 
-    //#ifdef DEBUG_MEAS_RRC
+#ifdef DEBUG_MEAS_RRC
 
     //    if (slot == 0) {
 
       if (eNB_offset == 0)
-	
-        LOG_D(PHY,"[UE %d] Frame %d, subframe %d RRC Measurements => rssi %3.1f dBm (digital: %3.1f dB, gain %d), N0 %d dBm\n",ue->Mod_id,
+       LOG_I(PHY,"[UE %d] Frame %d, subframe %d RRC Measurements => rssi %3.1f dBm (digital: %3.1f dB, gain %d), N0 %d dBm\n",ue->Mod_id,
               ue->proc.proc_rxtx[subframe&1].frame_rx,subframe,10*log10(ue->measurements.rssi)-ue->rx_total_gain_dB,
               10*log10(ue->measurements.rssi),
               ue->rx_total_gain_dB,
               ue->measurements.n0_power_tot_dBm);
 
-      LOG_D(PHY,"[UE %d] Frame %d, subframe %d RRC Measurements (idx %d, Cell id %d) => rsrp: %3.1f dBm/RE (%d), rsrq: %3.1f dB\n",
+      LOG_I(PHY,"[UE %d] Frame %d, subframe %d RRC Measurements (idx %d, Cell id %d) => rsrp: %3.1f dBm/RE (%d), rsrq: %3.1f dB\n",
             ue->Mod_id,
             ue->proc.proc_rxtx[subframe&1].frame_rx,subframe,eNB_offset,
             (eNB_offset>0) ? ue->measurements.adj_cell_id[eNB_offset-1] : ue->frame_parms.Nid_cell,
@@ -454,7 +448,7 @@ void ue_rrc_measurements(PHY_VARS_UE *ue,
 
       //    }
 
-      //#endif
+#endif
   }
 
 }
@@ -611,7 +605,7 @@ void lte_ue_measurements(PHY_VARS_UE *ue,
   ue->measurements.n0_power_avg_dB = dB_fixed( ue->measurements.n0_power_avg);
 
   for (eNB_id = 0; eNB_id < ue->n_connected_eNB; eNB_id++) {
-    if (frame_parms->nb_antenna_ports_eNB!=1) {
+    if (frame_parms->mode1_flag==0) {
       // cqi/pmi information
 
       for (aarx=0; aarx<frame_parms->nb_antennas_rx; aarx++) {
@@ -835,7 +829,7 @@ void lte_ue_measurements(PHY_VARS_UE *ue,
 void lte_ue_measurements_emul(PHY_VARS_UE *ue,uint8_t subframe,uint8_t eNB_id)
 {
 
-  LOG_D(PHY,"EMUL UE lte_ue_measurements_emul subframe %d, eNB_id %d\n",subframe,eNB_id);
+  msg("[PHY] EMUL UE lte_ue_measurements_emul subframe %d, eNB_id %d\n",subframe,eNB_id);
 }
 
 

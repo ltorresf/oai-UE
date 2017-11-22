@@ -1102,7 +1102,7 @@ int phy_init_lte_ue(PHY_VARS_UE *ue,
   int eNB_id;
   int th_id;
 
-  printf("Initializing UE vars (abstraction %"PRIu8") for eNB TXant %"PRIu8", UE RXant %"PRIu8"\n",abstraction_flag,fp->nb_antennas_tx,fp->nb_antennas_rx);
+  printf("Initializing UE vars (abstraction %"PRIu8") for eNB Tx ant %"PRIu8", UE Rx ant %"PRIu8"\n",abstraction_flag,fp->nb_antennas_tx,fp->nb_antennas_rx);
   LOG_D(PHY,"[MSC_NEW][FRAME 00000][PHY_UE][MOD %02u][]\n", ue->Mod_id+NB_eNB_INST);
 
   // many memory allocation sizes are hard coded

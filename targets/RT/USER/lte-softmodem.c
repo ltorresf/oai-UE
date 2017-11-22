@@ -1583,7 +1583,7 @@ int main( int argc, char **argv ) {
 
             PHY_vars_UE_g[0][CC_id] = init_lte_UE(frame_parms[CC_id], 0,abstraction_flag);
             UE[CC_id] = PHY_vars_UE_g[0][CC_id];
-            printf("PHY_vars_UE_g[0][%d] = %p\n",CC_id,UE[CC_id]);
+            printf("&PHY_vars_UE_g[0][CC_id=%d] = %p\n",CC_id,UE[CC_id]);
 
             if (phy_test==1)
                 UE[CC_id]->mac_enabled = 0;

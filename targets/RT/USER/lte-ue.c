@@ -205,6 +205,8 @@ void init_UE(int nb_inst)
  * \returns a pointer to an int. The storage is not on the heap and must not be freed.
  */
 static void *UE_thread_synch(void *arg) {
+	int procID_sync = gettid(); //LA
+	printf("**************************************************** Start : [UE_thread_synch] [PID: %d] ****************************************************\n",procID_sync);
     static int __thread UE_thread_synch_retval;
     int i, hw_slot_offset;
     PHY_VARS_UE *UE = (PHY_VARS_UE*) arg;
@@ -226,6 +228,7 @@ static void *UE_thread_synch(void *arg) {
     UE->is_synchronized = 0;
 
     if (UE->UE_scan == 0) {
+    	LOG_I(PHY,"[%d] UE->UE_scan = 0.\n",procID_sync);
         int ind;
         for ( ind=0;
                 ind < sizeof(eutra_bands) / sizeof(eutra_bands[0]);
@@ -240,7 +243,7 @@ static void *UE_thread_synch(void *arg) {
         }
         AssertFatal( ind < sizeof(eutra_bands) / sizeof(eutra_bands[0]), "Can't find EUTRA band for frequency");
 
-        LOG_I( PHY, "[SCHED][UE] Check absolute frequency DL %"PRIu32", UL %"PRIu32" (oai_exit %d, rx_num_channels %d)\n",
+        LOG_I( PHY, "[%d] [SCHED][UE] Check absolute frequency DL %"PRIu32", UL %"PRIu32" (oai_exit %d, rx_num_channels %d)\n", procID_sync,
                downlink_frequency[0][0], downlink_frequency[0][0]+uplink_frequency_offset[0][0],
                oai_exit, openair0_cfg[0].rx_num_channels);
 
@@ -257,6 +260,7 @@ static void *UE_thread_synch(void *arg) {
         sync_mode = pbch;
 
     } else {
+    	LOG_I(PHY,"[%d] UE->UE_scan = 1.\n",procID_sync);
         current_band=0;
         for (i=0; i<openair0_cfg[UE->rf_map.card].rx_num_channels; i++) {
             downlink_frequency[UE->rf_map.card][UE->rf_map.chain+i] = bands_to_scan.band_info[CC_id].dl_min;
@@ -280,7 +284,9 @@ static void *UE_thread_synch(void *arg) {
 
         switch (sync_mode) {
         case pss:
-            LOG_I(PHY,"[SCHED][UE] Scanning band %d (%d), freq %u\n",bands_to_scan.band_info[current_band].band, current_band,bands_to_scan.band_info[current_band].dl_min+current_offset);
+        {
+        	LOG_I(PHY,">>>>>>>>>>>>>>>>>>>>>>>>>> [%d] Start case: PSS <<<<<<<<<<<<<<<<<<<<<<<<<<\n",procID_sync);//LA
+            LOG_I(PHY,"[%d] [SCHED][UE] Scanning band %d (%d), freq %u\n",procID_sync,bands_to_scan.band_info[current_band].band, current_band,bands_to_scan.band_info[current_band].dl_min+current_offset);
             lte_sync_timefreq(UE,current_band,bands_to_scan.band_info[current_band].dl_min+current_offset);
             current_offset += 20000000; // increase by 20 MHz
 
@@ -306,11 +312,12 @@ static void *UE_thread_synch(void *arg) {
                 }
 
             }
-
+            LOG_I(PHY,">>>>>>>>>>>>>>>>>>>>>>>>>> [%d] End case: PSS <<<<<<<<<<<<<<<<<<<<<<<<<<\n",procID_sync);//LA
             break;
-
+        }
         case pbch:
-
+        {
+        	LOG_I(PHY,">>>>>>>>>>>>>>>>>>>>>>>>>> [%d] Start case: PBCH <<<<<<<<<<<<<<<<<<<<<<<<<<\n",procID_sync);//LA
 #if DISABLE_LOG_X
             printf("[UE thread Synch] Running Initial Synch (mode %d)\n",UE->mode);
 #else
@@ -319,7 +326,7 @@ static void *UE_thread_synch(void *arg) {
             if (initial_sync( UE, UE->mode ) == 0) {
 
                 hw_slot_offset = (UE->rx_offset<<1) / UE->frame_parms.samples_per_tti;
-                LOG_I( HW, "Got synch: hw_slot_offset %d, carrier off %d Hz, rxgain %d (DL %u, UL %u), UE_scan_carrier %d\n",
+                LOG_I( HW, "[%d] Got synch: hw_slot_offset %d, carrier off %d Hz, rxgain %d (DL %u, UL %u), UE_scan_carrier %d\n", procID_sync,
                        hw_slot_offset,
                        freq_offset,
                        UE->rx_total_gain_dB,
@@ -328,62 +335,61 @@ static void *UE_thread_synch(void *arg) {
                        UE->UE_scan_carrier );
 
 
-                    // rerun with new cell parameters and frequency-offset
-                    for (i=0; i<openair0_cfg[UE->rf_map.card].rx_num_channels; i++) {
-                        openair0_cfg[UE->rf_map.card].rx_gain[UE->rf_map.chain+i] = UE->rx_total_gain_dB;//-USRP_GAIN_OFFSET;
-			if (UE->UE_scan_carrier == 1) {
-                        if (freq_offset >= 0)
-                            openair0_cfg[UE->rf_map.card].rx_freq[UE->rf_map.chain+i] += abs(UE->common_vars.freq_offset);
-                        else
-                            openair0_cfg[UE->rf_map.card].rx_freq[UE->rf_map.chain+i] -= abs(UE->common_vars.freq_offset);
-                        openair0_cfg[UE->rf_map.card].tx_freq[UE->rf_map.chain+i] =
-                            openair0_cfg[UE->rf_map.card].rx_freq[UE->rf_map.chain+i]+uplink_frequency_offset[CC_id][i];
-                        downlink_frequency[CC_id][i] = openair0_cfg[CC_id].rx_freq[i];
-                        freq_offset=0;
-                    }
-	  }
+				// rerun with new cell parameters and frequency-offset
+				for (i=0; i<openair0_cfg[UE->rf_map.card].rx_num_channels; i++) {
+					openair0_cfg[UE->rf_map.card].rx_gain[UE->rf_map.chain+i] = UE->rx_total_gain_dB;//-USRP_GAIN_OFFSET;
+					if (UE->UE_scan_carrier == 1) {
+						if (freq_offset >= 0)
+							openair0_cfg[UE->rf_map.card].rx_freq[UE->rf_map.chain+i] += abs(UE->common_vars.freq_offset);
+						else
+							openair0_cfg[UE->rf_map.card].rx_freq[UE->rf_map.chain+i] -= abs(UE->common_vars.freq_offset);
+						openair0_cfg[UE->rf_map.card].tx_freq[UE->rf_map.chain+i] = openair0_cfg[UE->rf_map.card].rx_freq[UE->rf_map.chain+i]+uplink_frequency_offset[CC_id][i];
+						downlink_frequency[CC_id][i] = openair0_cfg[CC_id].rx_freq[i];
+						freq_offset=0;
+					}
+				}
 
-                    // reconfigure for potentially different bandwidth
-                    switch(UE->frame_parms.N_RB_DL) {
-                    case 6:
-                        openair0_cfg[UE->rf_map.card].sample_rate =1.92e6;
-                        openair0_cfg[UE->rf_map.card].rx_bw          =.96e6;
-                        openair0_cfg[UE->rf_map.card].tx_bw          =.96e6;
-                        //            openair0_cfg[0].rx_gain[0] -= 12;
-                        break;
-                    case 25:
-                        openair0_cfg[UE->rf_map.card].sample_rate =7.68e6;
-                        openair0_cfg[UE->rf_map.card].rx_bw          =2.5e6;
-                        openair0_cfg[UE->rf_map.card].tx_bw          =2.5e6;
-                        //            openair0_cfg[0].rx_gain[0] -= 6;
-                        break;
-                    case 50:
-                        openair0_cfg[UE->rf_map.card].sample_rate =15.36e6;
-                        openair0_cfg[UE->rf_map.card].rx_bw          =5.0e6;
-                        openair0_cfg[UE->rf_map.card].tx_bw          =5.0e6;
-                        //            openair0_cfg[0].rx_gain[0] -= 3;
-                        break;
-                    case 100:
-                        openair0_cfg[UE->rf_map.card].sample_rate=30.72e6;
-                        openair0_cfg[UE->rf_map.card].rx_bw=10.0e6;
-                        openair0_cfg[UE->rf_map.card].tx_bw=10.0e6;
-                        //            openair0_cfg[0].rx_gain[0] -= 0;
-                        break;
-                    }
+				// reconfigure for potentially different bandwidth
+				switch(UE->frame_parms.N_RB_DL) {
+				case 6:
+					openair0_cfg[UE->rf_map.card].sample_rate =1.92e6;
+					openair0_cfg[UE->rf_map.card].rx_bw          =.96e6;
+					openair0_cfg[UE->rf_map.card].tx_bw          =.96e6;
+					//            openair0_cfg[0].rx_gain[0] -= 12;
+					break;
+				case 25:
+					openair0_cfg[UE->rf_map.card].sample_rate =7.68e6;
+					openair0_cfg[UE->rf_map.card].rx_bw          =2.5e6;
+					openair0_cfg[UE->rf_map.card].tx_bw          =2.5e6;
+					//            openair0_cfg[0].rx_gain[0] -= 6;
+					break;
+				case 50:
+					openair0_cfg[UE->rf_map.card].sample_rate =15.36e6;
+					openair0_cfg[UE->rf_map.card].rx_bw          =5.0e6;
+					openair0_cfg[UE->rf_map.card].tx_bw          =5.0e6;
+					//            openair0_cfg[0].rx_gain[0] -= 3;
+					break;
+				case 100:
+					openair0_cfg[UE->rf_map.card].sample_rate=30.72e6;
+					openair0_cfg[UE->rf_map.card].rx_bw=10.0e6;
+					openair0_cfg[UE->rf_map.card].tx_bw=10.0e6;
+					//            openair0_cfg[0].rx_gain[0] -= 0;
+					break;
+				}
 
-                    UE->rfdevice.trx_set_freq_func(&UE->rfdevice,&openair0_cfg[0],0);
-                    //UE->rfdevice.trx_set_gains_func(&openair0,&openair0_cfg[0]);
-                    //UE->rfdevice.trx_stop_func(&UE->rfdevice);
-                    sleep(1);
-                    init_frame_parms(&UE->frame_parms,1);
-                    /*if (UE->rfdevice.trx_start_func(&UE->rfdevice) != 0 ) {
-                        LOG_E(HW,"Could not start the device\n");
-                        oai_exit=1;
-                    }*/
+				UE->rfdevice.trx_set_freq_func(&UE->rfdevice,&openair0_cfg[0],0);
+				//UE->rfdevice.trx_set_gains_func(&openair0,&openair0_cfg[0]);
+				//UE->rfdevice.trx_stop_func(&UE->rfdevice);
+				sleep(1);
+				init_frame_parms(&UE->frame_parms,1);
+				/*if (UE->rfdevice.trx_start_func(&UE->rfdevice) != 0 ) {
+					LOG_E(HW,"Could not start the device\n");
+					oai_exit=1;
+				}*/
 
-		if (UE->UE_scan_carrier == 1) {
 
-		  UE->UE_scan_carrier = 0;
+                if (UE->UE_scan_carrier == 1) {
+					UE->UE_scan_carrier = 0;
                 } else {
                     AssertFatal ( 0== pthread_mutex_lock(&UE->proc.mutex_synch), "");
                     UE->is_synchronized = 1;
@@ -421,7 +427,7 @@ static void *UE_thread_synch(void *arg) {
                     freq_offset *= -1;
 
                     if (abs(freq_offset) > 7500) {
-                        LOG_I( PHY, "[initial_sync] No cell synchronization found, abandoning\n" );
+                        LOG_I( PHY, "[%d] [initial_sync] No cell synchronization found, abandoning\n",procID_sync );
                         FILE *fd;
                         if ((fd = fopen("rxsig_frame0.dat","w"))!=NULL) {
                             fwrite((void*)&UE->common_vars.rxdata[0][0],
@@ -443,7 +449,7 @@ static void *UE_thread_synch(void *arg) {
                        downlink_frequency[0][0]+freq_offset,
                        downlink_frequency[0][0]+uplink_frequency_offset[0][0]+freq_offset );
 #else
-                LOG_I(PHY, "[initial_sync] trying carrier off %d Hz, rxgain %d (DL %u, UL %u)\n",
+                LOG_I(PHY, "[%d] [initial_sync] trying carrier off %d Hz, rxgain %d (DL %u, UL %u)\n",procID_sync,
                        freq_offset,
                        UE->rx_total_gain_dB,
                        downlink_frequency[0][0]+freq_offset,
@@ -459,7 +465,9 @@ static void *UE_thread_synch(void *arg) {
                 }
                 UE->rfdevice.trx_set_freq_func(&UE->rfdevice,&openair0_cfg[0],0);
             }// initial_sync=0
+            LOG_I(PHY,">>>>>>>>>>>>>>>>>>>>>>>>>> [%d] End case: PBCH <<<<<<<<<<<<<<<<<<<<<<<<<<\n",procID_sync);//LA
             break;
+        }
         case si:
         default:
             break;
@@ -473,6 +481,7 @@ static void *UE_thread_synch(void *arg) {
         VCD_SIGNAL_DUMPER_DUMP_FUNCTION_BY_NAME( VCD_SIGNAL_DUMPER_FUNCTIONS_UE_THREAD_SYNCH, 0 );
     }  // while !oai_exit
 
+    printf("**************************************************** End : [UE_thread_synch] [PID: %d] ****************************************************\n",procID_sync);
     return &UE_thread_synch_retval;
 }
 

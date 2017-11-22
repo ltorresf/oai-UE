@@ -870,6 +870,7 @@ void wait_eNBs(void) {
 
 int main( int argc, char **argv )
 {
+	printf("[main]\n");
   int i;
 #if defined (XFORMS)
   void *status;

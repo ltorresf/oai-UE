@@ -39,6 +39,7 @@
 #include "PHY_INTERFACE/extern.h"
 #endif
 //#define DEBUG_PHY
+//#define DEBUG_PHY //LA
 
 int* sync_corr_ue0 = NULL;
 int* sync_corr_ue1 = NULL;
@@ -50,11 +51,14 @@ short syncF_tmp[2048*2] __attribute__((aligned(32)));
 
 int lte_sync_time_init(LTE_DL_FRAME_PARMS *frame_parms )   // LTE_UE_COMMON *common_vars
 {
+	printf("************************** Start: [lte_sync_time_init] **************************\n"); //LA
 
   int i,k;
-
+  LOG_I(PHY,"Memory allocation: sync_corr_ue0.\n");
   sync_corr_ue0 = (int *)malloc16(LTE_NUMBER_OF_SUBFRAMES_PER_FRAME*sizeof(int)*frame_parms->samples_per_tti);
+  LOG_I(PHY,"Memory allocation: sync_corr_ue1.\n");
   sync_corr_ue1 = (int *)malloc16(LTE_NUMBER_OF_SUBFRAMES_PER_FRAME*sizeof(int)*frame_parms->samples_per_tti);
+  LOG_I(PHY,"Memory allocation: sync_corr_ue2.\n");
   sync_corr_ue2 = (int *)malloc16(LTE_NUMBER_OF_SUBFRAMES_PER_FRAME*sizeof(int)*frame_parms->samples_per_tti);
 
   if (sync_corr_ue0) {
@@ -87,6 +91,7 @@ int lte_sync_time_init(LTE_DL_FRAME_PARMS *frame_parms )   // LTE_UE_COMMON *com
     return(-1);
   }
 
+  LOG_I(PHY,"Mem allocation and zeroed-value initialization: primary_synch0_time.\n");
   //  primary_synch0_time = (int *)malloc16((frame_parms->ofdm_symbol_size+frame_parms->nb_prefix_samples)*sizeof(int));
   primary_synch0_time = (int16_t *)malloc16((frame_parms->ofdm_symbol_size)*sizeof(int16_t)*2);
 
@@ -101,6 +106,7 @@ int lte_sync_time_init(LTE_DL_FRAME_PARMS *frame_parms )   // LTE_UE_COMMON *com
     return(-1);
   }
 
+  LOG_I(PHY,"Mem allocation and zeroed-value initialization: primary_synch1_time.\n");
   //  primary_synch1_time = (int *)malloc16((frame_parms->ofdm_symbol_size+frame_parms->nb_prefix_samples)*sizeof(int));
   primary_synch1_time = (int16_t *)malloc16((frame_parms->ofdm_symbol_size)*sizeof(int16_t)*2);
 
@@ -114,7 +120,7 @@ int lte_sync_time_init(LTE_DL_FRAME_PARMS *frame_parms )   // LTE_UE_COMMON *com
     msg("[openair][LTE_PHY][SYNC] primary_synch1_time not allocated\n");
     return(-1);
   }
-
+  LOG_I(PHY,"Mem allocation and zeroed-value initialization: primary_synch2_time.\n");
   //  primary_synch2_time = (int *)malloc16((frame_parms->ofdm_symbol_size+frame_parms->nb_prefix_samples)*sizeof(int));
   primary_synch2_time = (int16_t *)malloc16((frame_parms->ofdm_symbol_size)*sizeof(int16_t)*2);
 
@@ -131,19 +137,24 @@ int lte_sync_time_init(LTE_DL_FRAME_PARMS *frame_parms )   // LTE_UE_COMMON *com
 
 
   // generate oversampled sync_time sequences
+  LOG_I(PHY,"Generating time-domain primary synchronization sequence based on IDFT of PSS0: primary_synch0_time.\n");
   k=frame_parms->ofdm_symbol_size-36;
 
+  //stores the 72 frequence-domain PSS sequence values (multiplied by 2^(15-2) in variable syncF_tmp
   for (i=0; i<72; i++) {
-    syncF_tmp[2*k] = primary_synch0[2*i]>>2;  //we need to shift input to avoid overflow in fft
+    syncF_tmp[2*k] = primary_synch0[2*i]>>2;  //we need to shift input to avoid overflow in fft (division by 4)
     syncF_tmp[2*k+1] = primary_synch0[2*i+1]>>2;
+    //LA:LOG_I(PHY,"i = %d, k = %d, syncF_tmp[2k=%d] = %d, syncF_tmp[2k+1=%d] = %d.\n",i,k,2*k,syncF_tmp[2*k],2*k+1,syncF_tmp[2*k+1]);
     k++;
 
     if (k >= frame_parms->ofdm_symbol_size) {
+    	//LA:printf("Skipping the DC carrier.\n");
       k++;  // skip DC carrier
       k-=frame_parms->ofdm_symbol_size;
     }
   }
 
+  //LOG_I(PHY,"The IDFT of syncF_tmp (PSS Sequence - freq dom) is stored in sync_tmp (time dom).\n");
   switch (frame_parms->N_RB_DL) {
   case 6:
     idft128((short*)syncF_tmp,          /// complex input
@@ -176,17 +187,28 @@ int lte_sync_time_init(LTE_DL_FRAME_PARMS *frame_parms )   // LTE_UE_COMMON *com
     break;
   }
 
-  for (i=0; i<frame_parms->ofdm_symbol_size; i++)
+  //LA: the IDFT provides an approximate value. Tests with MATLAB show that the average difference (module) is 2.92 (max: 11.69, min: 0.19)
+  //LA: The generation of the 2048 complex symbols in time domain is correct (even though it seems here than only the first 1024 ones were written)
+  for (i=0; i<frame_parms->ofdm_symbol_size; i++){
     ((int32_t*)primary_synch0_time)[i] = sync_tmp[i];
+    //(i%2 == 0) ? printf("primary_synch0_time[%d] = %"PRIi32"  ",i,primary_synch0_time[i]) : printf("primary_synch0_time[%d] = %"PRIi32" \n",i,primary_synch0_time[i]);
+  }
 
+  /*for (i=0; i<2*frame_parms->ofdm_symbol_size; i++){
+    (i%2 == 0) ? printf("primary_synch0_time[%d] = %"PRIi32"  ",i,primary_synch0_time[i]) : printf("primary_synch0_time[%d] = %"PRIi32" \n",i,primary_synch0_time[i]);
+  }*/
+
+  LOG_I(PHY,"Generating time-domain primary synchronization sequence based on IDFT of PSS1: primary_synch1_time.\n");
   k=frame_parms->ofdm_symbol_size-36;
 
   for (i=0; i<72; i++) {
     syncF_tmp[2*k] = primary_synch1[2*i]>>2;  //we need to shift input to avoid overflow in fft
     syncF_tmp[2*k+1] = primary_synch1[2*i+1]>>2;
+    //LOG_I(PHY,"i = %d, k = %d, syncF_tmp[2k=%d] = %d, syncF_tmp[2k+1=%d] = %d.\n",i,k,2*k,syncF_tmp[2*k],2*k+1,syncF_tmp[2*k+1]);
     k++;
 
     if (k >= frame_parms->ofdm_symbol_size) {
+    	//printf("Skipping the DC carrier.\n");
       k++;  // skip DC carrier
       k-=frame_parms->ofdm_symbol_size;
     }
@@ -227,14 +249,17 @@ int lte_sync_time_init(LTE_DL_FRAME_PARMS *frame_parms )   // LTE_UE_COMMON *com
   for (i=0; i<frame_parms->ofdm_symbol_size; i++)
     ((int32_t*)primary_synch1_time)[i] = sync_tmp[i];
 
+  LOG_I(PHY,"Generating time-domain primary synchronization sequence based on IDFT of PSS2: primary_synch2_time.\n");
   k=frame_parms->ofdm_symbol_size-36;
 
   for (i=0; i<72; i++) {
     syncF_tmp[2*k] = primary_synch2[2*i]>>2;  //we need to shift input to avoid overflow in fft
     syncF_tmp[2*k+1] = primary_synch2[2*i+1]>>2;
+    //LOG_I(PHY,"i = %d, k = %d, syncF_tmp[2k=%d] = %d, syncF_tmp[2k+1=%d] = %d.\n",i,k,2*k,syncF_tmp[2*k],2*k+1,syncF_tmp[2*k+1]);
     k++;
 
     if (k >= frame_parms->ofdm_symbol_size) {
+    	//printf("Skipping the DC carrier.\n");
       k++;  // skip DC carrier
       k-=frame_parms->ofdm_symbol_size;
     }
@@ -283,6 +308,7 @@ int lte_sync_time_init(LTE_DL_FRAME_PARMS *frame_parms )   // LTE_UE_COMMON *com
   write_output("primary_sync1.m","psync1",primary_synch1_time,frame_parms->ofdm_symbol_size,1,1);
   write_output("primary_sync2.m","psync2",primary_synch2_time,frame_parms->ofdm_symbol_size,1,1);
 #endif
+  printf("************************** End : [lte_sync_time_init] **************************\n"); //LA
   return (1);
 }
 

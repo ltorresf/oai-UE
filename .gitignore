@@ -1,0 +1,8 @@
+.cproject
+.project
+.settings/
+cmake_targets/UE_1.log
+cmake_targets/log/
+cmake_targets/lte_build_oai/
+cmake_targets/nas_sim_tools/build/
+targets/bin/

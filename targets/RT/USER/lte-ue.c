@@ -156,7 +156,7 @@ void init_thread(int sched_runtime, int sched_deadline, int sched_fifo, cpu_set_
       for (int j = 0; j < CPU_SETSIZE; j++)
         if (CPU_ISSET(j, cset))
 	  sprintf(txt+strlen(txt), " %d ", j);
-      printf("CPU Affinity of thread %s is %s\n", name, txt);
+      LOG_I(PHY,"CPU Affinity of thread %s is %s\n", name, txt);
     }
     CPU_FREE(cset);
 #endif
@@ -166,13 +166,16 @@ void init_thread(int sched_runtime, int sched_deadline, int sched_fifo, cpu_set_
     pthread_setname_np( pthread_self(), name );
 
     // LTS: this sync stuff should be wrong
-    printf("waiting for sync (%s)\n",name);
+    //printf("waiting for sync (%s)\n",name);
+    LOG_I(PHY,"Waiting for sync (%s)\n",name);
     pthread_mutex_lock(&sync_mutex);
-    printf("Locked sync_mutex, waiting (%s)\n",name);
+    //printf("Locked sync_mutex, waiting (%s)\n",name);
+    LOG_I(PHY,"Locked sync_mutex, waiting (%s)\n",name);
     while (sync_var<0)
         pthread_cond_wait(&sync_cond, &sync_mutex);
     pthread_mutex_unlock(&sync_mutex);
-    printf("started %s as PID: %ld\n",name, gettid());
+    //printf("started %s as PID: %ld\n",name, gettid());
+    LOG_I(PHY,"started %s as PID: %ld\n",name, gettid());
 }
 
 void init_UE(int nb_inst)
@@ -217,12 +220,14 @@ static void *UE_thread_synch(void *arg) {
     int freq_offset=0;
     char threadname[128];
 
+
     cpu_set_t cpuset;
     CPU_ZERO(&cpuset);
     if ( threads.iq != -1 )
         CPU_SET(threads.iq, &cpuset);
     // this thread priority must be lower that the main acquisition thread
-    sprintf(threadname, "sync UE %d\n", UE->Mod_id);
+    //sprintf(threadname, "sync UE %d\n", UE->Mod_id);
+    sprintf(threadname, "sync_UE_%d", UE->Mod_id);
     init_thread(100000, 500000, FIFO_PRIORITY-1, &cpuset, threadname);
 
     UE->is_synchronized = 0;
@@ -264,12 +269,24 @@ static void *UE_thread_synch(void *arg) {
         current_band=0;
         for (i=0; i<openair0_cfg[UE->rf_map.card].rx_num_channels; i++) {
             downlink_frequency[UE->rf_map.card][UE->rf_map.chain+i] = bands_to_scan.band_info[CC_id].dl_min;
-            uplink_frequency_offset[UE->rf_map.card][UE->rf_map.chain+i] =
-                bands_to_scan.band_info[CC_id].ul_min-bands_to_scan.band_info[CC_id].dl_min;
+            uplink_frequency_offset[UE->rf_map.card][UE->rf_map.chain+i] = bands_to_scan.band_info[CC_id].ul_min-bands_to_scan.band_info[CC_id].dl_min;
             openair0_cfg[UE->rf_map.card].rx_freq[UE->rf_map.chain+i] = downlink_frequency[CC_id][i];
-            openair0_cfg[UE->rf_map.card].tx_freq[UE->rf_map.chain+i] =
-                downlink_frequency[CC_id][i]+uplink_frequency_offset[CC_id][i];
+            openair0_cfg[UE->rf_map.card].tx_freq[UE->rf_map.chain+i] = downlink_frequency[CC_id][i]+uplink_frequency_offset[CC_id][i];
             openair0_cfg[UE->rf_map.card].rx_gain[UE->rf_map.chain+i] = UE->rx_total_gain_dB;
+
+            //LA:
+            LOG_I(PHY, "[%d] UE_scan = %d. i = %d, downlink_frequency[%d][%d] = %"PRIu32" MHz.\n",procID_sync,UE->UE_scan,i,(UE->rf_map.card),(UE->rf_map.chain+i),downlink_frequency[UE->rf_map.card][UE->rf_map.chain+i]/1000000);
+            LOG_I(PHY, "[%d] UE_scan = %d. i = %d, uplink_frequency_offset[%d][%d] = %"PRIi32" MHz.\n",procID_sync,UE->UE_scan,i,(UE->rf_map.card),(UE->rf_map.chain+i),uplink_frequency_offset[UE->rf_map.card][UE->rf_map.chain+i]/1000000);
+            LOG_I(PHY, "[%d] UE_scan = %d. i = %d, openair0_cfg[%d].rx_freq[%d] = %f MHz.\n",procID_sync,UE->UE_scan,i,(UE->rf_map.card),(UE->rf_map.chain+i),openair0_cfg[UE->rf_map.card].rx_freq[UE->rf_map.chain+i]/1000000);
+            LOG_I(PHY, "[%d] UE_scan = %d. i = %d, openair0_cfg[%d].tx_freq[%d] = %f MHz.\n",procID_sync,UE->UE_scan,i,(UE->rf_map.card),(UE->rf_map.chain+i),openair0_cfg[UE->rf_map.card].tx_freq[UE->rf_map.chain+i]/1000000);
+            LOG_I(PHY, "[%d] UE_scan = %d. i = %d, openair0_cfg[%d].rx_gain[%d] = %f.\n",procID_sync,UE->UE_scan,i,(UE->rf_map.card),(UE->rf_map.chain+i),openair0_cfg[UE->rf_map.card].rx_gain[UE->rf_map.chain+i]);
+
+            LOG_I(PHY, "[%d] UE_scan = %d. i = %d, bands_to_scan.band_info[%d].band = %d.\n",procID_sync,UE->UE_scan,i,CC_id,bands_to_scan.band_info[CC_id].band);
+            LOG_I(PHY, "[%d] UE_scan = %d. i = %d, bands_to_scan.band_info[%d].ul_min = %"PRIu32" MHz.\n",procID_sync,UE->UE_scan,i,CC_id,bands_to_scan.band_info[CC_id].ul_min/1000000);
+            LOG_I(PHY, "[%d] UE_scan = %d. i = %d, bands_to_scan.band_info[%d].ul_max = %"PRIu32" MHz.\n",procID_sync,UE->UE_scan,i,CC_id,bands_to_scan.band_info[CC_id].ul_max/1000000);
+            LOG_I(PHY, "[%d] UE_scan = %d. i = %d, bands_to_scan.band_info[%d].dl_min = %"PRIu32" MHz.\n",procID_sync,UE->UE_scan,i,CC_id,bands_to_scan.band_info[CC_id].dl_min/1000000);
+            LOG_I(PHY, "[%d] UE_scan = %d. i = %d, bands_to_scan.band_info[%d].dl_max = %"PRIu32" MHz.\n",procID_sync,UE->UE_scan,i,CC_id,bands_to_scan.band_info[CC_id].dl_max/1000000);
+            LOG_I(PHY, "[%d] UE_scan = %d. i = %d, bands_to_scan.band_info[%d].frame_type = %d.\n",procID_sync,UE->UE_scan,i,CC_id,bands_to_scan.band_info[CC_id].frame_type);
         }
     }
 
@@ -317,11 +334,11 @@ static void *UE_thread_synch(void *arg) {
         }
         case pbch:
         {
-        	LOG_I(PHY,">>>>>>>>>>>>>>>>>>>>>>>>>> [%d] Start case: PBCH <<<<<<<<<<<<<<<<<<<<<<<<<<\n",procID_sync);//LA
+        	printf(">>>>>>>>>>>>>>>>>>>>>>>>>> [%d] Start case: PBCH <<<<<<<<<<<<<<<<<<<<<<<<<<\n",procID_sync);//LA
 #if DISABLE_LOG_X
             printf("[UE thread Synch] Running Initial Synch (mode %d)\n",UE->mode);
 #else
-            LOG_I(PHY, "[UE thread Synch] Running Initial Synch (mode %d)\n",UE->mode);
+            LOG_I(PHY, "[%d] Running Initial Synch (UE->mode = %d) [0:normal_txrx].\n",procID_sync,UE->mode);
 #endif
             if (initial_sync( UE, UE->mode ) == 0) {
 
@@ -421,20 +438,22 @@ static void *UE_thread_synch(void *arg) {
             } else {
                 // initial sync failed
                 // calculate new offset and try again
+            	LOG_I(PHY,"[%d] Initial sync failed. Calculating new +/-100-Hz offset and trying again.\n",procID_sync);
                 if (UE->UE_scan_carrier == 1) {
                     if (freq_offset >= 0)
                         freq_offset += 100;
                     freq_offset *= -1;
 
                     if (abs(freq_offset) > 7500) {
-                        LOG_I( PHY, "[%d] [initial_sync] No cell synchronization found, abandoning\n",procID_sync );
+                        LOG_I( PHY, "[%d] No cell synchronization found after scanning 15-kHz BW (OFDM carrier BW); abandoning.\n",procID_sync );
                         FILE *fd;
                         if ((fd = fopen("rxsig_frame0.dat","w"))!=NULL) {
+                        //if ((fd = fopen("rxsig_frame0.m","w"))!=NULL) {
                             fwrite((void*)&UE->common_vars.rxdata[0][0],
                                    sizeof(int32_t),
                                    10*UE->frame_parms.samples_per_tti,
                                    fd);
-                            LOG_I(PHY,"Dummping Frame ... bye bye \n");
+                            LOG_I(PHY,"Dumping Frame ... bye bye \n");
                             fclose(fd);
                             exit(0);
                         }
@@ -449,7 +468,7 @@ static void *UE_thread_synch(void *arg) {
                        downlink_frequency[0][0]+freq_offset,
                        downlink_frequency[0][0]+uplink_frequency_offset[0][0]+freq_offset );
 #else
-                LOG_I(PHY, "[%d] [initial_sync] trying carrier off %d Hz, rxgain %d (DL %u, UL %u)\n",procID_sync,
+                LOG_I(PHY,"[%d] Trying carrier off %d Hz, rxgain %d (DL %u, UL %u)\n",procID_sync,
                        freq_offset,
                        UE->rx_total_gain_dB,
                        downlink_frequency[0][0]+freq_offset,
@@ -463,9 +482,10 @@ static void *UE_thread_synch(void *arg) {
                     if (UE->UE_scan_carrier==1)
                         openair0_cfg[UE->rf_map.card].autocal[UE->rf_map.chain+i] = 1;
                 }
+                //Setting the new Tx/Rx frequency values in the USRP configuration
                 UE->rfdevice.trx_set_freq_func(&UE->rfdevice,&openair0_cfg[0],0);
             }// initial_sync=0
-            LOG_I(PHY,">>>>>>>>>>>>>>>>>>>>>>>>>> [%d] End case: PBCH <<<<<<<<<<<<<<<<<<<<<<<<<<\n",procID_sync);//LA
+            printf(">>>>>>>>>>>>>>>>>>>>>>>>>> [%d] End case: PBCH <<<<<<<<<<<<<<<<<<<<<<<<<<\n",procID_sync);//LA
             break;
         }
         case si:

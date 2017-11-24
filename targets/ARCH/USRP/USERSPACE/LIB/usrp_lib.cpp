@@ -491,7 +491,8 @@ int trx_usrp_set_freq(openair0_device* device, openair0_config_t *openair0_cfg, 
     usrp_state_t *s = (usrp_state_t*)device->priv;
     pthread_t f_thread;
 
-    printf("Setting USRP TX Freq %f, RX Freq %f\n",openair0_cfg[0].tx_freq[0],openair0_cfg[0].rx_freq[0]);
+    printf("Setting USRP Tx Freq %f MHz, Rx Freq %f MHz.\n",openair0_cfg[0].tx_freq[0]/1000000,openair0_cfg[0].rx_freq[0]/1000000);
+    //LA:printf("Setting USRP Tx Freq %f, Rx Freq %f\n",openair0_cfg[0].tx_freq[0],openair0_cfg[0].rx_freq[0]);
 
     // spawn a thread to handle the frequency change to not block the calling thread
     if (dont_block == 1)

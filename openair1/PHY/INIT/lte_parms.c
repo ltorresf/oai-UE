@@ -47,7 +47,7 @@ int init_frame_parms(LTE_DL_FRAME_PARMS *frame_parms,uint8_t osf)
 #if DISABLE_LOG_X
   printf("Initializing frame parms for N_RB_DL %d, Ncp %d, osf %d\n",frame_parms->N_RB_DL,frame_parms->Ncp,osf);
 #else
-  LOG_I(PHY,"Initializing frame parms for N_RB_DL %d, Ncp %d, osf %d\n",frame_parms->N_RB_DL,frame_parms->Ncp,osf);
+  //LA:LOG_I(PHY,"Initializing frame parms for N_RB_DL = %d, Ncp = %d, osf = %d\n",frame_parms->N_RB_DL,frame_parms->Ncp,osf);
 #endif
 
   if (frame_parms->Ncp==EXTENDED) {
@@ -188,7 +188,9 @@ int init_frame_parms(LTE_DL_FRAME_PARMS *frame_parms,uint8_t osf)
     break;
   }
 
-  printf("lte_parms.c: Setting N_RB_DL to %d, ofdm_symbol_size %d\n",frame_parms->N_RB_DL, frame_parms->ofdm_symbol_size);
+  //LA:printf("lte_parms.c: Setting N_RB_DL to %d, ofdm_symbol_size %d\n",frame_parms->N_RB_DL, frame_parms->ofdm_symbol_size);
+  LOG_I(PHY,"Setting: N_RB_DL = %d, Ncp = %d, osf = %d, ofdm_symbol_size = %d.\n",frame_parms->N_RB_DL,frame_parms->Ncp,osf,frame_parms->ofdm_symbol_size);
+
 
   if (frame_parms->frame_type == TDD) set_S_config(frame_parms);
 

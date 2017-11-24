@@ -37,11 +37,13 @@
 #include "defs.h"
 #include "extern.h"
 
+//LA:
+#include "../../../targets/RT/USER/rt_wrapper.h"
 
 #include "common_lib.h"
 extern openair0_config_t openair0_cfg[];
 
-//#define DEBUG_INITIAL_SYNCH
+#define DEBUG_INITIAL_SYNCH
 
 int pbch_detection(PHY_VARS_UE *ue, runmode_t mode)
 {
@@ -267,6 +269,8 @@ char prefix_string[2][9] = {"NORMAL","EXTENDED"};
 
 int initial_sync(PHY_VARS_UE *ue, runmode_t mode)
 {
+	int procID_initial_sync = gettid();
+	printf("-------------------------- Start: [initial_sync] [PID: %d] --------------------------\n",procID_initial_sync);
 
   int32_t sync_pos,sync_pos2,sync_pos_slot;
   int32_t metric_fdd_ncp=0,metric_fdd_ecp=0,metric_tdd_ncp=0,metric_tdd_ecp=0;
@@ -281,6 +285,7 @@ int initial_sync(PHY_VARS_UE *ue, runmode_t mode)
   #endif*/
   //  LOG_I(PHY,"**************************************************************\n");
   // First try FDD normal prefix
+  printf(".......................... [1/4] Ncp=NORMAL, frame_type=FDD ..........................\n");
   frame_parms->Ncp=NORMAL;
   frame_parms->frame_type=FDD;
   init_frame_parms(frame_parms,1);
@@ -342,6 +347,7 @@ int initial_sync(PHY_VARS_UE *ue, runmode_t mode)
   if (ret==-1) {
 
     // Now FDD extended prefix
+	  printf(".......................... [2/4] Ncp=EXTENDED, frame_type=FDD ..........................\n");
     frame_parms->Ncp=EXTENDED;
     frame_parms->frame_type=FDD;
     init_frame_parms(frame_parms,1);
@@ -386,6 +392,7 @@ int initial_sync(PHY_VARS_UE *ue, runmode_t mode)
 
     if (ret==-1) {
       // Now TDD normal prefix
+    	printf(".......................... [3/4] Ncp=NORMAL, frame_type=TDD ..........................\n");
       frame_parms->Ncp=NORMAL;
       frame_parms->frame_type=TDD;
       init_frame_parms(frame_parms,1);
@@ -425,6 +432,7 @@ int initial_sync(PHY_VARS_UE *ue, runmode_t mode)
 
       if (ret==-1) {
         // Now TDD extended prefix
+    	  printf(".......................... [4/4] Ncp=EXTENDED, frame_type=TDD ..........................\n");
         frame_parms->Ncp=EXTENDED;
         frame_parms->frame_type=TDD;
         init_frame_parms(frame_parms,1);
@@ -462,7 +470,7 @@ int initial_sync(PHY_VARS_UE *ue, runmode_t mode)
     }
   }
 
-  /* Consider this is a false detection if the offset is > 1000 Hz */
+  /* Consider threturnis is a false detection if the offset is > 1000 Hz */
   if( (abs(ue->common_vars.freq_offset) > 150) && (ret == 0) )
   {
 	  ret=-1;
@@ -639,6 +647,7 @@ int initial_sync(PHY_VARS_UE *ue, runmode_t mode)
 
   }
 
+  printf("-------------------------- Start: [initial_sync] [PID: %d] --------------------------\n",procID_initial_sync);
   //  exit_fun("debug exit");
   return ret;
 }

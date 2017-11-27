@@ -43,7 +43,7 @@
 #include "common_lib.h"
 extern openair0_config_t openair0_cfg[];
 
-#define DEBUG_INITIAL_SYNCH
+//LA1#define DEBUG_INITIAL_SYNCH
 
 int pbch_detection(PHY_VARS_UE *ue, runmode_t mode)
 {
@@ -267,10 +267,11 @@ char phich_string[13][4] = {"","1/6","","1/2","","","one","","","","","","two"};
 char duplex_string[2][4] = {"FDD","TDD"};
 char prefix_string[2][9] = {"NORMAL","EXTENDED"};
 
+//LA: if returns ret=0, it has done synchronization. Otherwise it has failed and a new frequency must be chosen.
 int initial_sync(PHY_VARS_UE *ue, runmode_t mode)
 {
 	int procID_initial_sync = gettid();
-	printf("-------------------------- Start: [initial_sync] [PID: %d] --------------------------\n",procID_initial_sync);
+//LA1	printf("-------------------------- Start: [initial_sync] [PID: %d] --------------------------\n",procID_initial_sync);
 
   int32_t sync_pos,sync_pos2,sync_pos_slot;
   int32_t metric_fdd_ncp=0,metric_fdd_ecp=0,metric_tdd_ncp=0,metric_tdd_ecp=0;
@@ -285,7 +286,7 @@ int initial_sync(PHY_VARS_UE *ue, runmode_t mode)
   #endif*/
   //  LOG_I(PHY,"**************************************************************\n");
   // First try FDD normal prefix
-  printf(".......................... [1/4] Ncp=NORMAL, frame_type=FDD ..........................\n");
+//LA1  printf(".......................... [1/4] Ncp=NORMAL, frame_type=FDD ..........................\n");
   frame_parms->Ncp=NORMAL;
   frame_parms->frame_type=FDD;
   init_frame_parms(frame_parms,1);
@@ -293,18 +294,18 @@ int initial_sync(PHY_VARS_UE *ue, runmode_t mode)
   write_output("rxdata0.m","rxd0",ue->common_vars.rxdata[0],10*frame_parms->samples_per_tti,1,1);
   exit(-1);
   */
-  sync_pos = lte_sync_time(ue->common_vars.rxdata,
-                           frame_parms,
-                           (int *)&ue->common_vars.eNb_id);
+  sync_pos = lte_sync_time(ue->common_vars.rxdata,frame_parms,(int *)&ue->common_vars.eNb_id);
 
   //  write_output("rxdata1.m","rxd1",ue->common_vars.rxdata[0],10*frame_parms->samples_per_tti,1,1);
+  //LA: sync_pos2 is the beginning of the OFDM symbol considering the CP-prefix
   if (sync_pos >= frame_parms->nb_prefix_samples)
     sync_pos2 = sync_pos - frame_parms->nb_prefix_samples;
   else
     sync_pos2 = sync_pos + FRAME_LENGTH_COMPLEX_SAMPLES - frame_parms->nb_prefix_samples;
 
 #ifdef DEBUG_INITIAL_SYNCH
-  LOG_I(PHY,"[UE%d] Initial sync : Estimated PSS position %d, Nid2 %d\n",ue->Mod_id,sync_pos,ue->common_vars.eNb_id);
+  //LOG_I(PHY,"[UE%d] Initial sync : Estimated PSS position %d, Nid2 %d\n",ue->Mod_id,sync_pos,ue->common_vars.eNb_id);
+  LOG_I(PHY,"[%d] Estimated PSS position = %"PRIi32", sync_pos2 = %"PRIi32", eNb_id = %d\n",procID_initial_sync,sync_pos,sync_pos2,ue->common_vars.eNb_id);
 #endif
 
   // SSS detection
@@ -317,10 +318,12 @@ int initial_sync(PHY_VARS_UE *ue, runmode_t mode)
   else
     ue->rx_offset = FRAME_LENGTH_COMPLEX_SAMPLES + sync_pos2 - sync_pos_slot;
 
-  if (((sync_pos2 - sync_pos_slot) >=0 ) &&
-      ((sync_pos2 - sync_pos_slot) < ((FRAME_LENGTH_COMPLEX_SAMPLES-frame_parms->samples_per_tti/2)))) {
+  LOG_I(PHY,"[%d] sync_pos_slot = %"PRIi32", timing offset = %d\n",procID_initial_sync,sync_pos_slot,ue->rx_offset);
+
+  if (((sync_pos2 - sync_pos_slot) >=0 ) && ((sync_pos2 - sync_pos_slot) < ((FRAME_LENGTH_COMPLEX_SAMPLES-frame_parms->samples_per_tti/2)))) {
 #ifdef DEBUG_INITIAL_SYNCH
-    LOG_I(PHY,"Calling sss detection (FDD normal CP)\n");
+    //LOG_I(PHY,"Calling sss detection (FDD normal CP).\n");
+    LOG_I(PHY,"[%d] Calling SSS detection (FDD normal CP).\n",procID_initial_sync);
 #endif
     rx_sss(ue,&metric_fdd_ncp,&flip_fdd_ncp,&phase_fdd_ncp);
     frame_parms->nushift  = frame_parms->Nid_cell%6;
@@ -334,12 +337,12 @@ int initial_sync(PHY_VARS_UE *ue, runmode_t mode)
     //   write_output("rxdata2.m","rxd2",ue->common_vars.rxdata[0],10*frame_parms->samples_per_tti,1,1);
 
 #ifdef DEBUG_INITIAL_SYNCH
-    LOG_I(PHY,"FDD Normal prefix: CellId %d metric %d, phase %d, flip %d, pbch %d\n",
-          frame_parms->Nid_cell,metric_fdd_ncp,phase_fdd_ncp,flip_fdd_ncp,ret);
+    //LOG_I(PHY,"FDD Normal prefix: CellId %d metric %d, phase %d, flip %d, pbch %d\n",frame_parms->Nid_cell,metric_fdd_ncp,phase_fdd_ncp,flip_fdd_ncp,ret);
+    LOG_I(PHY,"[%d] CellId = %d, metric = %d, phase = %d, flip = %d, pbch = %d\n",procID_initial_sync,frame_parms->Nid_cell,metric_fdd_ncp,phase_fdd_ncp,flip_fdd_ncp,ret);
 #endif
   } else {
 #ifdef DEBUG_INITIAL_SYNCH
-    LOG_I(PHY,"FDD Normal prefix: SSS error condition: sync_pos %d, sync_pos_slot %d\n", sync_pos, sync_pos_slot);
+    LOG_I(PHY,"[%d] SSS error condition: sync_pos %d, sync_pos_slot %d\n",procID_initial_sync,sync_pos, sync_pos_slot);
 #endif
   }
 
@@ -347,7 +350,7 @@ int initial_sync(PHY_VARS_UE *ue, runmode_t mode)
   if (ret==-1) {
 
     // Now FDD extended prefix
-	  printf(".......................... [2/4] Ncp=EXTENDED, frame_type=FDD ..........................\n");
+//LA1	  printf(".......................... [2/4] Ncp=EXTENDED, frame_type=FDD ..........................\n");
     frame_parms->Ncp=EXTENDED;
     frame_parms->frame_type=FDD;
     init_frame_parms(frame_parms,1);
@@ -392,7 +395,7 @@ int initial_sync(PHY_VARS_UE *ue, runmode_t mode)
 
     if (ret==-1) {
       // Now TDD normal prefix
-    	printf(".......................... [3/4] Ncp=NORMAL, frame_type=TDD ..........................\n");
+//LA1    	printf(".......................... [3/4] Ncp=NORMAL, frame_type=TDD ..........................\n");
       frame_parms->Ncp=NORMAL;
       frame_parms->frame_type=TDD;
       init_frame_parms(frame_parms,1);
@@ -432,7 +435,7 @@ int initial_sync(PHY_VARS_UE *ue, runmode_t mode)
 
       if (ret==-1) {
         // Now TDD extended prefix
-    	  printf(".......................... [4/4] Ncp=EXTENDED, frame_type=TDD ..........................\n");
+//LA1    	  printf(".......................... [4/4] Ncp=EXTENDED, frame_type=TDD ..........................\n");
         frame_parms->Ncp=EXTENDED;
         frame_parms->frame_type=TDD;
         init_frame_parms(frame_parms,1);
@@ -647,7 +650,7 @@ int initial_sync(PHY_VARS_UE *ue, runmode_t mode)
 
   }
 
-  printf("-------------------------- Start: [initial_sync] [PID: %d] --------------------------\n",procID_initial_sync);
+//LA1  printf("-------------------------- End: [initial_sync] [PID: %d] --------------------------\n",procID_initial_sync);
   //  exit_fun("debug exit");
   return ret;
 }

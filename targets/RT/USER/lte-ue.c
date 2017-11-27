@@ -338,7 +338,7 @@ static void *UE_thread_synch(void *arg) {
 #if DISABLE_LOG_X
             printf("[UE thread Synch] Running Initial Synch (mode %d)\n",UE->mode);
 #else
-            LOG_I(PHY, "[%d] Running Initial Synch (UE->mode = %d) [0:normal_txrx].\n",procID_sync,UE->mode);
+//LA1            LOG_I(PHY, "[%d] Running Initial Synch (UE->mode = %d) [0:normal_txrx].\n",procID_sync,UE->mode);
 #endif
             if (initial_sync( UE, UE->mode ) == 0) {
 

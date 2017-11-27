@@ -365,11 +365,12 @@ int debug_cnt=0;
 #endif
 
 #define SHIFT 17
-
+// This function uses the PSS sequence to obtain the timing offset of the radio frame
 int lte_sync_time(int **rxdata, ///rx data in time domain
                   LTE_DL_FRAME_PARMS *frame_parms,
                   int *eNB_id)
 {
+//LA1	printf("**************************************************** Start : [lte_sync_time] ****************************************************\n");
 
 
 
@@ -380,6 +381,7 @@ int lte_sync_time(int **rxdata, ///rx data in time domain
   int sync_out[3] = {0,0,0},sync_out2[3] = {0,0,0};
   int tmp[3] = {0,0,0};
   int length =   LTE_NUMBER_OF_SUBFRAMES_PER_FRAME*frame_parms->samples_per_tti>>1;
+  //LOG_I(PHY,"length = %d, max_n = %d.\n",length,length-frame_parms->ofdm_symbol_size);
 
   //msg("[SYNC TIME] Calling sync_time.\n");
   if (sync_corr_ue0 == NULL) {
@@ -422,6 +424,7 @@ int lte_sync_time(int **rxdata, ///rx data in time domain
     sync_corr_ue1[n+length] = 0;
     sync_corr_ue2[n] = 0;
     sync_corr_ue2[n+length] = 0;
+    //LOG_I(PHY,"sync_corr_ue0[n=%d] = %d, sync_corr_ue0[n+length=%d] = %d\n",n,sync_corr_ue0[n],n+length,sync_corr_ue0[n+length]);
 
     for (s=0; s<3; s++) {
       sync_out[s]=0;
@@ -436,11 +439,13 @@ int lte_sync_time(int **rxdata, ///rx data in time domain
 
         result  = dot_product((short*)primary_synch0_time, (short*) &(rxdata[ar][n]), frame_parms->ofdm_symbol_size, SHIFT);
         result2 = dot_product((short*)primary_synch0_time, (short*) &(rxdata[ar][n+length]), frame_parms->ofdm_symbol_size, SHIFT);
+        //LOG_I(PHY,"n = %d, result = %d, result2 = %d\n",n,result,result2);
 
         ((short*)sync_corr_ue0)[2*n] += ((short*) &result)[0];
         ((short*)sync_corr_ue0)[2*n+1] += ((short*) &result)[1];
         ((short*)sync_corr_ue0)[2*(length+n)] += ((short*) &result2)[0];
         ((short*)sync_corr_ue0)[(2*(length+n))+1] += ((short*) &result2)[1];
+
         ((short*)sync_out)[0] += ((short*) &result)[0];
         ((short*)sync_out)[1] += ((short*) &result)[1];
         ((short*)sync_out2)[0] += ((short*) &result2)[0];
@@ -487,23 +492,29 @@ int lte_sync_time(int **rxdata, ///rx data in time domain
     sync_corr_ue2[n+length] = abs32(sync_corr_ue2[n+length]);
 
     for (s=0; s<3; s++) {
-      tmp[s] = (abs32(sync_out[s])>>1) + (abs32(sync_out2[s])>>1);
+      tmp[s] = (abs32(sync_out[s])>>1) + (abs32(sync_out2[s])>>1); //LA: probably the division by 2 is to avoid overflow
 
       if (tmp[s]>peak_val) {
         peak_val = tmp[s];
         peak_pos = n;
-        sync_source = s;
-        /*
-        printf("s %d: n %d sync_out %d, sync_out2  %d (sync_corr %d,%d), (%d,%d) (%d,%d)\n",s,n,abs32(sync_out[s]),abs32(sync_out2[s]),sync_corr_ue0[n],
-               sync_corr_ue0[n+length],((int16_t*)&sync_out[s])[0],((int16_t*)&sync_out[s])[1],((int16_t*)&sync_out2[s])[0],((int16_t*)&sync_out2[s])[1]);
-        */
+        sync_source = s;	//s is the PSS sequence where the peak was found. I can be either 0, 1 or 2
+
+/*LA1        LOG_I(PHY,"s = %d: n = %d, peak_val = %d, abs(sync_out) = %d, abs(sync_out2) = %d, sync_corr_ue0 = (%d,%d), sync_out =(%"PRIi16" + j%"PRIi16") sync_out2 = (%"PRIi16" + j%"PRIi16")\n",
+        		s,n,
+				peak_val,
+        		abs32(sync_out[s]),abs32(sync_out2[s]),
+				sync_corr_ue0[n],sync_corr_ue0[n+length],
+				((int16_t*)&sync_out[s])[0],((int16_t*)&sync_out[s])[1],
+				((int16_t*)&sync_out2[s])[0],((int16_t*)&sync_out2[s])[1]);
+*/
       }
     }
   }
 
-  *eNB_id = sync_source;
+  *eNB_id = sync_source;	//eNB_id stores the PSS sequence we are using
 
-  LOG_D(PHY,"[UE] lte_sync_time: Sync source = %d, Peak found at pos %d, val = %d (%d dB)\n",sync_source,peak_pos,peak_val,dB_fixed(peak_val)/2);
+  //LOG_D(PHY,"[UE] lte_sync_time: Sync source = %d, Peak found at pos %d, val = %d (%d dB)\n",sync_source,peak_pos,peak_val,dB_fixed(peak_val)/2);
+//LA1  LOG_I(PHY,"lte_sync_time: Sync source = %d, Peak found at pos = %d, val = %d (%d dB)\n",sync_source,peak_pos,peak_val,dB_fixed(peak_val)/2);
 
 
 #ifdef DEBUG_PHY
@@ -520,7 +531,7 @@ int lte_sync_time(int **rxdata, ///rx data in time domain
 
 #endif
 
-
+//LA1  printf("**************************************************** End : [lte_sync_time] ****************************************************\n");
   return(peak_pos);
 
 }

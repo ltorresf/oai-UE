@@ -1238,8 +1238,10 @@ void set_default_frame_parms(LTE_DL_FRAME_PARMS *frame_parms[MAX_NUM_CCs]) {
         frame_parms[CC_id]->frame_type          = FDD;
         frame_parms[CC_id]->tdd_config          = 3;
         frame_parms[CC_id]->tdd_config_S        = 0;
-        frame_parms[CC_id]->N_RB_DL             = 100;
-        frame_parms[CC_id]->N_RB_UL             = 100;
+        //frame_parms[CC_id]->N_RB_DL             = 100;
+        //frame_parms[CC_id]->N_RB_UL             = 100;
+        frame_parms[CC_id]->N_RB_DL             = 6; // Implemented: N_RB_DL = {6,25,50,100}. Not implemented: N_RB_DL={15,75}
+        frame_parms[CC_id]->N_RB_UL             = 6;
         frame_parms[CC_id]->Ncp                 = NORMAL;
         frame_parms[CC_id]->Ncp_UL              = NORMAL;
         frame_parms[CC_id]->Nid_cell            = 0;

@@ -233,7 +233,7 @@ static void *UE_thread_synch(void *arg) {
     UE->is_synchronized = 0;
 
     if (UE->UE_scan == 0) {
-    	LOG_I(PHY,"[%d] UE->UE_scan = 0.\n",procID_sync);
+    	LOG_I(PHY,"[%d] Band scanning disabled. (UE->UE_scan = 0).\n",procID_sync);
         int ind;
         for ( ind=0;
                 ind < sizeof(eutra_bands) / sizeof(eutra_bands[0]);
@@ -265,7 +265,7 @@ static void *UE_thread_synch(void *arg) {
         sync_mode = pbch;
 
     } else {
-    	LOG_I(PHY,"[%d] UE->UE_scan = 1.\n",procID_sync);
+    	LOG_I(PHY,"[%d] Band scanning enabled. (UE->UE_scan = 1).\n",procID_sync);
         current_band=0;
         for (i=0; i<openair0_cfg[UE->rf_map.card].rx_num_channels; i++) {
             downlink_frequency[UE->rf_map.card][UE->rf_map.chain+i] = bands_to_scan.band_info[CC_id].dl_min;

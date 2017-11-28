@@ -1607,7 +1607,7 @@ int main( int argc, char **argv ) {
             UE[CC_id]->UE_scan = UE_scan;
             UE[CC_id]->UE_scan_carrier = UE_scan_carrier;
             UE[CC_id]->mode    = mode;
-            printf("UE[%d]->mode = %d\n",CC_id,mode);
+            printf("UE[%d]->mode = %d (0: normal_txrx). UE[%d]->UE_scan_carrier = %d, UE[%d]->UE_scan = %d.\n",CC_id,mode,CC_id,UE_scan_carrier,CC_id,UE_scan);
 
             for (uint8_t i=0; i<RX_NB_TH_MAX; i++) {
                 UE[CC_id]->pdcch_vars[i][0]->agregationLevel = agregation_Level;

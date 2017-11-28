@@ -217,7 +217,7 @@ static void *UE_thread_synch(void *arg) {
     int current_offset = 0;
     sync_mode_t sync_mode = pbch;
     int CC_id = UE->CC_id;
-    int freq_offset=0;
+    int freq_offset=0,carrier_offset=0;//LA
     char threadname[128];
 
 
@@ -287,6 +287,11 @@ static void *UE_thread_synch(void *arg) {
             LOG_I(PHY, "[%d] UE_scan = %d. i = %d, bands_to_scan.band_info[%d].dl_min = %"PRIu32" MHz.\n",procID_sync,UE->UE_scan,i,CC_id,bands_to_scan.band_info[CC_id].dl_min/1000000);
             LOG_I(PHY, "[%d] UE_scan = %d. i = %d, bands_to_scan.band_info[%d].dl_max = %"PRIu32" MHz.\n",procID_sync,UE->UE_scan,i,CC_id,bands_to_scan.band_info[CC_id].dl_max/1000000);
             LOG_I(PHY, "[%d] UE_scan = %d. i = %d, bands_to_scan.band_info[%d].frame_type = %d.\n",procID_sync,UE->UE_scan,i,CC_id,bands_to_scan.band_info[CC_id].frame_type);
+
+            LOG_I( PHY, "[%d] Bandwith of signal: %"PRIu32" MHz.\n",procID_sync,(bands_to_scan.band_info[CC_id].dl_max-bands_to_scan.band_info[CC_id].dl_min)/1000000);
+
+            //LA:Setting the new Tx/Rx frequency values in the USRP configuration
+            UE->rfdevice.trx_set_freq_func(&UE->rfdevice,&openair0_cfg[0],0);
         }
     }
 
@@ -438,7 +443,29 @@ static void *UE_thread_synch(void *arg) {
             } else {
                 // initial sync failed
                 // calculate new offset and try again
-            	LOG_I(PHY,"[%d] Initial sync failed. Calculating new +/-100-Hz offset and trying again.\n",procID_sync);
+            	if (UE->UE_scan == 1) {
+
+            		if (UE->UE_scan_carrier == 1) {
+            			LOG_I(PHY,"[%d] Initial sync failed. Calculating new +/-100-Hz offset and trying again.\n",procID_sync);
+						if (freq_offset >= 0)
+						freq_offset += 100;
+						freq_offset *= -1;
+
+						if (abs(freq_offset) > 7500) {
+							LOG_I( PHY, "[%d] No cell synchronization found after scanning 15-kHz BW (OFDM carrier BW); Scanning next carrier: %d of %d.\n",procID_sync,
+									carrier_offset/15000,(bands_to_scan.band_info[CC_id].dl_max-bands_to_scan.band_info[CC_id].dl_min)/15000);
+							freq_offset=0;
+							carrier_offset+=15000;
+							if (carrier_offset > (bands_to_scan.band_info[CC_id].dl_max-bands_to_scan.band_info[CC_id].dl_min)) {
+								mac_xface->macphy_exit("No cell synchronization found, abandoning");
+								return &UE_thread_synch_retval; // not reached
+							}
+
+						}
+            		}
+
+            	}
+ /*           	LOG_I(PHY,"[%d] Initial sync failed. Calculating new +/-100-Hz offset and trying again.\n",procID_sync);
                 if (UE->UE_scan_carrier == 1) {
                     if (freq_offset >= 0)
                         freq_offset += 100;
@@ -460,7 +487,8 @@ static void *UE_thread_synch(void *arg) {
                         mac_xface->macphy_exit("No cell synchronization found, abandoning");
                         return &UE_thread_synch_retval; // not reached
                     }
-                }
+
+                } */
 #if DISABLE_LOG_X
                 printf("[initial_sync] trying carrier off %d Hz, rxgain %d (DL %u, UL %u)\n",
                        freq_offset,
@@ -468,16 +496,23 @@ static void *UE_thread_synch(void *arg) {
                        downlink_frequency[0][0]+freq_offset,
                        downlink_frequency[0][0]+uplink_frequency_offset[0][0]+freq_offset );
 #else
-                LOG_I(PHY,"[%d] Trying carrier off %d Hz, rxgain %d (DL %u, UL %u)\n",procID_sync,
+/*                LOG_I(PHY,"[%d] Trying carrier off %d Hz, rxgain %d (DL %u, UL %u)\n",procID_sync,
                        freq_offset,
                        UE->rx_total_gain_dB,
                        downlink_frequency[0][0]+freq_offset,
-                       downlink_frequency[0][0]+uplink_frequency_offset[0][0]+freq_offset );
+                       downlink_frequency[0][0]+uplink_frequency_offset[0][0]+freq_offset );*/
+                LOG_I(PHY,"[%d] Trying carrier off %d Hz, rxgain %d (DL %u, UL %u)\n",procID_sync,
+                       freq_offset+carrier_offset,
+                       UE->rx_total_gain_dB,
+                       downlink_frequency[0][0]+freq_offset+carrier_offset,
+                       downlink_frequency[0][0]+uplink_frequency_offset[0][0]+freq_offset+carrier_offset );
 #endif
 
                 for (i=0; i<openair0_cfg[UE->rf_map.card].rx_num_channels; i++) {
-                    openair0_cfg[UE->rf_map.card].rx_freq[UE->rf_map.chain+i] = downlink_frequency[CC_id][i]+freq_offset;
-                    openair0_cfg[UE->rf_map.card].tx_freq[UE->rf_map.chain+i] = downlink_frequency[CC_id][i]+uplink_frequency_offset[CC_id][i]+freq_offset;
+                	//openair0_cfg[UE->rf_map.card].rx_freq[UE->rf_map.chain+i] = downlink_frequency[CC_id][i]+freq_offset;
+                	//openair0_cfg[UE->rf_map.card].tx_freq[UE->rf_map.chain+i] = downlink_frequency[CC_id][i]+uplink_frequency_offset[CC_id][i]+freq_offset;
+                	openair0_cfg[UE->rf_map.card].rx_freq[UE->rf_map.chain+i] = downlink_frequency[CC_id][i]+freq_offset+carrier_offset;
+                    openair0_cfg[UE->rf_map.card].tx_freq[UE->rf_map.chain+i] = downlink_frequency[CC_id][i]+uplink_frequency_offset[CC_id][i]+freq_offset+carrier_offset;
                     openair0_cfg[UE->rf_map.card].rx_gain[UE->rf_map.chain+i] = UE->rx_total_gain_dB;//-USRP_GAIN_OFFSET;
                     if (UE->UE_scan_carrier==1)
                         openair0_cfg[UE->rf_map.card].autocal[UE->rf_map.chain+i] = 1;
@@ -697,12 +732,14 @@ void *UE_thread(void *arg) {
 
     int sub_frame=-1;
     //int cumulated_shift=0;
+    int la=0;
     AssertFatal(UE->rfdevice.trx_start_func(&UE->rfdevice) == 0, "Could not start the device\n");
     while (!oai_exit) {
-        AssertFatal ( 0== pthread_mutex_lock(&UE->proc.mutex_synch), "");
+    	la++;
+        AssertFatal ( 0== pthread_mutex_lock(&UE->proc.mutex_synch), "luis1");
         int instance_cnt_synch = UE->proc.instance_cnt_synch;
         int is_synchronized    = UE->is_synchronized;
-        AssertFatal ( 0== pthread_mutex_unlock(&UE->proc.mutex_synch), "");
+        AssertFatal ( 0== pthread_mutex_unlock(&UE->proc.mutex_synch), "luis2");
 
         if (is_synchronized == 0) {
             if (instance_cnt_synch < 0) {  // we can invoke the synch
@@ -727,6 +764,7 @@ void *UE_thread(void *arg) {
                 }
 		AssertFatal ( 0== pthread_mutex_unlock(&UE->proc.mutex_synch), "");
             } else {
+            	printf("la = %d, UE->is_synchronized = %d\n",la,UE->is_synchronized);
 #if OAISIM
               (void)dummy_rx; /* avoid gcc warnings */
               usleep(500);

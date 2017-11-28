@@ -220,4 +220,5 @@ void dump_frame_parms(LTE_DL_FRAME_PARMS *frame_parms)
   printf("frame_parms->first_carrier_offset=%d\n",frame_parms->first_carrier_offset);
   printf("frame_parms->samples_per_tti=%d\n",frame_parms->samples_per_tti);
   printf("frame_parms->symbols_per_tti=%d\n",frame_parms->symbols_per_tti);
+  //printf("openair0_cfg[UE->rf_map.card].rx_num_channels = %d\n",openair0_cfg[UE->rf_map.card].rx_num_channels);
 }

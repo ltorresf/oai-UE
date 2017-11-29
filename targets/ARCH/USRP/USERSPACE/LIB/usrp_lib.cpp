@@ -429,6 +429,7 @@ static int trx_usrp_read(openair0_device *device, openair0_timestamp *ptimestamp
         // bring RX data into 12 LSBs for softmodem RX
         for (int i=0; i<cc; i++) {
             for (int j=0; j<nsamps2; j++) {
+            	//printf("i = %d, j = %d\n",i,j);
 #if defined(__x86_64__) || defined(__i386__)
 #ifdef __AVX2__
                 ((__m256i *)buff[i])[j] = _mm256_srai_epi16(buff_tmp[i][j],4);

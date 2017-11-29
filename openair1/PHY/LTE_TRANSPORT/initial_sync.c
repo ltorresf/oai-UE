@@ -174,26 +174,32 @@ int pbch_detection(PHY_VARS_UE *ue, runmode_t mode)
     switch (dummy) {
 
     case 0 :
+    	LOG_I(PHY,"case 0: dummy = 0. Changing N_RB_DL to 6\n");
       frame_parms->N_RB_DL = 6;
       break;
 
     case 1 :
+    	LOG_I(PHY,"case 1: dummy = 1. Changing N_RB_DL to 15\n");
       frame_parms->N_RB_DL = 15;
       break;
 
     case 2 :
+    	LOG_I(PHY,"case 2: dummy = 2. Changing N_RB_DL to 25\n");
       frame_parms->N_RB_DL = 25;
       break;
 
     case 3 :
+    	LOG_I(PHY,"case 3: dummy = 3. Changing N_RB_DL to 50\n");
       frame_parms->N_RB_DL = 50;
       break;
 
     case 4 :
+    	LOG_I(PHY,"case 4: dummy = 4. Changing N_RB_DL to 75\n");
       frame_parms->N_RB_DL = 75;
       break;
 
     case 5:
+    	LOG_I(PHY,"case 5: dummy = 5. Changing N_RB_DL to 100\n");
       frame_parms->N_RB_DL = 100;
       break;
 

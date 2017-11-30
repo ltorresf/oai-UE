@@ -324,7 +324,7 @@ int initial_sync(PHY_VARS_UE *ue, runmode_t mode)
   else
     ue->rx_offset = FRAME_LENGTH_COMPLEX_SAMPLES + sync_pos2 - sync_pos_slot;
 
-  LOG_I(PHY,"[%d] sync_pos_slot = %"PRIi32", timing offset = %d\n",procID_initial_sync,sync_pos_slot,ue->rx_offset);
+//LA  LOG_I(PHY,"[%d] sync_pos_slot = %"PRIi32", timing offset = %d\n",procID_initial_sync,sync_pos_slot,ue->rx_offset);
 
   if (((sync_pos2 - sync_pos_slot) >=0 ) && ((sync_pos2 - sync_pos_slot) < ((FRAME_LENGTH_COMPLEX_SAMPLES-frame_parms->samples_per_tti/2)))) {
 #ifdef DEBUG_INITIAL_SYNCH
@@ -339,7 +339,8 @@ int initial_sync(PHY_VARS_UE *ue, runmode_t mode)
 
     init_frame_parms(&ue->frame_parms,1);
     lte_gold(frame_parms,ue->lte_gold_table[0],frame_parms->Nid_cell);
-    ret = pbch_detection(ue,mode);
+//LA    LOG_I(PHY, "[1/4] Ncp=NORMAL, frame_type=FDD. Before PBCH detection: N_RB_DL = %d \n",ue->frame_parms.N_RB_DL);
+    //ret = pbch_detection(ue,mode);
     //   write_output("rxdata2.m","rxd2",ue->common_vars.rxdata[0],10*frame_parms->samples_per_tti,1,1);
 
 #ifdef DEBUG_INITIAL_SYNCH
@@ -387,7 +388,8 @@ int initial_sync(PHY_VARS_UE *ue, runmode_t mode)
 
       init_frame_parms(&ue->frame_parms,1);
       lte_gold(frame_parms,ue->lte_gold_table[0],frame_parms->Nid_cell);
-      ret = pbch_detection(ue,mode);
+//LA      LOG_I(PHY, "[2/4] Ncp=EXTENDED, frame_type=FDD. Before PBCH detection: N_RB_DL = %d \n",ue->frame_parms.N_RB_DL);
+      //ret = pbch_detection(ue,mode);
       //     write_output("rxdata3.m","rxd3",ue->common_vars.rxdata[0],10*frame_parms->samples_per_tti,1,1);
 #ifdef DEBUG_INITIAL_SYNCH
       LOG_I(PHY,"FDD Extended prefix: CellId %d metric %d, phase %d, flip %d, pbch %d\n",
@@ -431,7 +433,8 @@ int initial_sync(PHY_VARS_UE *ue, runmode_t mode)
       init_frame_parms(&ue->frame_parms,1);
 
       lte_gold(frame_parms,ue->lte_gold_table[0],frame_parms->Nid_cell);
-      ret = pbch_detection(ue,mode);
+//LA      LOG_I(PHY, "[3/4] Ncp=NORMAL, frame_type=TDD. Before PBCH detection: N_RB_DL = %d \n",ue->frame_parms.N_RB_DL);
+      //ret = pbch_detection(ue,mode);
       //      write_output("rxdata4.m","rxd4",ue->common_vars.rxdata[0],10*frame_parms->samples_per_tti,1,1);
 
 #ifdef DEBUG_INITIAL_SYNCH
@@ -468,7 +471,8 @@ int initial_sync(PHY_VARS_UE *ue, runmode_t mode)
 
         init_frame_parms(&ue->frame_parms,1);
         lte_gold(frame_parms,ue->lte_gold_table[0],frame_parms->Nid_cell);
-        ret = pbch_detection(ue,mode);
+//LA        LOG_I(PHY, "[4/4] Ncp=EXTENDED, frame_type=TDD. Before PBCH detection: N_RB_DL = %d \n",ue->frame_parms.N_RB_DL);
+        //ret = pbch_detection(ue,mode);
 
 	//	write_output("rxdata5.m","rxd5",ue->common_vars.rxdata[0],10*frame_parms->samples_per_tti,1,1);
 #ifdef DEBUG_INITIAL_SYNCH
@@ -486,7 +490,7 @@ int initial_sync(PHY_VARS_UE *ue, runmode_t mode)
 #if DISABLE_LOG_X
 	  printf("Ignore MIB with high freq offset [%d Hz] estimation \n",ue->common_vars.freq_offset);
 #else
-	  LOG_E(HW, "Ignore MIB with high freq offset [%d Hz] estimation \n",ue->common_vars.freq_offset);
+	  LOG_E(HW, "Ignore MIB with high freq offset [%d Hz] estimation. N_RB_DL = %d \n",ue->common_vars.freq_offset,ue->frame_parms.N_RB_DL);
 #endif
   }
 

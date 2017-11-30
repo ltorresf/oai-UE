@@ -87,7 +87,7 @@ int init_frame_parms(LTE_DL_FRAME_PARMS *frame_parms,uint8_t osf)
     printf("Illegal oversampling %d\n",osf);
     return(-1);
   }
-
+  //printf("[lte_parms] frame_parms->N_RB_DL = %d\n",frame_parms->N_RB_DL);
   switch (frame_parms->N_RB_DL) {
 
   case 100:

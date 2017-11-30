@@ -201,6 +201,8 @@ void init_UE(int nb_inst)
 #endif
 }
 
+
+int freq_offset=0,carrier_offset=0;//LA
 /*!
  * \brief This is the UE synchronize thread.
  * It performs band scanning and synchonization.
@@ -217,7 +219,7 @@ static void *UE_thread_synch(void *arg) {
     int current_offset = 0;
     sync_mode_t sync_mode = pbch;
     int CC_id = UE->CC_id;
-    int freq_offset=0,carrier_offset=0;//LA
+//    int freq_offset=0,carrier_offset=0;//LA
     char threadname[128];
 
 
@@ -340,13 +342,13 @@ static void *UE_thread_synch(void *arg) {
         }
         case pbch:
         {
-        	printf(">>>>>>>>>>>>>>>>>>>>>>>>>> [%d] Start case: PBCH <<<<<<<<<<<<<<<<<<<<<<<<<<\n",procID_sync);//LA
+//LA        	printf(">>>>>>>>>>>>>>>>>>>>>>>>>> [%d] Start case: PBCH <<<<<<<<<<<<<<<<<<<<<<<<<<\n",procID_sync);//LA
 #if DISABLE_LOG_X
             printf("[UE thread Synch] Running Initial Synch (mode %d)\n",UE->mode);
 #else
 //LA1            LOG_I(PHY, "[%d] Running Initial Synch (UE->mode = %d) [0:normal_txrx].\n",procID_sync,UE->mode);
 #endif
-            LOG_I(PHY,"[%d] samples_per_tti = %d.\n",procID_sync,UE->frame_parms.samples_per_tti);
+//LA            LOG_I(PHY,"[%d] samples_per_tti = %d.\n",procID_sync,UE->frame_parms.samples_per_tti);
             if (initial_sync( UE, UE->mode ) == 0) {	//LA: Initial synchronization succeed
 
                 hw_slot_offset = (UE->rx_offset<<1) / UE->frame_parms.samples_per_tti;
@@ -448,6 +450,7 @@ static void *UE_thread_synch(void *arg) {
             	if (UE->UE_scan == 1) {
 
             		if (UE->UE_scan_carrier == 1) {
+            			LOG_I(PHY,"[%d] carrier_cnt = %d.\n",procID_sync,carrier_cnt);
             			LOG_I(PHY,"[%d] Initial sync failed. Calculating new +/-100-Hz offset and trying again.\n",procID_sync);
 						if (freq_offset >= 0)
 						freq_offset += 100;
@@ -455,15 +458,33 @@ static void *UE_thread_synch(void *arg) {
 
 						if (abs(freq_offset) > 7500) {
 							LOG_I( PHY, "[%d] No cell synchronization found after scanning 15-kHz BW (OFDM carrier BW); Scanning next carrier: %d of %d.\n",procID_sync,
-									carrier_offset/15000,(bands_to_scan.band_info[CC_id].dl_max-bands_to_scan.band_info[CC_id].dl_min)/15000);
+														2+carrier_offset/15000,(bands_to_scan.band_info[CC_id].dl_max-bands_to_scan.band_info[CC_id].dl_min)/15000);
 							freq_offset=0;
 							carrier_offset+=15000;
+							pss_corr_freq[carrier_cnt] = pss_corr_foffset[carrier_cnt] + bands_to_scan.band_info[CC_id].dl_min;
+							carrier_cnt++; //LA
 							if (carrier_offset > (bands_to_scan.band_info[CC_id].dl_max-bands_to_scan.band_info[CC_id].dl_min)) {
+							//if (carrier_offset > 60000) {
+								//Storing variable in MATLAB file
+								write_output("PSS_correlation_peaks.m","peak_val",pss_corr_peaks,5000,1,2);
+								write_output("PSS_correlation_time_offset.m","time_offset",pss_corr_toffset,5000,1,2);
+								write_output("PSS_correlation_freq.m","freq",pss_corr_freq,5000,1,2);
+								write_output("PSS_correlation_freq_offset.m","freq_offset",pss_corr_foffset,5000,1,2);
+								write_output("PSS_correlation_sequence_index.m","pss_index",pss_corr_seq,5000,1,2);
+								LOG_I(PHY,"Dumping max correlation values after PSS synchronization centered at each possible OFDM carrier... bye bye \n");
+		                        /*FILE *fd;
+		                        if ((fd = fopen("rxsig_frame0.dat","w"))!=NULL) {
+		                            fwrite((void*)&UE->common_vars.rxdata[0][0],sizeof(int32_t),10*UE->frame_parms.samples_per_tti,fd);
+		                            LOG_I(PHY,"Dumping max correlation values after PSS synchronization centered at each possible OFDM carrier... bye bye \n");
+		                            fclose(fd);
+		                            exit(0);
+		                        } */
+		                        //Exiting the whole program execution
 								mac_xface->macphy_exit("No cell synchronization found, abandoning");
 								return &UE_thread_synch_retval; // not reached
 							}
-
 						}
+
             		}
 
             	}
@@ -503,7 +524,7 @@ static void *UE_thread_synch(void *arg) {
                        UE->rx_total_gain_dB,
                        downlink_frequency[0][0]+freq_offset,
                        downlink_frequency[0][0]+uplink_frequency_offset[0][0]+freq_offset );*/
-                LOG_I(PHY,"[%d] Trying carrier off %d Hz, rxgain %d (DL %u, UL %u)\n",procID_sync,
+                LOG_I(PHY,"[%d] Trying carrier offset %d Hz, rxgain %d (DL %u, UL %u)\n",procID_sync,
                        freq_offset+carrier_offset,
                        UE->rx_total_gain_dB,
                        downlink_frequency[0][0]+freq_offset+carrier_offset,
@@ -522,7 +543,7 @@ static void *UE_thread_synch(void *arg) {
                 //Setting the new Tx/Rx frequency values in the USRP configuration
                 UE->rfdevice.trx_set_freq_func(&UE->rfdevice,&openair0_cfg[0],0);
             }// initial_sync=0
-            printf(">>>>>>>>>>>>>>>>>>>>>>>>>> [%d] End case: PBCH <<<<<<<<<<<<<<<<<<<<<<<<<<\n",procID_sync);//LA
+//LA            printf(">>>>>>>>>>>>>>>>>>>>>>>>>> [%d] End case: PBCH <<<<<<<<<<<<<<<<<<<<<<<<<<\n",procID_sync);//LA
             break;
         }
         case si:
@@ -533,7 +554,7 @@ static void *UE_thread_synch(void *arg) {
         AssertFatal ( 0== pthread_mutex_lock(&UE->proc.mutex_synch), "");
         // indicate readiness
         UE->proc.instance_cnt_synch--;
-        LOG_I(PHY,"[%d] UE->proc.instance_cnt_synch = %d, samples_per_tti = %d.\n",procID_sync,UE->proc.instance_cnt_synch,UE->frame_parms.samples_per_tti);
+//LA        LOG_I(PHY,"[%d] UE->proc.instance_cnt_synch = %d, samples_per_tti = %d.\n",procID_sync,UE->proc.instance_cnt_synch,UE->frame_parms.samples_per_tti);
         AssertFatal ( 0== pthread_mutex_unlock(&UE->proc.mutex_synch), "");
 
         VCD_SIGNAL_DUMPER_DUMP_FUNCTION_BY_NAME( VCD_SIGNAL_DUMPER_FUNCTIONS_UE_THREAD_SYNCH, 0 );
@@ -735,12 +756,12 @@ void *UE_thread(void *arg) {
 
     int sub_frame=-1;
     //int cumulated_shift=0;
-    int la=0, la1=0, la2=0;
+//LA    int la=0;//LA, la1=0, la2=0;
     AssertFatal(UE->rfdevice.trx_start_func(&UE->rfdevice) == 0, "Could not start the device\n");
     while (!oai_exit) {
-    	la++;
-    	la1++;
-    	printf("la1 = %d, ",la1);
+    	//LAla++;
+//LA    	la++;
+//LA    	printf("Cycle = %d\n",la);
         AssertFatal ( 0== pthread_mutex_lock(&UE->proc.mutex_synch), "");
         //LA: Instance count for synch thread. If <0,
         int instance_cnt_synch = UE->proc.instance_cnt_synch;
@@ -749,13 +770,13 @@ void *UE_thread(void *arg) {
         AssertFatal ( 0== pthread_mutex_unlock(&UE->proc.mutex_synch), "");
 
         if (is_synchronized == 0) {
-        	printf("la = %d, UE->is_synchronized = %d\n",la,UE->is_synchronized);
+//LA        	printf("la = %d, UE->is_synchronized = %d\n",la,UE->is_synchronized);
             if (instance_cnt_synch < 0) {  // we can invoke the synch
-                printf("[<0] instance_cnt_synch = %d\n",instance_cnt_synch);
+//LA                printf("[<0] instance_cnt_synch = %d\n",instance_cnt_synch);
             	// grab 10 ms of signal and wakeup synch thread
                 for (int i=0; i<UE->frame_parms.nb_antennas_rx; i++)
                     rxp[i] = (void*)&UE->common_vars.rxdata[i][0];
-                printf("[<0] loop_through_memory = %d, UE->mode = %d\n", loop_through_memory,UE->mode);
+//LA                printf("[<0] loop_through_memory = %d, UE->mode = %d\n", loop_through_memory,UE->mode);
 
                 if (UE->mode != loop_through_memory)
                     AssertFatal( UE->frame_parms.samples_per_tti*10 ==
@@ -775,22 +796,22 @@ void *UE_thread(void *arg) {
                 }
 		AssertFatal ( 0== pthread_mutex_unlock(&UE->proc.mutex_synch), "");
             } else {
-            	printf("[=0] instance_cnt_synch = %d\n",instance_cnt_synch);
+//LA            	printf("[=0] instance_cnt_synch = %d\n",instance_cnt_synch);
 #if OAISIM
               (void)dummy_rx; /* avoid gcc warnings */
               usleep(500);
 #else
-              printf("[=0] loop_through_memory = %d, UE->mode = %d\n", loop_through_memory,UE->mode);
+//LA              printf("[=0] loop_through_memory = %d, UE->mode = %d, N_RB_DL = %d\n", loop_through_memory,UE->mode,UE->frame_parms.N_RB_DL);
                 // grab 10 ms of signal into dummy buffer
                 if (UE->mode != loop_through_memory) {
                     for (int i=0; i<UE->frame_parms.nb_antennas_rx; i++)
                         rxp[i] = (void*)&dummy_rx[i][0];
                     for (int sf=0; sf<10; sf++) {
-                    	printf("before: sf = %d, samples_per_tti = %d, nb_antennas_rx = %d.\n",sf,UE->frame_parms.samples_per_tti,UE->frame_parms.nb_antennas_rx);
+ //LA                   	printf("before: sf = %d, samples_per_tti = %d, nb_antennas_rx = %d.\n",sf,UE->frame_parms.samples_per_tti,UE->frame_parms.nb_antennas_rx);
                     	//dump_frame_parms((LTE_DL_FRAME_PARMS*) UE->frame_parms);
 
-						printf("frame_parms->N_RB_DL=%d\n",UE->frame_parms.N_RB_DL);
-						printf("frame_parms->N_RB_UL=%d\n",UE->frame_parms.N_RB_UL);
+//LA						printf("before: frame_parms->N_RB_DL=%d\n",UE->frame_parms.N_RB_DL);
+/*LA						printf("frame_parms->N_RB_UL=%d\n",UE->frame_parms.N_RB_UL);
 						//printf("frame_parms->Nid_cell=%d\n",UE->frame_parms.Nid_cell);
 						printf("frame_parms->Ncp=%d\n",UE->frame_parms.Ncp);
 						printf("frame_parms->Ncp_UL=%d\n",UE->frame_parms.Ncp_UL);
@@ -808,14 +829,14 @@ void *UE_thread(void *arg) {
 						printf("frame_parms->first_carrier_offset=%d\n",UE->frame_parms.first_carrier_offset);
 						printf("frame_parms->samples_per_tti=%d\n",UE->frame_parms.samples_per_tti);
 						printf("frame_parms->symbols_per_tti=%d\n",UE->frame_parms.symbols_per_tti);
-
+*/
                     	//printf("rx = { %"PRIi16" , %"PRIi16" %"PRIi16" %"PRIi16" }\n",(int16_t *)(rxp),(int16_t *)(rxp+16),(int16_t *)(rxp+32),(int16_t *)(rxp+48));
                         //	    printf("Reading dummy sf %d\n",sf);
                     	//AssertFatal ( 0== pthread_mutex_lock(&UE->proc.mutex_synch), ""); //LA
-						//UE->rfdevice.trx_read_func(&UE->rfdevice,&timestamp,rxp,UE->frame_parms.samples_per_tti,UE->frame_parms.nb_antennas_rx);
-                    	la2=UE->rfdevice.trx_read_func(&UE->rfdevice,&timestamp,rxp,UE->frame_parms.samples_per_tti,UE->frame_parms.nb_antennas_rx);
+                    	UE->rfdevice.trx_read_func(&UE->rfdevice,&timestamp,rxp,UE->frame_parms.samples_per_tti,UE->frame_parms.nb_antennas_rx);
 						//AssertFatal ( 0== pthread_mutex_unlock(&UE->proc.mutex_synch), ""); //LA
-						printf("after: sf = %d, number of samples read = %d\n",sf,la2);
+//LA						printf("after: sf = %d, number of samples read = %d\n",sf,la2);
+//LA						printf("after: frame_parms->N_RB_DL=%d\n",UE->frame_parms.N_RB_DL);
 						//dump_frame_parms((LTE_DL_FRAME_PARMS*) UE->frame_parms);
 
                     }

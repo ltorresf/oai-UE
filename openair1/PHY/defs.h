@@ -129,6 +129,7 @@ static inline void* malloc16_clear( size_t size )
 #include "PHY/TOOLS/defs.h"
 #include "platform_types.h"
 
+
 #ifdef OPENAIR_LTE
 
 #include "PHY/LTE_TRANSPORT/defs.h"

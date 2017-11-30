@@ -47,6 +47,13 @@ int* sync_corr_ue2 = NULL;
 int sync_tmp[2048*4] __attribute__((aligned(32)));
 short syncF_tmp[2048*2] __attribute__((aligned(32)));
 
+//LA
+int pss_corr_peaks[5000];
+int pss_corr_toffset[5000];
+int pss_corr_freq[5000];
+int pss_corr_foffset[5000];
+int pss_corr_seq[5000];
+int	carrier_cnt = 0;
 
 
 int lte_sync_time_init(LTE_DL_FRAME_PARMS *frame_parms )   // LTE_UE_COMMON *common_vars
@@ -54,6 +61,15 @@ int lte_sync_time_init(LTE_DL_FRAME_PARMS *frame_parms )   // LTE_UE_COMMON *com
 	printf("************************** Start: [lte_sync_time_init] **************************\n"); //LA
 
   int i,k;
+
+  //LA
+	bzero(pss_corr_peaks,5000);
+	bzero(pss_corr_toffset,5000);
+	bzero(pss_corr_freq,5000);
+	bzero(pss_corr_foffset,5000);
+	bzero(pss_corr_seq,5000);
+
+
   LOG_I(PHY,"Memory allocation: sync_corr_ue0.\n");
   sync_corr_ue0 = (int *)malloc16(LTE_NUMBER_OF_SUBFRAMES_PER_FRAME*sizeof(int)*frame_parms->samples_per_tti);
   LOG_I(PHY,"Memory allocation: sync_corr_ue1.\n");
@@ -365,6 +381,7 @@ int debug_cnt=0;
 #endif
 
 #define SHIFT 17
+
 // This function uses the PSS sequence to obtain the timing offset of the radio frame
 int lte_sync_time(int **rxdata, ///rx data in time domain
                   LTE_DL_FRAME_PARMS *frame_parms,
@@ -509,7 +526,18 @@ int lte_sync_time(int **rxdata, ///rx data in time domain
 */
       }
     }
+
   }
+
+  //LA
+  if(peak_val>pss_corr_peaks[carrier_cnt]) {
+	pss_corr_peaks[carrier_cnt]=peak_val;
+	printf("peak_val = %d, pss_corr_peaks[%d] = %d, pss = %d.\n",peak_val,carrier_cnt,pss_corr_peaks[carrier_cnt],sync_source);
+	pss_corr_seq[carrier_cnt] = sync_source;
+	pss_corr_toffset[carrier_cnt] = peak_pos;
+	pss_corr_foffset[carrier_cnt] = freq_offset+carrier_offset;
+  }
+
 
   *eNB_id = sync_source;	//eNB_id stores the PSS sequence we are using
 

@@ -35,6 +35,14 @@ extern unsigned int TX_DMA_BUFFER[4][NB_ANTENNAS_TX];
 #include "PHY/LTE_TRANSPORT/extern.h"
 #include "SIMULATION/ETH_TRANSPORT/extern.h"
 
+//LA
+extern int	pss_corr_peaks[5000],carrier_cnt;
+extern int	pss_corr_toffset[5000];
+extern int	pss_corr_foffset[5000];
+extern int	pss_corr_freq[5000];
+extern int	pss_corr_seq[5000];
+extern int freq_offset,carrier_offset;//LA
+
 extern unsigned int DAQ_MBOX;
 extern int number_of_cards;
 

@@ -276,7 +276,7 @@ char prefix_string[2][9] = {"NORMAL","EXTENDED"};
 //LA: if returns ret=0, it has done synchronization. Otherwise it has failed and a new frequency must be chosen.
 int initial_sync(PHY_VARS_UE *ue, runmode_t mode)
 {
-	int procID_initial_sync = gettid();
+	//LAint procID_initial_sync = gettid();
 //LA1	printf("-------------------------- Start: [initial_sync] [PID: %d] --------------------------\n",procID_initial_sync);
 
   int32_t sync_pos,sync_pos2,sync_pos_slot;
@@ -331,14 +331,14 @@ int initial_sync(PHY_VARS_UE *ue, runmode_t mode)
     //LOG_I(PHY,"Calling sss detection (FDD normal CP).\n");
     LOG_I(PHY,"[%d] Calling SSS detection (FDD normal CP).\n",procID_initial_sync);
 #endif
-    rx_sss(ue,&metric_fdd_ncp,&flip_fdd_ncp,&phase_fdd_ncp);
+    //rx_sss(ue,&metric_fdd_ncp,&flip_fdd_ncp,&phase_fdd_ncp);
     frame_parms->nushift  = frame_parms->Nid_cell%6;
 
-    if (flip_fdd_ncp==1)
+ /*LA   if (flip_fdd_ncp==1)
       ue->rx_offset += (FRAME_LENGTH_COMPLEX_SAMPLES>>1);
-
-    init_frame_parms(&ue->frame_parms,1);
-    lte_gold(frame_parms,ue->lte_gold_table[0],frame_parms->Nid_cell);
+*/
+//LA    init_frame_parms(&ue->frame_parms,1);
+//LA    lte_gold(frame_parms,ue->lte_gold_table[0],frame_parms->Nid_cell);
 //LA    LOG_I(PHY, "[1/4] Ncp=NORMAL, frame_type=FDD. Before PBCH detection: N_RB_DL = %d \n",ue->frame_parms.N_RB_DL);
     //ret = pbch_detection(ue,mode);
     //   write_output("rxdata2.m","rxd2",ue->common_vars.rxdata[0],10*frame_parms->samples_per_tti,1,1);

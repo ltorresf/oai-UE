@@ -219,6 +219,7 @@ static void *UE_thread_synch(void *arg) {
     int current_offset = 0;
     sync_mode_t sync_mode = pbch;
     int CC_id = UE->CC_id;
+    //CC_id = 1;
 //    int freq_offset=0,carrier_offset=0;//LA
     char threadname[128];
 
@@ -270,8 +271,10 @@ static void *UE_thread_synch(void *arg) {
     	LOG_I(PHY,"[%d] Band scanning enabled. (UE->UE_scan = 1).\n",procID_sync);
         current_band=0;
         for (i=0; i<openair0_cfg[UE->rf_map.card].rx_num_channels; i++) {
-            downlink_frequency[UE->rf_map.card][UE->rf_map.chain+i] = bands_to_scan.band_info[CC_id].dl_min;
-            uplink_frequency_offset[UE->rf_map.card][UE->rf_map.chain+i] = bands_to_scan.band_info[CC_id].ul_min-bands_to_scan.band_info[CC_id].dl_min;
+            //downlink_frequency[UE->rf_map.card][UE->rf_map.chain+i] = bands_to_scan.band_info[CC_id].dl_min;
+            //uplink_frequency_offset[UE->rf_map.card][UE->rf_map.chain+i] = bands_to_scan.band_info[CC_id].ul_min-bands_to_scan.band_info[CC_id].dl_min;
+            downlink_frequency[UE->rf_map.card][UE->rf_map.chain+i] = bands_to_scan.band_info[1].dl_min;
+            uplink_frequency_offset[UE->rf_map.card][UE->rf_map.chain+i] = bands_to_scan.band_info[1].ul_min-bands_to_scan.band_info[1].dl_min;
             openair0_cfg[UE->rf_map.card].rx_freq[UE->rf_map.chain+i] = downlink_frequency[CC_id][i];
             openair0_cfg[UE->rf_map.card].tx_freq[UE->rf_map.chain+i] = downlink_frequency[CC_id][i]+uplink_frequency_offset[CC_id][i];
             openair0_cfg[UE->rf_map.card].rx_gain[UE->rf_map.chain+i] = UE->rx_total_gain_dB;
@@ -450,7 +453,7 @@ static void *UE_thread_synch(void *arg) {
             	if (UE->UE_scan == 1) {
 
             		if (UE->UE_scan_carrier == 1) {
-            			LOG_I(PHY,"[%d] carrier_cnt = %d.\n",procID_sync,carrier_cnt);
+            			LOG_I(PHY,"[%d] carrier_cnt = %d, CC_id = %d, frequency = %"PRIu32".\n",procID_sync,carrier_cnt,CC_id,downlink_frequency[0][0]);
             			LOG_I(PHY,"[%d] Initial sync failed. Calculating new +/-100-Hz offset and trying again.\n",procID_sync);
 						if (freq_offset >= 0)
 						freq_offset += 100;

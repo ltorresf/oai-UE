@@ -219,6 +219,7 @@ static void *UE_thread_synch(void *arg) {
     int current_offset = 0;
     sync_mode_t sync_mode = pbch;
     int CC_id = UE->CC_id;
+    int	set_band = 1;
     //CC_id = 1;
 //    int freq_offset=0,carrier_offset=0;//LA
     char threadname[128];
@@ -273,8 +274,8 @@ static void *UE_thread_synch(void *arg) {
         for (i=0; i<openair0_cfg[UE->rf_map.card].rx_num_channels; i++) {
             //downlink_frequency[UE->rf_map.card][UE->rf_map.chain+i] = bands_to_scan.band_info[CC_id].dl_min;
             //uplink_frequency_offset[UE->rf_map.card][UE->rf_map.chain+i] = bands_to_scan.band_info[CC_id].ul_min-bands_to_scan.band_info[CC_id].dl_min;
-            downlink_frequency[UE->rf_map.card][UE->rf_map.chain+i] = bands_to_scan.band_info[1].dl_min;
-            uplink_frequency_offset[UE->rf_map.card][UE->rf_map.chain+i] = bands_to_scan.band_info[1].ul_min-bands_to_scan.band_info[1].dl_min;
+            downlink_frequency[UE->rf_map.card][UE->rf_map.chain+i] = bands_to_scan.band_info[set_band].dl_min;
+            uplink_frequency_offset[UE->rf_map.card][UE->rf_map.chain+i] = bands_to_scan.band_info[set_band].ul_min-bands_to_scan.band_info[set_band].dl_min;
             openair0_cfg[UE->rf_map.card].rx_freq[UE->rf_map.chain+i] = downlink_frequency[CC_id][i];
             openair0_cfg[UE->rf_map.card].tx_freq[UE->rf_map.chain+i] = downlink_frequency[CC_id][i]+uplink_frequency_offset[CC_id][i];
             openair0_cfg[UE->rf_map.card].rx_gain[UE->rf_map.chain+i] = UE->rx_total_gain_dB;
@@ -286,14 +287,22 @@ static void *UE_thread_synch(void *arg) {
             LOG_I(PHY, "[%d] UE_scan = %d. i = %d, openair0_cfg[%d].tx_freq[%d] = %f MHz.\n",procID_sync,UE->UE_scan,i,(UE->rf_map.card),(UE->rf_map.chain+i),openair0_cfg[UE->rf_map.card].tx_freq[UE->rf_map.chain+i]/1000000);
             LOG_I(PHY, "[%d] UE_scan = %d. i = %d, openair0_cfg[%d].rx_gain[%d] = %f.\n",procID_sync,UE->UE_scan,i,(UE->rf_map.card),(UE->rf_map.chain+i),openair0_cfg[UE->rf_map.card].rx_gain[UE->rf_map.chain+i]);
 
-            LOG_I(PHY, "[%d] UE_scan = %d. i = %d, bands_to_scan.band_info[%d].band = %d.\n",procID_sync,UE->UE_scan,i,CC_id,bands_to_scan.band_info[CC_id].band);
+/*            LOG_I(PHY, "[%d] UE_scan = %d. i = %d, bands_to_scan.band_info[%d].band = %d.\n",procID_sync,UE->UE_scan,i,CC_id,bands_to_scan.band_info[CC_id].band);
             LOG_I(PHY, "[%d] UE_scan = %d. i = %d, bands_to_scan.band_info[%d].ul_min = %"PRIu32" MHz.\n",procID_sync,UE->UE_scan,i,CC_id,bands_to_scan.band_info[CC_id].ul_min/1000000);
             LOG_I(PHY, "[%d] UE_scan = %d. i = %d, bands_to_scan.band_info[%d].ul_max = %"PRIu32" MHz.\n",procID_sync,UE->UE_scan,i,CC_id,bands_to_scan.band_info[CC_id].ul_max/1000000);
             LOG_I(PHY, "[%d] UE_scan = %d. i = %d, bands_to_scan.band_info[%d].dl_min = %"PRIu32" MHz.\n",procID_sync,UE->UE_scan,i,CC_id,bands_to_scan.band_info[CC_id].dl_min/1000000);
             LOG_I(PHY, "[%d] UE_scan = %d. i = %d, bands_to_scan.band_info[%d].dl_max = %"PRIu32" MHz.\n",procID_sync,UE->UE_scan,i,CC_id,bands_to_scan.band_info[CC_id].dl_max/1000000);
-            LOG_I(PHY, "[%d] UE_scan = %d. i = %d, bands_to_scan.band_info[%d].frame_type = %d.\n",procID_sync,UE->UE_scan,i,CC_id,bands_to_scan.band_info[CC_id].frame_type);
+            LOG_I(PHY, "[%d] UE_scan = %d. i = %d, bands_to_scan.band_info[%d].frame_type = %d.\n",procID_sync,UE->UE_scan,i,CC_id,bands_to_scan.band_info[CC_id].frame_type); */
 
-            LOG_I( PHY, "[%d] Bandwith of signal: %"PRIu32" MHz.\n",procID_sync,(bands_to_scan.band_info[CC_id].dl_max-bands_to_scan.band_info[CC_id].dl_min)/1000000);
+            LOG_I(PHY, "[%d] UE_scan = %d. i = %d, bands_to_scan.band_info[%d].band = %d.\n",procID_sync,UE->UE_scan,i,set_band,bands_to_scan.band_info[set_band].band);
+			LOG_I(PHY, "[%d] UE_scan = %d. i = %d, bands_to_scan.band_info[%d].ul_min = %"PRIu32" MHz.\n",procID_sync,UE->UE_scan,i,set_band,bands_to_scan.band_info[set_band].ul_min/1000000);
+			LOG_I(PHY, "[%d] UE_scan = %d. i = %d, bands_to_scan.band_info[%d].ul_max = %"PRIu32" MHz.\n",procID_sync,UE->UE_scan,i,set_band,bands_to_scan.band_info[set_band].ul_max/1000000);
+			LOG_I(PHY, "[%d] UE_scan = %d. i = %d, bands_to_scan.band_info[%d].dl_min = %"PRIu32" MHz.\n",procID_sync,UE->UE_scan,i,set_band,bands_to_scan.band_info[set_band].dl_min/1000000);
+			LOG_I(PHY, "[%d] UE_scan = %d. i = %d, bands_to_scan.band_info[%d].dl_max = %"PRIu32" MHz.\n",procID_sync,UE->UE_scan,i,set_band,bands_to_scan.band_info[set_band].dl_max/1000000);
+			LOG_I(PHY, "[%d] UE_scan = %d. i = %d, bands_to_scan.band_info[%d].frame_type = %d.\n",procID_sync,UE->UE_scan,i,set_band,bands_to_scan.band_info[set_band].frame_type);
+
+            //LOG_I( PHY, "[%d] Bandwith of signal: %"PRIu32" MHz.\n",procID_sync,(bands_to_scan.band_info[CC_id].dl_max-bands_to_scan.band_info[CC_id].dl_min)/1000000);
+            LOG_I( PHY, "[%d] Bandwith of signal: %"PRIu32" MHz.\n",procID_sync,(bands_to_scan.band_info[set_band].dl_max-bands_to_scan.band_info[set_band].dl_min)/1000000);
             LOG_I(PHY,"[%d] samples_per_tti = %d.\n",procID_sync,UE->frame_parms.samples_per_tti);
 
             //LA:Setting the new Tx/Rx frequency values in the USRP configuration
@@ -460,13 +469,17 @@ static void *UE_thread_synch(void *arg) {
 						freq_offset *= -1;
 
 						if (abs(freq_offset) > 7500) {
+							//LOG_I( PHY, "[%d] No cell synchronization found after scanning 15-kHz BW (OFDM carrier BW); Scanning next carrier: %d of %d.\n",procID_sync,
+							//							2+carrier_offset/15000,(bands_to_scan.band_info[CC_id].dl_max-bands_to_scan.band_info[CC_id].dl_min)/15000);
 							LOG_I( PHY, "[%d] No cell synchronization found after scanning 15-kHz BW (OFDM carrier BW); Scanning next carrier: %d of %d.\n",procID_sync,
-														2+carrier_offset/15000,(bands_to_scan.band_info[CC_id].dl_max-bands_to_scan.band_info[CC_id].dl_min)/15000);
+																					2+carrier_offset/15000,(bands_to_scan.band_info[set_band].dl_max-bands_to_scan.band_info[set_band].dl_min)/15000);
 							freq_offset=0;
 							carrier_offset+=15000;
-							pss_corr_freq[carrier_cnt] = pss_corr_foffset[carrier_cnt] + bands_to_scan.band_info[CC_id].dl_min;
+							//pss_corr_freq[carrier_cnt] = pss_corr_foffset[carrier_cnt] + bands_to_scan.band_info[CC_id].dl_min;
+							pss_corr_freq[carrier_cnt] = pss_corr_foffset[carrier_cnt] + bands_to_scan.band_info[set_band].dl_min;
 							carrier_cnt++; //LA
-							if (carrier_offset > (bands_to_scan.band_info[CC_id].dl_max-bands_to_scan.band_info[CC_id].dl_min)) {
+							//if (carrier_offset > (bands_to_scan.band_info[CC_id].dl_max-bands_to_scan.band_info[CC_id].dl_min)) {
+							if (carrier_offset > (bands_to_scan.band_info[set_band].dl_max-bands_to_scan.band_info[set_band].dl_min)) {
 							//if (carrier_offset > 60000) {
 								//Storing variable in MATLAB file
 								write_output("PSS_correlation_peaks.m","peak_val",pss_corr_peaks,5000,1,2);

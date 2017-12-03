@@ -54,6 +54,13 @@ int pss_corr_freq[5000];
 int pss_corr_foffset[5000];
 int pss_corr_seq[5000];
 int	carrier_cnt = 0;
+char filename1[25];
+char filename2[25];
+char filename3[25];
+char filename4[25];
+//int* tmp1 = NULL;
+//int* tmp2 = NULL;
+//int* tmp3 = NULL;
 
 
 int lte_sync_time_init(LTE_DL_FRAME_PARMS *frame_parms )   // LTE_UE_COMMON *common_vars
@@ -68,6 +75,11 @@ int lte_sync_time_init(LTE_DL_FRAME_PARMS *frame_parms )   // LTE_UE_COMMON *com
 	bzero(pss_corr_freq,5000);
 	bzero(pss_corr_foffset,5000);
 	bzero(pss_corr_seq,5000);
+
+//	tmp1 = (int *)malloc16(LTE_NUMBER_OF_SUBFRAMES_PER_FRAME*sizeof(int)*frame_parms->samples_per_tti);
+//	tmp2 = (int *)malloc16(LTE_NUMBER_OF_SUBFRAMES_PER_FRAME*sizeof(int)*frame_parms->samples_per_tti);
+//	tmp3 = (int *)malloc16(LTE_NUMBER_OF_SUBFRAMES_PER_FRAME*sizeof(int)*frame_parms->samples_per_tti);
+
 
 
   LOG_I(PHY,"Memory allocation: sync_corr_ue0.\n");
@@ -516,6 +528,11 @@ int lte_sync_time(int **rxdata, ///rx data in time domain
         peak_pos = n;
         sync_source = s;	//s is the PSS sequence where the peak was found. I can be either 0, 1 or 2
 
+        //LA
+//        memcpy(tmp1,sync_corr_ue0,LTE_NUMBER_OF_SUBFRAMES_PER_FRAME*sizeof(int)*frame_parms->samples_per_tti);
+//        memcpy(tmp2,sync_corr_ue0,LTE_NUMBER_OF_SUBFRAMES_PER_FRAME*sizeof(int)*frame_parms->samples_per_tti);
+ //       memcpy(tmp3,sync_corr_ue0,LTE_NUMBER_OF_SUBFRAMES_PER_FRAME*sizeof(int)*frame_parms->samples_per_tti);
+
 /*LA1        LOG_I(PHY,"s = %d: n = %d, peak_val = %d, abs(sync_out) = %d, abs(sync_out2) = %d, sync_corr_ue0 = (%d,%d), sync_out =(%"PRIi16" + j%"PRIi16") sync_out2 = (%"PRIi16" + j%"PRIi16")\n",
         		s,n,
 				peak_val,
@@ -527,7 +544,9 @@ int lte_sync_time(int **rxdata, ///rx data in time domain
       }
     }
 
-  }
+  } //end for (frame)
+
+
 
   //LA
   if(peak_val>pss_corr_peaks[carrier_cnt]) {
@@ -536,6 +555,14 @@ int lte_sync_time(int **rxdata, ///rx data in time domain
 	pss_corr_seq[carrier_cnt] = sync_source;
 	pss_corr_toffset[carrier_cnt] = peak_pos;
 	pss_corr_foffset[carrier_cnt] = freq_offset+carrier_offset;
+	snprintf(filename1,25,"%s%d%s","sync_corr0_ue_",carrier_cnt,".m");
+	snprintf(filename2,25,"%s%d%s","sync_corr1_ue_",carrier_cnt,".m");
+	snprintf(filename3,25,"%s%d%s","sync_corr2_ue_",carrier_cnt,".m");
+	snprintf(filename4,25,"%s%d%s","rxdata0",carrier_cnt,".m");
+	write_output(filename1,"synccorr0",sync_corr_ue0,2*length,1,2);
+	  write_output(filename2,"synccorr1",sync_corr_ue1,2*length,1,2);
+	  write_output(filename3,"synccorr2",sync_corr_ue2,2*length,1,2);
+	  write_output(filename4,"rxd0",rxdata[0],length<<1,1,1);
   }
 
 

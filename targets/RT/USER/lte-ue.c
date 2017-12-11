@@ -97,7 +97,8 @@ band_info_t bands_to_scan;
 static const eutra_band_t eutra_bands[] = {
     { 1, 1920    * MHz, 1980    * MHz, 2110    * MHz, 2170    * MHz, FDD},
     { 2, 1850    * MHz, 1910    * MHz, 1930    * MHz, 1990    * MHz, FDD},
-    { 3, 1710    * MHz, 1785    * MHz, 1805    * MHz, 1880    * MHz, FDD},
+    //{ 3, 1710    * MHz, 1785    * MHz, 1805    * MHz, 1880    * MHz, FDD},
+	{ 3, 1710    * MHz, 1785    * MHz, 1835    * MHz, 1855    * MHz, FDD},
     { 4, 1710    * MHz, 1755    * MHz, 2110    * MHz, 2155    * MHz, FDD},
     { 5,  824    * MHz,  849    * MHz,  869    * MHz,  894    * MHz, FDD},
     { 6,  830    * MHz,  840    * MHz,  875    * MHz,  885    * MHz, FDD},
@@ -219,7 +220,7 @@ static void *UE_thread_synch(void *arg) {
     int current_offset = 0;
     sync_mode_t sync_mode = pbch;
     int CC_id = UE->CC_id;
-    int	set_band = 1;
+    int	set_band = 0;
     //CC_id = 1;
 //    int freq_offset=0,carrier_offset=0;//LA
     char threadname[128];

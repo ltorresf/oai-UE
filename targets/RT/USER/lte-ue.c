@@ -97,8 +97,8 @@ band_info_t bands_to_scan;
 static const eutra_band_t eutra_bands[] = {
     { 1, 1920    * MHz, 1980    * MHz, 2110    * MHz, 2170    * MHz, FDD},
     { 2, 1850    * MHz, 1910    * MHz, 1930    * MHz, 1990    * MHz, FDD},
-    //{ 3, 1710    * MHz, 1785    * MHz, 1805    * MHz, 1880    * MHz, FDD},
-	{ 3, 1710    * MHz, 1785    * MHz, 1835    * MHz, 1855    * MHz, FDD},
+    { 3, 1710    * MHz, 1785    * MHz, 1805    * MHz, 1880    * MHz, FDD},
+	//{ 3, 1710    * MHz, 1785    * MHz, 1835    * MHz, 1855    * MHz, FDD},
     { 4, 1710    * MHz, 1755    * MHz, 2110    * MHz, 2155    * MHz, FDD},
     { 5,  824    * MHz,  849    * MHz,  869    * MHz,  894    * MHz, FDD},
     { 6,  830    * MHz,  840    * MHz,  875    * MHz,  885    * MHz, FDD},
@@ -460,7 +460,7 @@ static void *UE_thread_synch(void *arg) {
             } else {
                 // initial sync failed
                 // calculate new offset and try again
-            	if (UE->UE_scan == 1) {
+ /*           	if (UE->UE_scan == 1) {
 
             		if (UE->UE_scan_carrier == 1) {
             			LOG_I(PHY,"[%d] carrier_cnt = %d, CC_id = %d, frequency = %"PRIu32".\n",procID_sync,carrier_cnt,CC_id,downlink_frequency[0][0]);
@@ -489,13 +489,13 @@ static void *UE_thread_synch(void *arg) {
 								write_output("PSS_correlation_freq_offset.m","freq_offset",pss_corr_foffset,5000,1,2);
 								write_output("PSS_correlation_sequence_index.m","pss_index",pss_corr_seq,5000,1,2);
 								LOG_I(PHY,"Dumping max correlation values after PSS synchronization centered at each possible OFDM carrier... bye bye \n");
-		                        /*FILE *fd;
-		                        if ((fd = fopen("rxsig_frame0.dat","w"))!=NULL) {
-		                            fwrite((void*)&UE->common_vars.rxdata[0][0],sizeof(int32_t),10*UE->frame_parms.samples_per_tti,fd);
-		                            LOG_I(PHY,"Dumping max correlation values after PSS synchronization centered at each possible OFDM carrier... bye bye \n");
-		                            fclose(fd);
-		                            exit(0);
-		                        } */
+		                        //FILE *fd;
+		                        //if ((fd = fopen("rxsig_frame0.dat","w"))!=NULL) {
+		                        //    fwrite((void*)&UE->common_vars.rxdata[0][0],sizeof(int32_t),10*UE->frame_parms.samples_per_tti,fd);
+		                        //    LOG_I(PHY,"Dumping max correlation values after PSS synchronization centered at each possible OFDM carrier... bye bye \n");
+		                        //    fclose(fd);
+		                        //    exit(0);
+		                        //}
 		                        //Exiting the whole program execution
 								mac_xface->macphy_exit("No cell synchronization found, abandoning");
 								return &UE_thread_synch_retval; // not reached
@@ -505,7 +505,9 @@ static void *UE_thread_synch(void *arg) {
             		}
 
             	}
- /*           	LOG_I(PHY,"[%d] Initial sync failed. Calculating new +/-100-Hz offset and trying again.\n",procID_sync);
+ */
+
+            	LOG_I(PHY,"[%d] Initial sync failed. Calculating new +/-100-Hz offset and trying again.\n",procID_sync);
                 if (UE->UE_scan_carrier == 1) {
                     if (freq_offset >= 0)
                         freq_offset += 100;
@@ -528,7 +530,7 @@ static void *UE_thread_synch(void *arg) {
                         return &UE_thread_synch_retval; // not reached
                     }
 
-                } */
+                }
 #if DISABLE_LOG_X
                 printf("[initial_sync] trying carrier off %d Hz, rxgain %d (DL %u, UL %u)\n",
                        freq_offset,

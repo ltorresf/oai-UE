@@ -276,7 +276,7 @@ char prefix_string[2][9] = {"NORMAL","EXTENDED"};
 //LA: if returns ret=0, it has done synchronization. Otherwise it has failed and a new frequency must be chosen.
 int initial_sync(PHY_VARS_UE *ue, runmode_t mode)
 {
-	//LAint procID_initial_sync = gettid();
+	int procID_initial_sync = gettid();
 //LA1	printf("-------------------------- Start: [initial_sync] [PID: %d] --------------------------\n",procID_initial_sync);
 
   int32_t sync_pos,sync_pos2,sync_pos_slot;
@@ -324,23 +324,23 @@ int initial_sync(PHY_VARS_UE *ue, runmode_t mode)
   else
     ue->rx_offset = FRAME_LENGTH_COMPLEX_SAMPLES + sync_pos2 - sync_pos_slot;
 
-//LA  LOG_I(PHY,"[%d] sync_pos_slot = %"PRIi32", timing offset = %d\n",procID_initial_sync,sync_pos_slot,ue->rx_offset);
+  LOG_I(PHY,"[%d] sync_pos_slot = %"PRIi32", timing offset = %d\n",procID_initial_sync,sync_pos_slot,ue->rx_offset);
 
   if (((sync_pos2 - sync_pos_slot) >=0 ) && ((sync_pos2 - sync_pos_slot) < ((FRAME_LENGTH_COMPLEX_SAMPLES-frame_parms->samples_per_tti/2)))) {
 #ifdef DEBUG_INITIAL_SYNCH
     //LOG_I(PHY,"Calling sss detection (FDD normal CP).\n");
     LOG_I(PHY,"[%d] Calling SSS detection (FDD normal CP).\n",procID_initial_sync);
 #endif
-    //rx_sss(ue,&metric_fdd_ncp,&flip_fdd_ncp,&phase_fdd_ncp);
+    rx_sss(ue,&metric_fdd_ncp,&flip_fdd_ncp,&phase_fdd_ncp);
     frame_parms->nushift  = frame_parms->Nid_cell%6;
 
- /*LA   if (flip_fdd_ncp==1)
+   if (flip_fdd_ncp==1)
       ue->rx_offset += (FRAME_LENGTH_COMPLEX_SAMPLES>>1);
-*/
-//LA    init_frame_parms(&ue->frame_parms,1);
-//LA    lte_gold(frame_parms,ue->lte_gold_table[0],frame_parms->Nid_cell);
-//LA    LOG_I(PHY, "[1/4] Ncp=NORMAL, frame_type=FDD. Before PBCH detection: N_RB_DL = %d \n",ue->frame_parms.N_RB_DL);
-    //ret = pbch_detection(ue,mode);
+
+    init_frame_parms(&ue->frame_parms,1);
+    lte_gold(frame_parms,ue->lte_gold_table[0],frame_parms->Nid_cell);
+    LOG_I(PHY, "[1/4] Ncp=NORMAL, frame_type=FDD. Before PBCH detection: N_RB_DL = %d \n",ue->frame_parms.N_RB_DL);
+    ret = pbch_detection(ue,mode);
     //   write_output("rxdata2.m","rxd2",ue->common_vars.rxdata[0],10*frame_parms->samples_per_tti,1,1);
 
 #ifdef DEBUG_INITIAL_SYNCH
@@ -388,8 +388,8 @@ int initial_sync(PHY_VARS_UE *ue, runmode_t mode)
 
       init_frame_parms(&ue->frame_parms,1);
       lte_gold(frame_parms,ue->lte_gold_table[0],frame_parms->Nid_cell);
-//LA      LOG_I(PHY, "[2/4] Ncp=EXTENDED, frame_type=FDD. Before PBCH detection: N_RB_DL = %d \n",ue->frame_parms.N_RB_DL);
-      //ret = pbch_detection(ue,mode);
+      LOG_I(PHY, "[2/4] Ncp=EXTENDED, frame_type=FDD. Before PBCH detection: N_RB_DL = %d \n",ue->frame_parms.N_RB_DL);
+      ret = pbch_detection(ue,mode);
       //     write_output("rxdata3.m","rxd3",ue->common_vars.rxdata[0],10*frame_parms->samples_per_tti,1,1);
 #ifdef DEBUG_INITIAL_SYNCH
       LOG_I(PHY,"FDD Extended prefix: CellId %d metric %d, phase %d, flip %d, pbch %d\n",
@@ -403,7 +403,7 @@ int initial_sync(PHY_VARS_UE *ue, runmode_t mode)
 
     if (ret==-1) {
       // Now TDD normal prefix
-//LA1    	printf(".......................... [3/4] Ncp=NORMAL, frame_type=TDD ..........................\n");
+    	//printf(".......................... [3/4] Ncp=NORMAL, frame_type=TDD ..........................\n");
       frame_parms->Ncp=NORMAL;
       frame_parms->frame_type=TDD;
       init_frame_parms(frame_parms,1);
@@ -433,8 +433,8 @@ int initial_sync(PHY_VARS_UE *ue, runmode_t mode)
       init_frame_parms(&ue->frame_parms,1);
 
       lte_gold(frame_parms,ue->lte_gold_table[0],frame_parms->Nid_cell);
-//LA      LOG_I(PHY, "[3/4] Ncp=NORMAL, frame_type=TDD. Before PBCH detection: N_RB_DL = %d \n",ue->frame_parms.N_RB_DL);
-      //ret = pbch_detection(ue,mode);
+      LOG_I(PHY, "[3/4] Ncp=NORMAL, frame_type=TDD. Before PBCH detection: N_RB_DL = %d \n",ue->frame_parms.N_RB_DL);
+      ret = pbch_detection(ue,mode);
       //      write_output("rxdata4.m","rxd4",ue->common_vars.rxdata[0],10*frame_parms->samples_per_tti,1,1);
 
 #ifdef DEBUG_INITIAL_SYNCH
@@ -471,8 +471,8 @@ int initial_sync(PHY_VARS_UE *ue, runmode_t mode)
 
         init_frame_parms(&ue->frame_parms,1);
         lte_gold(frame_parms,ue->lte_gold_table[0],frame_parms->Nid_cell);
-//LA        LOG_I(PHY, "[4/4] Ncp=EXTENDED, frame_type=TDD. Before PBCH detection: N_RB_DL = %d \n",ue->frame_parms.N_RB_DL);
-        //ret = pbch_detection(ue,mode);
+        LOG_I(PHY, "[4/4] Ncp=EXTENDED, frame_type=TDD. Before PBCH detection: N_RB_DL = %d \n",ue->frame_parms.N_RB_DL);
+        ret = pbch_detection(ue,mode);
 
 	//	write_output("rxdata5.m","rxd5",ue->common_vars.rxdata[0],10*frame_parms->samples_per_tti,1,1);
 #ifdef DEBUG_INITIAL_SYNCH

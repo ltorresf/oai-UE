@@ -431,7 +431,9 @@ static void *UE_thread_synch(void *arg) {
 					UE->UE_scan_carrier = 0;
                 } else {
                     AssertFatal ( 0== pthread_mutex_lock(&UE->proc.mutex_synch), "");
+                    printf("Before: UE->is_synchronized = %d",UE->is_synchronized);
                     UE->is_synchronized = 1;
+                    printf("After: UE->is_synchronized = %d",UE->is_synchronized);
                     AssertFatal ( 0== pthread_mutex_unlock(&UE->proc.mutex_synch), "");
 
                     if( UE->mode == rx_dump_frame ) {

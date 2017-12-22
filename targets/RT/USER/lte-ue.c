@@ -355,7 +355,7 @@ static void *UE_thread_synch(void *arg) {
         }
         case pbch:
         {
-//LA        	printf(">>>>>>>>>>>>>>>>>>>>>>>>>> [%d] Start case: PBCH <<<<<<<<<<<<<<<<<<<<<<<<<<\n",procID_sync);//LA
+        	printf(">>>>>>>>>>>>>>>>>>>>>>>>>> [%d] Start case: PBCH <<<<<<<<<<<<<<<<<<<<<<<<<<\n",procID_sync);//LA
 #if DISABLE_LOG_X
             printf("[UE thread Synch] Running Initial Synch (mode %d)\n",UE->mode);
 #else
@@ -365,7 +365,7 @@ static void *UE_thread_synch(void *arg) {
             if (initial_sync( UE, UE->mode ) == 0) {	//LA: Initial synchronization succeed
 
                 hw_slot_offset = (UE->rx_offset<<1) / UE->frame_parms.samples_per_tti;
-                LOG_I( HW, "[%d] Got synch: hw_slot_offset %d, carrier off %d Hz, rxgain %d (DL %u, UL %u), UE_scan_carrier %d\n", procID_sync,
+                LOG_I( HW, "[%d] Got synch: hw_slot_offset %d, carrier off %d Hz, rxgain %d dB (DL %u, UL %u), UE_scan_carrier %d\n", procID_sync,
                        hw_slot_offset,
                        freq_offset,
                        UE->rx_total_gain_dB,
@@ -562,7 +562,7 @@ static void *UE_thread_synch(void *arg) {
                 //Setting the new Tx/Rx frequency values in the USRP configuration
                 UE->rfdevice.trx_set_freq_func(&UE->rfdevice,&openair0_cfg[0],0);
             }// initial_sync=0
-//LA            printf(">>>>>>>>>>>>>>>>>>>>>>>>>> [%d] End case: PBCH <<<<<<<<<<<<<<<<<<<<<<<<<<\n",procID_sync);//LA
+            printf(">>>>>>>>>>>>>>>>>>>>>>>>>> [%d] End case: PBCH <<<<<<<<<<<<<<<<<<<<<<<<<<\n",procID_sync);//LA
             break;
         }
         case si:
@@ -592,6 +592,8 @@ static void *UE_thread_synch(void *arg) {
  */
 
 static void *UE_thread_rxn_txnp4(void *arg) {
+	int procID_rxn_txnp4 = gettid();
+	printf("**************************************************** Start : [UE_thread_rxn_txnp4] [PID: %d] ****************************************************\n",procID_rxn_txnp4);
     static __thread int UE_thread_rxtx_retval;
     struct rx_tx_thread_data *rtd = arg;
     UE_rxtx_proc_t *proc = rtd->proc;
@@ -725,6 +727,7 @@ static void *UE_thread_rxn_txnp4(void *arg) {
         }
     }
 
+    printf("**************************************************** End : [UE_thread_rxn_txnp4] [PID: %d] ****************************************************\n",procID_rxn_txnp4);
 // thread finished
     free(arg);
     return &UE_thread_rxtx_retval;
@@ -789,7 +792,8 @@ void *UE_thread(void *arg) {
         AssertFatal ( 0== pthread_mutex_unlock(&UE->proc.mutex_synch), "");
 
         if (is_synchronized == 0) {
-//LA        	printf("la = %d, UE->is_synchronized = %d\n",la,UE->is_synchronized);
+//        	printf("la = %d, UE->is_synchronized = %d\n",la,UE->is_synchronized);
+        	//printf("UE->is_synchronized = %d\n",UE->is_synchronized);
             if (instance_cnt_synch < 0) {  // we can invoke the synch
 //LA                printf("[<0] instance_cnt_synch = %d\n",instance_cnt_synch);
             	// grab 10 ms of signal and wakeup synch thread
@@ -865,6 +869,7 @@ void *UE_thread(void *arg) {
 
         } // UE->is_synchronized==0
         else {
+        	LOG_I(PHY,"Frame synchronization succeed.\n");
             if (start_rx_stream==0) {
                 start_rx_stream=1;
                 if (UE->mode != loop_through_memory) {
@@ -904,7 +909,7 @@ void *UE_thread(void *arg) {
                 // update thread index for received subframe
                 UE->current_thread_id[sub_frame] = thread_idx;
 
-                LOG_D(PHY,"Process Subframe %d thread Idx %d \n", sub_frame, UE->current_thread_id[sub_frame]);
+                LOG_I(PHY,"Process Subframe %d thread Idx %d \n", sub_frame, UE->current_thread_id[sub_frame]);
 
                 thread_idx++;
                 if(thread_idx>=RX_NB_TH)

@@ -74,6 +74,7 @@
 #define PAGE_SIZE 4096
 
 #define RX_NB_TH_MAX 2
+//LA: Number of receiver threads (always 2, since they process even and odd subframes of the 10-ms radio frame)
 #define RX_NB_TH 2
 
 

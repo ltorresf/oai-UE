@@ -363,7 +363,7 @@ static void *UE_thread_synch(void *arg) {
 #endif
 //LA            LOG_I(PHY,"[%d] samples_per_tti = %d.\n",procID_sync,UE->frame_parms.samples_per_tti);
             if (initial_sync( UE, UE->mode ) == 0) {	//LA: Initial synchronization succeed
-
+            		//LA: Once it is synchronized, the main change is that the parameter UE->is_synchronized changes from 0 to 1. Then this loop is no longer executed.
                 hw_slot_offset = (UE->rx_offset<<1) / UE->frame_parms.samples_per_tti;
                 LOG_I( HW, "[%d] Got synch: hw_slot_offset %d, carrier off %d Hz, rxgain %d dB (DL %u, UL %u), UE_scan_carrier %d\n", procID_sync,
                        hw_slot_offset,
@@ -421,6 +421,7 @@ static void *UE_thread_synch(void *arg) {
 				//UE->rfdevice.trx_stop_func(&UE->rfdevice);
 				sleep(1);
 				init_frame_parms(&UE->frame_parms,1);
+				dump_frame_parms(&UE->frame_parms);
 				/*if (UE->rfdevice.trx_start_func(&UE->rfdevice) != 0 ) {
 					LOG_E(HW,"Could not start the device\n");
 					oai_exit=1;
@@ -431,9 +432,9 @@ static void *UE_thread_synch(void *arg) {
 					UE->UE_scan_carrier = 0;
                 } else {
                     AssertFatal ( 0== pthread_mutex_lock(&UE->proc.mutex_synch), "");
-                    printf("Before: UE->is_synchronized = %d",UE->is_synchronized);
+                    //printf("Before: UE->is_synchronized = %d\n",UE->is_synchronized);
                     UE->is_synchronized = 1;
-                    printf("After: UE->is_synchronized = %d",UE->is_synchronized);
+                    //printf("After: UE->is_synchronized = %d\n",UE->is_synchronized);
                     AssertFatal ( 0== pthread_mutex_unlock(&UE->proc.mutex_synch), "");
 
                     if( UE->mode == rx_dump_frame ) {
@@ -789,7 +790,7 @@ void *UE_thread(void *arg) {
         AssertFatal ( 0== pthread_mutex_lock(&UE->proc.mutex_synch), "");
         //LA: Instance count for synch thread. If <0,
         int instance_cnt_synch = UE->proc.instance_cnt_synch;
-        //LA: Indicator that UE is synchronized to an eNB
+        //LA: Indicator that UE is synchronized to an eNB (i.e., the PSS, SSS, and PBCH sequences were decoded)
         int is_synchronized    = UE->is_synchronized;
         AssertFatal ( 0== pthread_mutex_unlock(&UE->proc.mutex_synch), "");
 
@@ -899,6 +900,7 @@ void *UE_thread(void *arg) {
                                                             (void**)UE->common_vars.rxdata,
                                                             UE->frame_parms.ofdm_symbol_size+UE->frame_parms.nb_prefix_samples0,
                                                             UE->frame_parms.nb_antennas_rx),"");
+                    //LA: What is the purpose of this function?
                     slot_fep(UE,0, 0, 0, 0, 0);
                 } //UE->mode != loop_through_memory
                 else
@@ -919,6 +921,7 @@ void *UE_thread(void *arg) {
 
 
                 if (UE->mode != loop_through_memory) {
+                	//LA: UE->mode is normally normal_txrx=0 and not loop_through_memory=8. So normally this portion of the code is executed.
                     for (i=0; i<UE->frame_parms.nb_antennas_rx; i++)
                         rxp[i] = (void*)&UE->common_vars.rxdata[i][UE->frame_parms.ofdm_symbol_size+
                                  UE->frame_parms.nb_prefix_samples0+

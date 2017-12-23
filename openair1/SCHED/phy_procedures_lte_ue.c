@@ -3057,7 +3057,7 @@ void ue_pbch_procedures(uint8_t eNB_id,PHY_VARS_UE *ue,UE_rxtx_proc_t *proc, uin
 int ue_pdcch_procedures(uint8_t eNB_id,PHY_VARS_UE *ue,UE_rxtx_proc_t *proc,uint8_t abstraction_flag)
 {
 	int procID_initial_pdcch = gettid();
-	printf("-------------------------- Start: [initial_sync] [PID: %d] --------------------------\n",procID_initial_pdcch);
+	printf("-------------------------- Start: [ue_pdcch_procedures] [PID: %d] --------------------------\n",procID_initial_pdcch);
 
   unsigned int dci_cnt=0, i;
 
@@ -3476,6 +3476,7 @@ int ue_pdcch_procedures(uint8_t eNB_id,PHY_VARS_UE *ue,UE_rxtx_proc_t *proc,uint
   stop_meas(&ue->dlsch_rx_pdcch_stats);
 #endif
   VCD_SIGNAL_DUMPER_DUMP_FUNCTION_BY_NAME(VCD_SIGNAL_DUMPER_FUNCTIONS_UE_PDCCH_PROCEDURES, VCD_FUNCTION_OUT);
+  printf("-------------------------- End: [ue_pdcch_procedures] [PID: %d] --------------------------\n",procID_initial_pdcch);
   return(0);
 }
 

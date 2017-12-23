@@ -128,8 +128,10 @@ int logInit (void)
 
 #if ! defined(CN_BUILD)
   g_log->log_component[PHY].name = "PHY";
-  g_log->log_component[PHY].level = LOG_EMERG;
-  g_log->log_component[PHY].flag =  LOG_MED;
+  //g_log->log_component[PHY].level = LOG_EMERG;
+  g_log->log_component[PHY].level = LOG_DEBUG;
+  //g_log->log_component[PHY].flag =  LOG_MED;
+  g_log->log_component[PHY].flag =  LOG_HIGH;
   g_log->log_component[PHY].interval =  1;
   g_log->log_component[PHY].fd = 0;
   g_log->log_component[PHY].filelog = 0;

@@ -641,6 +641,7 @@ static void *UE_thread_rxn_txnp4(void *arg) {
         updateTimes(proc->gotIQs, &t2, 10000, "Delay to wake up UE_Thread_Rx (case 2)");
 
         // Process Rx data for one sub-frame
+        //LA: In the case of FDD, the value returned is SF_DL for all subframes. This function is only relevant in TDD.
         lte_subframe_t sf_type = subframe_select( &UE->frame_parms, proc->subframe_rx);
         if ((sf_type == SF_DL) ||
                 (UE->frame_parms.frame_type == FDD) ||
@@ -654,7 +655,8 @@ static void *UE_thread_rxn_txnp4(void *arg) {
                        (sf_type==SF_UL? "SF_UL" :
                         (sf_type==SF_S ? "SF_S"  : "UNKNOWN_SF_TYPE"))));
             } else {
-                LOG_D(PHY, "%s,%s,%s: calling UE_RX\n",
+                //LOG_D(PHY, "%s,%s,%s: calling UE_RX\n",
+                	LOG_I(PHY, "%s,%s,%s: calling UE_RX\n",
                       threadname,
                       (UE->frame_parms.frame_type==FDD? "FDD":
                        (UE->frame_parms.frame_type==TDD? "TDD":"UNKNOWN_DUPLEX_MODE")),

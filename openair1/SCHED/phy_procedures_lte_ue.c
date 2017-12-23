@@ -3056,6 +3056,8 @@ void ue_pbch_procedures(uint8_t eNB_id,PHY_VARS_UE *ue,UE_rxtx_proc_t *proc, uin
 
 int ue_pdcch_procedures(uint8_t eNB_id,PHY_VARS_UE *ue,UE_rxtx_proc_t *proc,uint8_t abstraction_flag)
 {
+	int procID_initial_pdcch = gettid();
+	printf("-------------------------- Start: [initial_sync] [PID: %d] --------------------------\n",procID_initial_pdcch);
 
   unsigned int dci_cnt=0, i;
 

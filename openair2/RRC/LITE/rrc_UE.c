@@ -2797,6 +2797,8 @@ int decode_PCCH_DLSCH_Message(
 //-----------------------------------------------------------------------------
 static int decode_SIB1( const protocol_ctxt_t* const ctxt_pP, const uint8_t eNB_index, const uint8_t rsrq, const uint8_t rsrp )
 {
+	int procID_decode_SIB1 = gettid();
+	printf("**************************************************** Start : [decode_SIB1] [PID: %d] ****************************************************\n",procID_decode_SIB1);
   SystemInformationBlockType1_t* sib1 = UE_rrc_inst[ctxt_pP->module_id].sib1[eNB_index];
 
   VCD_SIGNAL_DUMPER_DUMP_FUNCTION_BY_NAME( VCD_SIGNAL_DUMPER_FUNCTIONS_RRC_UE_DECODE_SIB1, VCD_FUNCTION_IN );
@@ -3019,7 +3021,7 @@ static int decode_SIB1( const protocol_ctxt_t* const ctxt_pP, const uint8_t eNB_
 #endif
 
   VCD_SIGNAL_DUMPER_DUMP_FUNCTION_BY_NAME( VCD_SIGNAL_DUMPER_FUNCTIONS_RRC_UE_DECODE_SIB1, VCD_FUNCTION_OUT );
-
+  printf("**************************************************** End : [decode_SIB1] [PID: %d] ****************************************************\n",procID_decode_SIB1);
   return 0;
 }
 

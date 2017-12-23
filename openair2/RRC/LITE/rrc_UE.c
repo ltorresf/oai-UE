@@ -88,6 +88,9 @@
 
 #include "SIMULATION/TOOLS/defs.h" // for taus
 
+//LA
+#include "../../../targets/RT/USER/rt_wrapper.h"
+
 
 #ifdef PHY_EMUL
 extern EMULATION_VARS *Emul_vars;

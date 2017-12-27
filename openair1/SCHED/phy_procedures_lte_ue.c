@@ -3087,7 +3087,7 @@ int ue_pdcch_procedures(uint8_t eNB_id,PHY_VARS_UE *ue,UE_rxtx_proc_t *proc,uint
 
   //  if (subframe_rx != 5)
   //    return 0;
-  if (abstraction_flag == 0)  {
+  if (abstraction_flag == 0)  {	//LA: always = 0, when called by "UE_thread_rxn_txnp4"
 
     VCD_SIGNAL_DUMPER_DUMP_FUNCTION_BY_NAME(VCD_SIGNAL_DUMPER_FUNCTIONS_RX_PDCCH, VCD_FUNCTION_IN);
     rx_pdcch(ue,

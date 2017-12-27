@@ -5153,6 +5153,7 @@ int phy_procedures_UE_RX(PHY_VARS_UE *ue,UE_rxtx_proc_t *proc,uint8_t eNB_id,
   LOG_I(PHY," ------ slot 0 Processing: AbsSubframe %d.%d ------  \n", frame_rx%1024, subframe_rx);
   LOG_I(PHY," ------  --> FFT/ChannelEst/PDCCH slot 0: AbsSubframe %d.%d ------  \n", frame_rx%1024, subframe_rx);
   for (; l<=l2; l++) {
+	  printf(">>>>>>>>>>>>>>>>>>>>>>> Start processing OFDM symbol: %d <<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n",l);
     if (abstraction_flag == 0) {	//LA: always = 0, when called by "UE_thread_rxn_txnp4"
 #if UE_TIMING_TRACE
         start_meas(&ue->ofdm_demod_stats);
@@ -5191,7 +5192,7 @@ int phy_procedures_UE_RX(PHY_VARS_UE *ue,UE_rxtx_proc_t *proc,uint8_t eNB_id,
 	LOG_I(PHY,"num_pdcch_symbols %d\n",ue->pdcch_vars[ue->current_thread_id[subframe_rx]][eNB_id]->num_pdcch_symbols);
       }
     }
-
+    printf(">>>>>>>>>>>>>>>>>>>>>>> End processing OFDM symbol: %d <<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n",l);
   } // for l=1..l2
   ue_measurement_procedures(l-1,ue,proc,eNB_id,(subframe_rx<<1),abstraction_flag,mode);
 

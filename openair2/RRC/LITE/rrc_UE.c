@@ -2645,6 +2645,9 @@ int decode_BCCH_DLSCH_Message(
   const uint8_t                rsrq,
   const uint8_t                rsrp )
 {
+	int procID_decode_BCCH_DLSCH_Message = gettid(); //LA
+	printf("**************************************************** Start : [decode_BCCH_DLSCH_Message] [PID: %d] ****************************************************\n",procID_decode_BCCH_DLSCH_Message);
+
   BCCH_DL_SCH_Message_t *bcch_message = NULL;
   SystemInformationBlockType1_t* sib1 = UE_rrc_inst[ctxt_pP->module_id].sib1[eNB_index];
   int i;
@@ -2760,6 +2763,7 @@ int decode_BCCH_DLSCH_Message(
 
   VCD_SIGNAL_DUMPER_DUMP_FUNCTION_BY_NAME( VCD_SIGNAL_DUMPER_FUNCTIONS_UE_DECODE_BCCH, VCD_FUNCTION_OUT );
 
+  printf("**************************************************** End : [decode_BCCH_DLSCH_Message] [PID: %d] ****************************************************\n",procID_decode_BCCH_DLSCH_Message);
   return 0;
 }
 
@@ -3032,6 +3036,8 @@ static int decode_SIB1( const protocol_ctxt_t* const ctxt_pP, const uint8_t eNB_
 //-----------------------------------------------------------------------------
 static void dump_sib2( SystemInformationBlockType2_t *sib2 )
 {
+	int procID_dump_sib2 = gettid();
+		printf("**************************************************** Start : [dump_sib2] [PID: %d] ****************************************************\n",procID_dump_sib2);
   // ac_BarringInfo
   if (sib2->ac_BarringInfo) {
     LOG_I( RRC, "ac_BarringInfo->ac_BarringForEmergency : %d\n",
@@ -3268,6 +3274,7 @@ static void dump_sib2( SystemInformationBlockType2_t *sib2 )
     LOG_I( RRC, "ac_BarringForCSFB_r10 : not defined\n" );
 
 #endif
+  printf("**************************************************** End : [dump_sib2] [PID: %d] ****************************************************\n",procID_dump_sib2);
 }
 
 //-----------------------------------------------------------------------------

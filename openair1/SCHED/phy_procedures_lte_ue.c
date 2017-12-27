@@ -2609,7 +2609,7 @@ void ue_measurement_procedures(
     uint8_t abstraction_flag,runmode_t mode)
 {
 	int procID_ue_measurement_procedures = gettid();
-	printf("-------------------------- Start: [ue_measurement_procedures] [PID: %d] --------------------------\n",procID_ue_measurement_procedures);
+	printf("-------------------------- Start: [ue_measurement_procedures] [OFDM Symbol: %"PRIu16"] [PID: %d] --------------------------\n",l,procID_ue_measurement_procedures);
 
   //LOG_I(PHY,"ue_measurement_procedures l %d Ncp %d\n",l,ue->frame_parms.Ncp);
 
@@ -2697,7 +2697,7 @@ void ue_measurement_procedures(
     }
 
   }
-	printf("-------------------------- End: [ue_measurement_procedures] [PID: %d] --------------------------\n",procID_ue_measurement_procedures);
+  printf("-------------------------- End: [ue_measurement_procedures] [OFDM Symbol: %"PRIu16"] [PID: %d] --------------------------\n",l,procID_ue_measurement_procedures);
   VCD_SIGNAL_DUMPER_DUMP_FUNCTION_BY_NAME(VCD_SIGNAL_DUMPER_FUNCTIONS_UE_MEASUREMENT_PROCEDURES, VCD_FUNCTION_OUT);
 }
 
@@ -5138,12 +5138,12 @@ int phy_procedures_UE_RX(PHY_VARS_UE *ue,UE_rxtx_proc_t *proc,uint8_t eNB_id,
   int prev_subframe_rx = (subframe_rx - 1)<0? 9: (subframe_rx - 1);
   if (subframe_select(&ue->frame_parms,prev_subframe_rx) != SF_DL) {
     //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    // RX processing of symbols l=0...l2
+    // RX processing of OFDM symbols l=0...l2
     //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     l=0;
   } else {
     //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    // RX processing of symbols l=1...l2 (l=0 is done in last scheduling epoch)
+    // RX processing of OFDM symbols l=1...l2 (l=0 is done in last scheduling epoch)
     //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     l=1;
   }

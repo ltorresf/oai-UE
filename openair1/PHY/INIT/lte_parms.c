@@ -201,10 +201,14 @@ int init_frame_parms(LTE_DL_FRAME_PARMS *frame_parms,uint8_t osf)
 
 void dump_frame_parms(LTE_DL_FRAME_PARMS *frame_parms)
 {
-  printf("frame_parms->N_RB_DL=%d\n",frame_parms->N_RB_DL);
-  printf("frame_parms->N_RB_UL=%d\n",frame_parms->N_RB_UL);
+  printf("frame_parms->N_RB_DL=%"PRIu8"\n",frame_parms->N_RB_DL);
+  printf("frame_parms->N_RB_UL=%"PRIu8"\n",frame_parms->N_RB_UL);
+  printf("frame_parms->N_RBG=%"PRIu8"\n",frame_parms->N_RBG);
+  printf("frame_parms->N_RBGS=%"PRIu8"\n",frame_parms->N_RBGS);
   printf("frame_parms->Nid_cell=%d\n",frame_parms->Nid_cell);
   printf("frame_parms->Ncp=%d\n",frame_parms->Ncp);
+  printf("frame_parms->threequarter_fs=%"PRIu8"\n",frame_parms->threequarter_fs);
+  printf("frame_parms->node_id=%"PRIu8"\n",frame_parms->node_id);
   printf("frame_parms->Ncp_UL=%d\n",frame_parms->Ncp_UL);
   printf("frame_parms->nushift=%d\n",frame_parms->nushift);
   printf("frame_parms->frame_type=%d\n",frame_parms->frame_type);
@@ -220,6 +224,8 @@ void dump_frame_parms(LTE_DL_FRAME_PARMS *frame_parms)
   printf("frame_parms->first_carrier_offset=%d\n",frame_parms->first_carrier_offset);
   printf("frame_parms->samples_per_tti=%d\n",frame_parms->samples_per_tti);
   printf("frame_parms->symbols_per_tti=%d\n",frame_parms->symbols_per_tti);
-  printf("dl_symbols_in_S_subframe=%"PRIu16"\n",frame_parms->dl_symbols_in_S_subframe);
+  printf("frame_parms->dl_symbols_in_S_subframe=%"PRIu16"\n",frame_parms->dl_symbols_in_S_subframe);
+  printf("frame_parms->pcfich_reg={%"PRIu16",%"PRIu16",%"PRIu16",%"PRIu16"}\n",frame_parms->pcfich_reg[0],frame_parms->pcfich_reg[1],frame_parms->pcfich_reg[2],frame_parms->pcfich_reg[3]);
+  printf("frame_parms->pcfich_first_reg_idx=%"PRIu8"\n",frame_parms->pcfich_first_reg_idx);
   //printf("openair0_cfg[UE->rf_map.card].rx_num_channels = %d\n",openair0_cfg[UE->rf_map.card].rx_num_channels);
 }

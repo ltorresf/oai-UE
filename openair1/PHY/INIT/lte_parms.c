@@ -229,7 +229,7 @@ void dump_frame_parms(LTE_DL_FRAME_PARMS *frame_parms)
   printf("frame_parms->pcfich_first_reg_idx=%"PRIu8"\n",frame_parms->pcfich_first_reg_idx);
   printf("frame_parms->SIwindowsize=%"PRIu8"\n",frame_parms->SIwindowsize);
   printf("frame_parms->SIPeriod=%"PRIu16"\n",frame_parms->SIPeriod);
-  printf("frame_parms->pdsch_config_common.=%"PRIi8"\n",frame_parms->pdsch_config_common.referenceSignalPower);
-  printf("frame_parms->pdsch_config_common.=%"PRIu8"\n",frame_parms->pdsch_config_common.p_b);
+  printf("frame_parms->pdsch_config_common.referenceSignalPower=%"PRIi8" dBm\n",frame_parms->pdsch_config_common.referenceSignalPower);
+  printf("frame_parms->pdsch_config_common.p_b=%"PRIu8"\n",frame_parms->pdsch_config_common.p_b);
   //printf("openair0_cfg[UE->rf_map.card].rx_num_channels = %d\n",openair0_cfg[UE->rf_map.card].rx_num_channels);
 }

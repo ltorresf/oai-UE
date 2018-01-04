@@ -877,7 +877,7 @@ void *UE_thread(void *arg) {
         } // UE->is_synchronized==0
         else {
         	LOG_I(PHY,"[PID-%d] Frame synchronization succeed.\n",procID_UE_thread);
-            if (start_rx_stream==0) {
+            if (start_rx_stream==0) {	//LA: This condition is only met the first time that sync is achieved, in order to perform timing offset
                 start_rx_stream=1;
                 if (UE->mode != loop_through_memory) {	//LA: this condition is normally met
                     if (UE->no_timing_correction==0) {	//LA: shouldn't the UE do timing correction? -> false, then do it.
@@ -909,7 +909,7 @@ void *UE_thread(void *arg) {
                                                             (void**)UE->common_vars.rxdata,
                                                             UE->frame_parms.ofdm_symbol_size+UE->frame_parms.nb_prefix_samples0,
                                                             UE->frame_parms.nb_antennas_rx),"");
-                    //LA: This function implements the OFDM front end processor on reception (FEP)
+                    //LA: This function implements the OFDM front end processor on reception (FEP) -> which basically performs DFT
                     //LA: UE, OFDM symbol within slot = 0,slot number = 0, sample offset within rxdata = 0, prefix included, always zero.
                     slot_fep(UE,0, 0, 0, 0, 0);
                 } //UE->mode != loop_through_memory

@@ -879,9 +879,13 @@ void *UE_thread(void *arg) {
         	LOG_I(PHY,"[PID-%d] Frame synchronization succeed.\n",procID_UE_thread);
             if (start_rx_stream==0) {
                 start_rx_stream=1;
-                if (UE->mode != loop_through_memory) {
-                    if (UE->no_timing_correction==0) {
-                        LOG_I(PHY,"[PID%d] Resynchronizing RX by UE->rx_offset=%d samples (mode = %d, 0=normal_txrx)\n",procID_UE_thread,UE->rx_offset,UE->mode);
+                if (UE->mode != loop_through_memory) {	//LA: this condition is normally met
+                    if (UE->no_timing_correction==0) {	//LA: shouldn't the UE do timing correction? -> false, then do it.
+                    		//LA: Performing timing correcting
+                        LOG_I(PHY,"[PID-%d] Resynchronizing RX by UE->rx_offset=%d samples (mode = %d, 0=normal_txrx)\n",procID_UE_thread,UE->rx_offset,UE->mode);
+                        //LA: this function receives "rx_offset" samples and stores them in "rxdata." It returns "rx_offset"
+                        //LA: after reading them, it can then start reading received samples without having a timing offset
+                        //LA: i.e., once we read some values from the buffer, they are freed and the next ones become available for reading
                         AssertFatal(UE->rx_offset ==
                                     UE->rfdevice.trx_read_func(&UE->rfdevice,
                                                                &timestamp,
@@ -894,17 +898,19 @@ void *UE_thread(void *arg) {
                     //UE->proc.proc_rxtx[0].frame_rx++;
                     //UE->proc.proc_rxtx[1].frame_rx++;
                     for (th_id=0; th_id < RX_NB_TH; th_id++) {
-                        UE->proc.proc_rxtx[th_id].frame_rx++;
+                    		//LA: "proc_rxtx[0-1]" = set of scheduling variables RXn-TXnp4 threads
+                        UE->proc.proc_rxtx[th_id].frame_rx++;		//LA: "frame_rx" = frame to act upon for reception
                     }
 
-                    // read in first symbol
+                    // read in first symbol	//LA: the samples are overwritten in "rxdata"
                     AssertFatal (UE->frame_parms.ofdm_symbol_size+UE->frame_parms.nb_prefix_samples0 ==
                                  UE->rfdevice.trx_read_func(&UE->rfdevice,
                                                             &timestamp,
                                                             (void**)UE->common_vars.rxdata,
                                                             UE->frame_parms.ofdm_symbol_size+UE->frame_parms.nb_prefix_samples0,
                                                             UE->frame_parms.nb_antennas_rx),"");
-                    //LA: What is the purpose of this function?
+                    //LA: This function implements the OFDM front end processor on reception (FEP)
+                    //LA: UE, OFDM symbol within slot = 0,slot number = 0, sample offset within rxdata = 0, prefix included, always zero.
                     slot_fep(UE,0, 0, 0, 0, 0);
                 } //UE->mode != loop_through_memory
                 else

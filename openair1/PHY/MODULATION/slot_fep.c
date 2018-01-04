@@ -21,17 +21,17 @@
 
 #include "PHY/defs.h"
 #include "defs.h"
-//#define DEBUG_FEP
+#define DEBUG_FEP
 
 #define SOFFSET 0
 
 
 int slot_fep(PHY_VARS_UE *ue,
-             unsigned char l,
-             unsigned char Ns,
-             int sample_offset,
-             int no_prefix,
-	     int reset_freq_est)
+             unsigned char l,	//LA: symbol within slot (0..6/7)
+             unsigned char Ns,	//LA: Slot number (0..19)
+             int sample_offset,	//LA: offset within rxdata (points to beginning of subframe)
+             int no_prefix,		//LA: always zero (false)
+	     int reset_freq_est)		//LA: always zero (false)
 {
 
   LTE_DL_FRAME_PARMS *frame_parms = &ue->frame_parms;
@@ -107,8 +107,8 @@ int slot_fep(PHY_VARS_UE *ue,
   }
 
 
-
-  for (aa=0; aa<frame_parms->nb_antennas_rx; aa++) {
+  //LA: in this loop basically the time-domain received signal is converted into the freq domain and stored in "rxdataF"
+  for (aa=0; aa<frame_parms->nb_antennas_rx; aa++) {	//LA: only one loop for aa=0
     memset(&common_vars->common_vars_rx_data_per_thread[ue->current_thread_id[Ns>>1]].rxdataF[aa][frame_parms->ofdm_symbol_size*symbol],0,frame_parms->ofdm_symbol_size*sizeof(int));
 
     rx_offset = sample_offset + slot_offset + nb_prefix_samples0 + subframe_offset - SOFFSET;
@@ -178,16 +178,17 @@ int slot_fep(PHY_VARS_UE *ue,
 
     #ifdef DEBUG_FEP
         //  if (ue->frame <100)
-        printf("slot_fep: frame %d: symbol %d rx_offset %d\n", ue->proc.proc_rxtx[(Ns>>1)&1].frame_rx, symbol,rx_offset);
+        printf("slot_fep: frame = %d: OFDM symbol = %d, rx_offset = %d\n", ue->proc.proc_rxtx[(Ns>>1)&1].frame_rx, symbol,rx_offset);
     #endif
   }
 
-  if (ue->perfect_ce == 0) {
+  if (ue->perfect_ce == 0) {	//LA: false, then it performs channel estimation
+	  //LA: OFDM symbols 0 and 4 contain the Reference Signals used for channel estimation
     if ((l==0) || (l==(4-frame_parms->Ncp))) {
       for (aa=0; aa<frame_parms->nb_antenna_ports_eNB; aa++) {
 
 #ifdef DEBUG_FEP
-        printf("Channel estimation eNB %d, aatx %d, slot %d, symbol %d\n",eNB_id,aa,Ns,l);
+        printf("Channel estimation. eNB = %d, aatx = %d, slot = %d, symbol = %d\n, n_adj_cells = %d",eNB_id,aa,Ns,l,ue->measurements.n_adj_cells);
 #endif
 #if UE_TIMING_TRACE
         start_meas(&ue->dlsch_channel_estimation_stats);

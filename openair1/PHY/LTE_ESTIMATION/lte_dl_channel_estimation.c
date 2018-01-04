@@ -27,7 +27,7 @@
 #include "PHY/defs.h"
 #include "filt96_32.h"
 #include "T.h"
-//#define DEBUG_CH
+#define DEBUG_CH
 
 int lte_dl_channel_estimation(PHY_VARS_UE *ue,
                               uint8_t eNB_id,

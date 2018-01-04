@@ -95,7 +95,7 @@ int slot_fep(PHY_VARS_UE *ue,
 
   //  subframe_offset_F = frame_parms->ofdm_symbol_size * frame_parms->symbols_per_tti * (Ns>>1);
 
-
+  //LA: this two conditions are normally not met
   if (l<0 || l>=7-frame_parms->Ncp) {
     printf("slot_fep: l must be between 0 and %d\n",7-frame_parms->Ncp);
     return(-1);
@@ -178,7 +178,7 @@ int slot_fep(PHY_VARS_UE *ue,
 
     #ifdef DEBUG_FEP
         //  if (ue->frame <100)
-        printf("slot_fep: frame = %d: OFDM symbol = %d, rx_offset = %d\n", ue->proc.proc_rxtx[(Ns>>1)&1].frame_rx, symbol,rx_offset);
+        printf("slot_fep: frame = %d: OFDM symbol = %d, rx_offset (to read beginning of OFDM symbol, i.e. without CP) = %d\n", ue->proc.proc_rxtx[(Ns>>1)&1].frame_rx, symbol,rx_offset);
     #endif
   }
 
@@ -188,7 +188,7 @@ int slot_fep(PHY_VARS_UE *ue,
       for (aa=0; aa<frame_parms->nb_antenna_ports_eNB; aa++) {
 
 #ifdef DEBUG_FEP
-        printf("Channel estimation. eNB = %d, aatx = %d, slot = %d, symbol = %d\n, n_adj_cells = %d",eNB_id,aa,Ns,l,ue->measurements.n_adj_cells);
+        printf("Channel estimation. eNB = %d, aatx = %d, slot = %d, symbol = %d, n_adj_cells = %d\n",eNB_id,aa,Ns,l,ue->measurements.n_adj_cells);
 #endif
 #if UE_TIMING_TRACE
         start_meas(&ue->dlsch_channel_estimation_stats);

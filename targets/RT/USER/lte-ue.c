@@ -882,7 +882,7 @@ void *UE_thread(void *arg) {
                 if (UE->mode != loop_through_memory) {	//LA: this condition is normally met
                     if (UE->no_timing_correction==0) {	//LA: shouldn't the UE do timing correction? -> false, then do it.
                     		//LA: Performing timing correcting
-                        LOG_I(PHY,"[PID-%d] Resynchronizing RX by UE->rx_offset=%d samples (mode = %d, 0=normal_txrx)\n",procID_UE_thread,UE->rx_offset,UE->mode);
+                        LOG_I(PHY,"[PID-%d] Resynchronizing RX by rx_offset=%d samples (mode = %d, 0:normal_txrx)\n",procID_UE_thread,UE->rx_offset,UE->mode);
                         //LA: this function receives "rx_offset" samples and stores them in "rxdata." It returns "rx_offset"
                         //LA: after reading them, it can then start reading received samples without having a timing offset
                         //LA: i.e., once we read some values from the buffer, they are freed and the next ones become available for reading

@@ -21,7 +21,7 @@
 
 #include "PHY/defs.h"
 #include "defs.h"
-#define DEBUG_FEP
+//#define DEBUG_FEP
 
 #define SOFFSET 0
 
@@ -143,6 +143,9 @@ int slot_fep(PHY_VARS_UE *ue,
     } else {
       rx_offset += (frame_parms->ofdm_symbol_size+nb_prefix_samples)*l;// +
       //                   (frame_parms->ofdm_symbol_size+nb_prefix_samples)*(l-1);
+
+      LOG_I(PHY,"slot_fep: frame %d: slot %d, symbol %d, nb_prefix_samples %d, nb_prefix_samples0 %d, slot_offset %d, subframe_offset %d, sample_offset %d,rx_offset %d, frame_length_samples %d\n", ue->proc.proc_rxtx[(Ns>>1)&1].frame_rx,Ns, symbol,
+                nb_prefix_samples,nb_prefix_samples0,slot_offset,subframe_offset,sample_offset,rx_offset,frame_length_samples);
 
 #ifdef DEBUG_FEP
       //  if (ue->frame <100)

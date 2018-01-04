@@ -917,14 +917,16 @@ void *UE_thread(void *arg) {
                     rt_sleep_ns(1000*1000);
 
             } else {
+            		//LA: This condition is met once per while iteration. In each while iteration, one subframe is processed.
                 sub_frame++;
                 sub_frame%=10;
                 UE_rxtx_proc_t *proc = &UE->proc.proc_rxtx[thread_idx];
                 // update thread index for received subframe
                 UE->current_thread_id[sub_frame] = thread_idx;
 
-                LOG_I(PHY,"[PID-%d] Process Subframe %d thread Idx %d \n",procID_UE_thread, sub_frame, UE->current_thread_id[sub_frame]);
+                LOG_I(PHY,"[PID-%d] Processing Subframe = %d, thread Idx = %d \n",procID_UE_thread, sub_frame, UE->current_thread_id[sub_frame]);
 
+                //LA: "thread_idx" can be either 0 or 1, depending whether we are processing an odd or even subframe
                 thread_idx++;
                 if(thread_idx>=RX_NB_TH)
                     thread_idx = 0;
@@ -954,7 +956,8 @@ void *UE_thread(void *arg) {
                                 UE->rx_offset < 10*UE->frame_parms.samples_per_tti )
                             UE->rx_offset_diff = 1;
 
-                        LOG_D(PHY,"AbsSubframe %d.%d SET rx_off_diff to %d rx_offset %d \n",proc->frame_rx,sub_frame,UE->rx_offset_diff,UE->rx_offset);
+                        //LOG_D(PHY,"AbsSubframe %d.%d SET rx_off_diff to %d rx_offset %d \n",proc->frame_rx,sub_frame,UE->rx_offset_diff,UE->rx_offset);
+                        LOG_D(PHY,"[PID-%d] AbsSubframe %d.%d SET rx_off_diff to %d rx_offset %d \n",procID_UE_thread,proc->frame_rx,sub_frame,UE->rx_offset_diff,UE->rx_offset);
                         readBlockSize=UE->frame_parms.samples_per_tti -
                                       UE->frame_parms.ofdm_symbol_size -
                                       UE->frame_parms.nb_prefix_samples0 -

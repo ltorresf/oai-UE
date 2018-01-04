@@ -750,6 +750,8 @@ static void *UE_thread_rxn_txnp4(void *arg) {
 
 void *UE_thread(void *arg) {
 
+	int procID_UE_thread = gettid();
+	printf("**************************************************** Start : [UE_thread] [PID: %d] ****************************************************\n",procID_UE_thread);
     PHY_VARS_UE *UE = (PHY_VARS_UE *) arg;
     //  int tx_enabled = 0;
     int dummy_rx[UE->frame_parms.nb_antennas_rx][UE->frame_parms.samples_per_tti] __attribute__((aligned(32)));
@@ -874,7 +876,7 @@ void *UE_thread(void *arg) {
 
         } // UE->is_synchronized==0
         else {
-        	LOG_I(PHY,"Frame synchronization succeed.\n");
+        	LOG_I(PHY,"[PID: %d] Frame synchronization succeed.\n",procID_UE_thread);
             if (start_rx_stream==0) {
                 start_rx_stream=1;
                 if (UE->mode != loop_through_memory) {
@@ -1035,6 +1037,7 @@ void *UE_thread(void *arg) {
         } // UE->is_synchronized==1
 
     } // while !oai_exit
+    printf("**************************************************** End : [UE_thread] [PID: %d] ****************************************************\n",procID_UE_thread);
     return NULL;
 }
 

@@ -876,12 +876,12 @@ void *UE_thread(void *arg) {
 
         } // UE->is_synchronized==0
         else {
-        	LOG_I(PHY,"[PID: %d] Frame synchronization succeed.\n",procID_UE_thread);
+        	LOG_I(PHY,"[PID-%d] Frame synchronization succeed.\n",procID_UE_thread);
             if (start_rx_stream==0) {
                 start_rx_stream=1;
                 if (UE->mode != loop_through_memory) {
                     if (UE->no_timing_correction==0) {
-                        LOG_I(PHY,"Resynchronizing RX by %d samples (mode = %d)\n",UE->rx_offset,UE->mode);
+                        LOG_I(PHY,"[PID%d] Resynchronizing RX by UE->rx_offset=%d samples (mode = %d, 0=normal_txrx)\n",procID_UE_thread,UE->rx_offset,UE->mode);
                         AssertFatal(UE->rx_offset ==
                                     UE->rfdevice.trx_read_func(&UE->rfdevice,
                                                                &timestamp,

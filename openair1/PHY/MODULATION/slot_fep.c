@@ -182,9 +182,11 @@ int slot_fep(PHY_VARS_UE *ue,
     #endif
   }
 
+
   if (ue->perfect_ce == 0) {	//LA: false, then it performs channel estimation
-	  //LA: OFDM symbols 0 and 4 contain the Reference Signals used for channel estimation
+	//LA: OFDM symbols 0 and 4 contain the Reference Signals used for channel estimation
     if ((l==0) || (l==(4-frame_parms->Ncp))) {
+    		//LA: per default 2 antPorts are configured, then 2 CRS are decoded in each OFDM symbols 0 and 4
       for (aa=0; aa<frame_parms->nb_antenna_ports_eNB; aa++) {
 
 #ifdef DEBUG_FEP
@@ -193,6 +195,7 @@ int slot_fep(PHY_VARS_UE *ue,
 #if UE_TIMING_TRACE
         start_meas(&ue->dlsch_channel_estimation_stats);
 #endif
+        //performs channel estimation including frequency and temporal interpolation
         lte_dl_channel_estimation(ue,eNB_id,0,
                                   Ns,
                                   aa,

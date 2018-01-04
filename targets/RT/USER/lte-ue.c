@@ -923,7 +923,7 @@ void *UE_thread(void *arg) {
                 // update thread index for received subframe
                 UE->current_thread_id[sub_frame] = thread_idx;
 
-                LOG_I(PHY,"Process Subframe %d thread Idx %d \n", sub_frame, UE->current_thread_id[sub_frame]);
+                LOG_I(PHY,"[PID-%d] Process Subframe %d thread Idx %d \n",procID_UE_thread, sub_frame, UE->current_thread_id[sub_frame]);
 
                 thread_idx++;
                 if(thread_idx>=RX_NB_TH)

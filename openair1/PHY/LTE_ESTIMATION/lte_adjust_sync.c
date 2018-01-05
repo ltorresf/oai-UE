@@ -22,6 +22,7 @@
 #include "PHY/types.h"
 #include "PHY/defs.h"
 #include "PHY/extern.h"
+#include "../../../targets/RT/USER/rt_wrapper.h"	//LA
 
 #include "UTIL/LOG/vcd_signal_dumper.h"
 
@@ -38,7 +39,7 @@ void lte_adjust_synch(LTE_DL_FRAME_PARMS *frame_parms,
                       unsigned char clear,
                       short coef)
 {
-
+	int procID_lte_adjust_synch = gettid();
   static int max_pos_fil = 0;
   static int count_max_pos_ok = 0;
   static int first_time = 1;
@@ -51,7 +52,7 @@ void lte_adjust_synch(LTE_DL_FRAME_PARMS *frame_parms,
   ncoef = 32767 - coef;
 
 #ifdef DEBUG_PHY
-  LOG_D(PHY,"AbsSubframe %d.%d: rx_offset (before) = %d\n",ue->proc.proc_rxtx[0].frame_rx%1024,subframe,ue->rx_offset);
+  LOG_D(PHY,"[PID-%d] AbsSubframe %d.%d: rx_offset (before) = %d\n",procID_lte_adjust_synch,ue->proc.proc_rxtx[0].frame_rx%1024,subframe,ue->rx_offset);
 #endif //DEBUG_PHY
 
 

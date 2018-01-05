@@ -128,6 +128,7 @@ static const eutra_band_t eutra_bands[] = {
 };
 
 void init_thread(int sched_runtime, int sched_deadline, int sched_fifo, cpu_set_t *cpuset, char * name) {
+	int procID_init_thread = gettid();
 
 #ifdef DEADLINE_SCHEDULER
     if (sched_runtime!=0) {
@@ -157,7 +158,7 @@ void init_thread(int sched_runtime, int sched_deadline, int sched_fifo, cpu_set_
       for (int j = 0; j < CPU_SETSIZE; j++)
         if (CPU_ISSET(j, cset))
 	  sprintf(txt+strlen(txt), " %d ", j);
-      LOG_I(PHY,"CPU Affinity of thread %s is %s\n", name, txt);
+      LOG_I(PHY,"[PID-%d] CPU Affinity of thread %s is %s\n",procID_init_thread, name, txt);
     }
     CPU_FREE(cset);
 #endif
@@ -168,15 +169,15 @@ void init_thread(int sched_runtime, int sched_deadline, int sched_fifo, cpu_set_
 
     // LTS: this sync stuff should be wrong
     //printf("waiting for sync (%s)\n",name);
-    LOG_I(PHY,"Waiting for sync (%s)\n",name);
+    LOG_I(PHY,"[PID-%d] Waiting for sync (%s)\n",procID_init_thread,name);
     pthread_mutex_lock(&sync_mutex);
     //printf("Locked sync_mutex, waiting (%s)\n",name);
-    LOG_I(PHY,"Locked sync_mutex, waiting (%s)\n",name);
+    LOG_I(PHY,"[PID-%d] Locked sync_mutex, waiting (%s)\n",procID_init_thread,name);
     while (sync_var<0)
         pthread_cond_wait(&sync_cond, &sync_mutex);
     pthread_mutex_unlock(&sync_mutex);
     //printf("started %s as PID: %ld\n",name, gettid());
-    LOG_I(PHY,"started %s as PID: %ld\n",name, gettid());
+    LOG_I(PHY,"[PID-%d] started %s as PID: %ld\n",procID_init_thread,name, gettid());
 }
 
 void init_UE(int nb_inst)
@@ -640,7 +641,7 @@ static void *UE_thread_rxn_txnp4(void *arg) {
         pickTime(current);
         updateTimes(proc->gotIQs, &t2, 10000, "Delay to wake up UE_Thread_Rx (case 2)");
 
-        // Process Rx data for one sub-frame
+        // Process Rx data for one sub-frame. //LA: The subframe should have been stored in "rxp"
         //LA: In the case of FDD, the value returned is SF_DL for all subframes. This function is only relevant in TDD.
         lte_subframe_t sf_type = subframe_select( &UE->frame_parms, proc->subframe_rx);
         if ((sf_type == SF_DL) ||

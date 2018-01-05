@@ -100,7 +100,7 @@ void lte_adjust_synch(LTE_DL_FRAME_PARMS *frame_parms,
           first_time = 0;
           ue->time_sync_cell = 1;
           if (ue->mac_enabled==1) {
-              LOG_I(PHY,"[UE%d] Sending synch status to higher layers\n",ue->Mod_id);
+              LOG_I(PHY,"[PID-%d][UE%d] Sending synch status to higher layers\n",procID_lte_adjust_synch,ue->Mod_id);
               //mac_resynch();
               mac_xface->dl_phy_sync_success(ue->Mod_id,ue->proc.proc_rxtx[0].frame_rx,0,1);//ue->common_vars.eNb_id);
               ue->UE_mode[0] = PRACH;
@@ -119,7 +119,8 @@ void lte_adjust_synch(LTE_DL_FRAME_PARMS *frame_parms,
 
 
       #ifdef DEBUG_PHY
-      LOG_D(PHY,"AbsSubframe %d.%d: ThreadId %d diff =%i rx_offset (final) = %i : clear %d,max_pos = %d,max_pos_fil = %d (peak %d) max_val %d target_pos %d \n",
+      LOG_D(PHY,"[PID-%d] AbsSubframe %d.%d: ThreadId %d, diff = %i, rx_offset (final) = %i : clear = %d, max_pos = %d,max_pos_fil = %d (peak %d), max_val = %d, target_pos %d \n",
+    		  	  procID_lte_adjust_synch,
               ue->proc.proc_rxtx[ue->current_thread_id[subframe]].frame_rx,
               subframe,
               ue->current_thread_id[subframe],

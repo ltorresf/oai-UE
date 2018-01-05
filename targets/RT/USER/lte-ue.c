@@ -657,7 +657,9 @@ static void *UE_thread_rxn_txnp4(void *arg) {
                         (sf_type==SF_S ? "SF_S"  : "UNKNOWN_SF_TYPE"))));
             } else {
                 //LOG_D(PHY, "%s,%s,%s: calling UE_RX\n",
-                	LOG_I(PHY, "%s,%s,%s: calling UE_RX\n",
+                	LOG_I(PHY, "[PID-%d] proc->instance_cnt_rxtx = %d, threadname = %s,UE->frame_parms.frame_type = %s,subframe-type = %s: calling UE_RX\n",
+                		procID_rxn_txnp4,
+					proc->instance_cnt_rxtx,
                       threadname,
                       (UE->frame_parms.frame_type==FDD? "FDD":
                        (UE->frame_parms.frame_type==TDD? "TDD":"UNKNOWN_DUPLEX_MODE")),

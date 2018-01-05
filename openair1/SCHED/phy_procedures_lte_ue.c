@@ -2622,7 +2622,7 @@ void ue_measurement_procedures(
   if (l==0) {
     // UE measurements on symbol 0
     if (abstraction_flag==0) {
-      LOG_D(PHY,"Calling measurements subframe %d, rxdata %p\n",subframe_rx,ue->common_vars.rxdata);
+      LOG_I(PHY,"[PID-%d] Calling measurements subframe %d, rxdata %p\n",procID_ue_measurement_procedures,subframe_rx,ue->common_vars.rxdata);
 
       lte_ue_measurements(ue,
         (subframe_rx*frame_parms->samples_per_tti+ue->rx_offset)%(frame_parms->samples_per_tti*LTE_NUMBER_OF_SUBFRAMES_PER_FRAME),
@@ -2651,7 +2651,7 @@ void ue_measurement_procedures(
 #endif
   }
 
-  if (l==(6-ue->frame_parms.Ncp)) {
+  if (l==(6-ue->frame_parms.Ncp)) {	//LA: for normal CP: if (l == 6)
 
     // make sure we have signal from PSS/SSS for N0 measurement
          // LOG_I(PHY," l==(6-ue->frame_parms.Ncp) ue_rrc_measurements\n");
@@ -5061,12 +5061,12 @@ int phy_procedures_slot_parallelization_UE_RX(PHY_VARS_UE *ue,UE_rxtx_proc_t *pr
 }
 #endif
 
-
+//LA: Scheduling for UE RX procedures in a subframe at a time.
 int phy_procedures_UE_RX(PHY_VARS_UE *ue,UE_rxtx_proc_t *proc,uint8_t eNB_id,
 			 uint8_t abstraction_flag,uint8_t do_pdcch_flag,runmode_t mode,
 			 relaying_type_t r_type,PHY_VARS_RN *phy_vars_rn) {
 	int procID_phy_procedures_UE_RX = gettid();
-	printf("**************************************************** Start : [phy_procedures_UE_RX] [PID: %d] ****************************************************\n",procID_phy_procedures_UE_RX);
+	printf("*************************************************************** Start : [phy_procedures_UE_RX] [PID: %d] ***************************************************************\n",procID_phy_procedures_UE_RX);
   int l,l2;
   int pilot1;
   int pmch_flag=0;
@@ -5098,26 +5098,29 @@ int phy_procedures_UE_RX(PHY_VARS_UE *ue,UE_rxtx_proc_t *proc,uint8_t eNB_id,
 
   pmch_flag = is_pmch_subframe(frame_rx,subframe_rx,&ue->frame_parms) ? 1 : 0;
 
-  if (do_pdcch_flag) {	//LA: This value is = 1, when called by "UE_thread_rxn_txnp4"
-  // deactivate reception until we scan pdcch
-  if (ue->dlsch[ue->current_thread_id[subframe_rx]][eNB_id][0])
-    ue->dlsch[ue->current_thread_id[subframe_rx]][eNB_id][0]->active = 0;
-  if (ue->dlsch[ue->current_thread_id[subframe_rx]][eNB_id][1])
-    ue->dlsch[ue->current_thread_id[subframe_rx]][eNB_id][1]->active = 0;
+  if (do_pdcch_flag) {	// deactivate reception until we scan pdcch
+	  //LA: This value is = 1, when called by "UE_thread_rxn_txnp4"
+	  //LA: basically the if-statements check whether the pointer is allocated to a valid memory address, whatever that be
+  if (ue->dlsch[ue->current_thread_id[subframe_rx]][eNB_id][0])				//LA: 1st RxTx Thread
+    ue->dlsch[ue->current_thread_id[subframe_rx]][eNB_id][0]->active = 0;		//LA: Active flag for DLSCH demodulation
+  if (ue->dlsch[ue->current_thread_id[subframe_rx]][eNB_id][1])				//LA: 2nd RxTx Thread
+    ue->dlsch[ue->current_thread_id[subframe_rx]][eNB_id][1]->active = 0;		//LA: Active flag for DLSCH demodulation
 
+  //LA: basically the if-statements check whether the pointer is allocated to a valid memory address, whatever that be
   if (ue->dlsch_SI[eNB_id])
-    ue->dlsch_SI[eNB_id]->active = 0;
+    ue->dlsch_SI[eNB_id]->active = 0;	//LA: Active flag for DLSCH demodulation
   if (ue->dlsch_p[eNB_id])
-    ue->dlsch_p[eNB_id]->active = 0;
+    ue->dlsch_p[eNB_id]->active = 0;		//LA: Active flag for DLSCH demodulation
   if (ue->dlsch_ra[eNB_id])
-    ue->dlsch_ra[eNB_id]->active = 0;
+    ue->dlsch_ra[eNB_id]->active = 0;	//LA: Active flag for DLSCH demodulation
   }
 
 #ifdef DEBUG_PHY_PROC
   //LOG_D(PHY,"[%s %d] Frame %d subframe %d: Doing phy_procedures_UE_RX\n",
-  LOG_I(PHY,"[%s %d] Frame %d subframe %d: Doing phy_procedures_UE_RX\n",
-  (r_type == multicast_relay) ? "RN/UE" : "UE",
-  ue->Mod_id,frame_rx, subframe_rx);
+  LOG_I(PHY,"[PID-%d][%s %d] Frame %d, subframe %d: Doing phy_procedures_UE_RX\n",
+		  procID_phy_procedures_UE_RX
+		  (r_type == multicast_relay) ? "RN/UE" : "UE",
+		  ue->Mod_id,frame_rx, subframe_rx);
 #endif
 
   if (ue->frame_parms.Ncp == 0) {  // normal prefix
@@ -5150,28 +5153,34 @@ int phy_procedures_UE_RX(PHY_VARS_UE *ue,UE_rxtx_proc_t *proc,uint8_t eNB_id,
 
   //LOG_D(PHY," ------ slot 0 Processing: AbsSubframe %d.%d ------  \n", frame_rx%1024, subframe_rx);
   //LOG_D(PHY," ------  --> FFT/ChannelEst/PDCCH slot 0: AbsSubframe %d.%d ------  \n", frame_rx%1024, subframe_rx);
-  LOG_I(PHY," ------ slot 0 Processing: AbsSubframe %d.%d ------  \n", frame_rx%1024, subframe_rx);
-  LOG_I(PHY," ------  --> FFT/ChannelEst/PDCCH slot 0: AbsSubframe %d.%d ------  \n", frame_rx%1024, subframe_rx);
+  //LOG_I(PHY,"[PID-%d] ------ slot 0 Processing: AbsSubframe %d.%d ------  \n",procID_phy_procedures_UE_RX, frame_rx%1024, subframe_rx);
+  LOG_I(PHY,"[PID-%d] ------  --> FFT/ChannelEst/PDCCH slot 0: AbsSubframe %d.%d ------  \n",procID_phy_procedures_UE_RX, frame_rx%1024, subframe_rx);
   for (; l<=l2; l++) {
-	  printf(">>>>>>>>>>>>>>>>>>>>>>> Start processing OFDM symbol: %d <<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n",l);
+	  printf(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Start processing OFDM symbol: %d <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n",l);
     if (abstraction_flag == 0) {	//LA: always = 0, when called by "UE_thread_rxn_txnp4"
 #if UE_TIMING_TRACE
         start_meas(&ue->ofdm_demod_stats);
 #endif
       VCD_SIGNAL_DUMPER_DUMP_FUNCTION_BY_NAME(VCD_SIGNAL_DUMPER_FUNCTIONS_UE_SLOT_FEP, VCD_FUNCTION_IN);
       slot_fep(ue,
-         l,
-         (subframe_rx<<1),
-         0,
-         0,
-         0);
+         l,					//LA: symbol within slot (0..6)
+         (subframe_rx<<1),	//LA: Slot number (0..19)
+         0,					//LA: offset within rxdata (points to beginning of subframe)
+         0,					//LA: always zero (false)
+         0);					//LA: always zero (false)
       VCD_SIGNAL_DUMPER_DUMP_FUNCTION_BY_NAME(VCD_SIGNAL_DUMPER_FUNCTIONS_UE_SLOT_FEP, VCD_FUNCTION_OUT);
 #if UE_TIMING_TRACE
       stop_meas(&ue->ofdm_demod_stats);
 #endif
     }
 
-    ue_measurement_procedures(l-1,ue,proc,eNB_id,(subframe_rx<<1),abstraction_flag,mode);
+    ue_measurement_procedures(l-1,
+							ue,
+							proc,
+							eNB_id,
+							(subframe_rx<<1),
+							abstraction_flag,
+							mode);
 
     if (do_pdcch_flag) {	//LA: This value is = 1, when called by "UE_thread_rxn_txnp4"
       if ((l==pilot1) ||
@@ -5192,7 +5201,7 @@ int phy_procedures_UE_RX(PHY_VARS_UE *ue,UE_rxtx_proc_t *proc,uint8_t eNB_id,
 	LOG_I(PHY,"num_pdcch_symbols %d\n",ue->pdcch_vars[ue->current_thread_id[subframe_rx]][eNB_id]->num_pdcch_symbols);
       }
     }
-    printf(">>>>>>>>>>>>>>>>>>>>>>> End processing OFDM symbol: %d <<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n",l);
+    printf(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> End processing OFDM symbol: %d <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n",l);
   } // for l=1..l2
   ue_measurement_procedures(l-1,ue,proc,eNB_id,(subframe_rx<<1),abstraction_flag,mode);
 
@@ -5556,7 +5565,7 @@ int phy_procedures_UE_RX(PHY_VARS_UE *ue,UE_rxtx_proc_t *proc,uint8_t eNB_id,
 
   //LOG_D(PHY," ****** end RX-Chain  for AbsSubframe %d.%d ******  \n", frame_rx%1024, subframe_rx);
   LOG_I(PHY," ****** end RX-Chain  for AbsSubframe %d.%d ******  \n", frame_rx%1024, subframe_rx);
-  printf("**************************************************** End : [phy_procedures_UE_RX] [PID: %d] ****************************************************\n",procID_phy_procedures_UE_RX);
+  printf("*************************************************************** End : [phy_procedures_UE_RX] [PID: %d] ***************************************************************\n",procID_phy_procedures_UE_RX);
   return (0);
 }
 

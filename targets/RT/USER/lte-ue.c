@@ -604,7 +604,7 @@ static void *UE_thread_rxn_txnp4(void *arg) {
     PHY_VARS_UE    *UE   = rtd->UE;
     int ret;
 
-    proc->instance_cnt_rxtx=-1;
+    proc->instance_cnt_rxtx=-1;	//LA: Instance count for RXn-TXnp4 processing thread. Always  = 0 for UE_thread_rxn_txnp4 processing.
     proc->subframe_rx=proc->sub_frame_start;
 
     char threadname[256];
@@ -657,7 +657,7 @@ static void *UE_thread_rxn_txnp4(void *arg) {
                         (sf_type==SF_S ? "SF_S"  : "UNKNOWN_SF_TYPE"))));
             } else {
                 //LOG_D(PHY, "%s,%s,%s: calling UE_RX\n",
-                	LOG_I(PHY, "[PID-%d] proc->instance_cnt_rxtx = %d, threadname = %s,UE->frame_parms.frame_type = %s,subframe-type = %s: calling UE_RX\n",
+                	LOG_I(PHY, "[PID-%d] proc->instance_cnt_rxtx = %d, threadname = %s, UE->frame_parms.frame_type = %s, subframe-type = %s: calling UE_RX\n",
                 		procID_rxn_txnp4,
 					proc->instance_cnt_rxtx,
                       threadname,
@@ -670,7 +670,14 @@ static void *UE_thread_rxn_txnp4(void *arg) {
 #ifdef UE_SLOT_PARALLELISATION
             phy_procedures_slot_parallelization_UE_RX( UE, proc, 0, 0, 1, UE->mode, no_relay, NULL );
 #else
-            phy_procedures_UE_RX( UE, proc, 0, 0, 1, UE->mode, no_relay, NULL );
+            phy_procedures_UE_RX( UE,	//LA: [phy_vars_ue] Pointer to UE variables on which to act
+            			proc, 		//LA: Pointer to RXn_TXnp4 proc information
+            			0, 			//LA: Local id of eNB on which to act
+					0, 			//LA: [abstraction_flag] Indicator of PHY abstraction
+					1, 			//LA: [do_pdcch_flag] if = 1, then deactivate reception until we scan pdcch
+					UE->mode, 	//LA: [mode] calibration/debug mode
+					no_relay, 	//LA: [r_type] indicates the relaying operation: "no relaying"
+					NULL );		//LA: [phy_vars_rn] pointer to RN variables (no relay nodes)
 #endif
         }
 
@@ -1088,7 +1095,7 @@ void init_UE_threads(PHY_VARS_UE *UE) {
         pthread_cond_init(&UE->proc.proc_rxtx[i].cond_rxtx,NULL);
         UE->proc.proc_rxtx[i].sub_frame_start=i;
         UE->proc.proc_rxtx[i].sub_frame_step=nb_threads;
-        LOG_I(PHY,"[PID: %d] Init_UE_threads: rtd->proc->sub_frame_start (rtd) = %d, UE->proc.proc_rxtx[%d].sub_frame_start (proc) = %d nb_threads = %d, i = %d\n",procID_init_UE_threads,rtd->proc->sub_frame_start,i,UE->proc.proc_rxtx[i].sub_frame_start,nb_threads, i);
+        LOG_I(PHY,"[PID-%d] Init_UE_threads: rtd->proc->sub_frame_start (rtd) = %d, UE->proc.proc_rxtx[%d].sub_frame_start (proc) = %d, nb_threads = %d, i = %d\n",procID_init_UE_threads,rtd->proc->sub_frame_start,i,UE->proc.proc_rxtx[i].sub_frame_start,nb_threads, i);
         pthread_create(&UE->proc.proc_rxtx[i].pthread_rxtx, NULL, UE_thread_rxn_txnp4, rtd);
 
 #ifdef UE_SLOT_PARALLELISATION

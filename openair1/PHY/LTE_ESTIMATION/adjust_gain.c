@@ -22,14 +22,18 @@
 #include "PHY/types.h"
 #include "PHY/defs.h"
 #include "PHY/extern.h"
+#include "../../../targets/RT/USER/rt_wrapper.h"	//LA
 
 void
 phy_adjust_gain (PHY_VARS_UE *ue, uint32_t rx_power_fil_dB, uint8_t eNB_id)
 {
-
-  LOG_D(PHY,"Gain control: rssi %d (%d,%d)\n",
+	int procID_phy_adjust_gain = gettid();
+  //LOG_I(PHY,"[PID-%d] Gain control: rssi %d (%d,%d)\n",
+LOG_I(PHY,"[PID-%d] Gain control: rx_power_fil_dB (rssi) = %d, ue->measurements.rssi = %d, ue->measurements.rx_power_avg_dB[eNB_id=%d] = %d)\n",
+	procID_phy_adjust_gain,
 	rx_power_fil_dB,
 	ue->measurements.rssi,
+	eNB_id,
 	ue->measurements.rx_power_avg_dB[eNB_id]
         );
 
@@ -61,7 +65,8 @@ phy_adjust_gain (PHY_VARS_UE *ue, uint32_t rx_power_fil_dB, uint8_t eNB_id)
     ue->rx_total_gain_dB = MIN_RF_GAIN;
   }
 
-  LOG_D(PHY,"Gain control: rx_total_gain_dB = %d (max %d,rxpf %d)\n",ue->rx_total_gain_dB,MAX_RF_GAIN,rx_power_fil_dB);
+  //LOG_D(PHY,"Gain control: rx_total_gain_dB = %d (max %d,rxpf %d)\n",ue->rx_total_gain_dB,MAX_RF_GAIN,rx_power_fil_dB);
+  LOG_I(PHY,"[PID-%d] Gain control: rx_total_gain_dB = %d, MAX_RF_GAIN = %d, x_power_fil_dB (rxpf) = %d)\n",procID_phy_adjust_gain,ue->rx_total_gain_dB,MAX_RF_GAIN,rx_power_fil_dB);
 
 #ifdef DEBUG_PHY
   /*  if ((ue->frame%100==0) || (ue->frame < 10))

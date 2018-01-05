@@ -21,18 +21,21 @@
 
 #include "PHY/defs.h"
 #include "defs.h"
+#include "../../../targets/RT/USER/rt_wrapper.h"	//LA
 //#define DEBUG_FEP
 
 #define SOFFSET 0
 
 
 int slot_fep(PHY_VARS_UE *ue,
-             unsigned char l,	//LA: symbol within slot (0..6/7)
+             unsigned char l,	//LA: symbol within slot (0..6)
              unsigned char Ns,	//LA: Slot number (0..19)
              int sample_offset,	//LA: offset within rxdata (points to beginning of subframe)
              int no_prefix,		//LA: always zero (false)
 	     int reset_freq_est)		//LA: always zero (false)
 {
+
+	int procID_slot_fep = gettid();
 
   LTE_DL_FRAME_PARMS *frame_parms = &ue->frame_parms;
   LTE_UE_COMMON *common_vars   = &ue->common_vars;
@@ -244,7 +247,7 @@ int slot_fep(PHY_VARS_UE *ue,
 #ifdef DEBUG_FEP
   printf("slot_fep: done\n");
 #endif
-  LOG_I(PHY,"slot_fep: frame %d: slot %d, symbol %d, nb_prefix_samples %d, nb_prefix_samples0 %d, slot_offset %d, subframe_offset %d, sample_offset %d,rx_offset %d, frame_length_samples %d\n", ue->proc.proc_rxtx[(Ns>>1)&1].frame_rx,Ns, symbol,
+  LOG_I(PHY,"[PID-%d] slot_fep: frame %d: slot %d, symbol %d, nb_prefix_samples %d, nb_prefix_samples0 %d, slot_offset %d, subframe_offset %d, sample_offset %d,rx_offset %d, frame_length_samples %d\n", procID_slot_fep,ue->proc.proc_rxtx[(Ns>>1)&1].frame_rx,Ns, symbol,
                   nb_prefix_samples,nb_prefix_samples0,slot_offset,subframe_offset,sample_offset,rx_offset,frame_length_samples);
   return(0);
 }

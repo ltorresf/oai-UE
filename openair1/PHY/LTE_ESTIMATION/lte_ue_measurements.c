@@ -27,13 +27,14 @@
 #include "SCHED/extern.h"
 #include "log.h"
 #include "PHY/sse_intrin.h"
+#include "../../../targets/RT/USER/rt_wrapper.h"	//LA
 
 //#define k1 1000
 #define k1 ((long long int) 1000)
 #define k2 ((long long int) (1024-k1))
 
-//#define DEBUG_MEAS_RRC
-//#define DEBUG_MEAS_UE
+#define DEBUG_MEAS_RRC
+#define DEBUG_MEAS_UE
 //#define DEBUG_RANK_EST
 
 int16_t cond_num_threshold = 0;
@@ -172,7 +173,7 @@ void ue_rrc_measurements(PHY_VARS_UE *ue,
     uint8_t slot,
     uint8_t abstraction_flag)
 {
-
+	int procID_ue_rrc_measurements = gettid();
   uint8_t subframe = slot>>1;
   int aarx,rb;
   uint8_t pss_symb;
@@ -345,8 +346,11 @@ void ue_rrc_measurements(PHY_VARS_UE *ue,
       for (l=0,nu=0; l<=(4-ue->frame_parms.Ncp); l+=(4-ue->frame_parms.Ncp),nu=3) {
         k = (nu + nushift)%6;
 #ifdef DEBUG_MEAS_RRC
-        LOG_I(PHY,"[UE %d] Frame %d subframe %d Doing ue_rrc_measurements rsrp/rssi (Nid_cell %d, nushift %d, eNB_offset %d, k %d, l %d)\n",ue->Mod_id,ue->proc.proc_rxtx[subframe&1].frame_rx,subframe,Nid_cell,nushift,
-              eNB_offset,k,l);
+        //LOG_I(PHY,"[UE %d] Frame %d subframe %d Doing ue_rrc_measurements rsrp/rssi (Nid_cell %d, nushift %d, eNB_offset %d, k %d, l %d)\n",ue->Mod_id,ue->proc.proc_rxtx[subframe&1].frame_rx,subframe,Nid_cell,nushift,
+        	LOG_I(PHY,"[PID-%d][UE %d] Frame %d subframe %d Doing ue_rrc_measurements (RSRP/RSCP/RSSI measurements) (Nid_cell = %d, nushift = %d, "
+        			"eNB_offset = %d, RS freq shift (k) = %d, OFDM symbol (l) = %d)\n",procID_ue_rrc_measurements,ue->Mod_id,
+					ue->proc.proc_rxtx[subframe&1].frame_rx,subframe,Nid_cell,nushift,
+					eNB_offset,k,l);
 #endif
 
         for (aarx=0; aarx<ue->frame_parms.nb_antennas_rx; aarx++) {
@@ -427,13 +431,14 @@ void ue_rrc_measurements(PHY_VARS_UE *ue,
     //    if (slot == 0) {
 
       if (eNB_offset == 0)
-       LOG_I(PHY,"[UE %d] Frame %d, subframe %d RRC Measurements => rssi %3.1f dBm (digital: %3.1f dB, gain %d), N0 %d dBm\n",ue->Mod_id,
+       LOG_I(PHY,"[PID-%d][UE %d] Frame %d, subframe %d RRC Measurements => rssi %3.1f dBm (digital: %3.1f dB, gain %d), N0 %d dBm\n",procID_ue_rrc_measurements,ue->Mod_id,
               ue->proc.proc_rxtx[subframe&1].frame_rx,subframe,10*log10(ue->measurements.rssi)-ue->rx_total_gain_dB,
               10*log10(ue->measurements.rssi),
               ue->rx_total_gain_dB,
               ue->measurements.n0_power_tot_dBm);
 
-      LOG_I(PHY,"[UE %d] Frame %d, subframe %d RRC Measurements (idx %d, Cell id %d) => rsrp: %3.1f dBm/RE (%d), rsrq: %3.1f dB\n",
+      LOG_I(PHY,"[PID-%d][UE %d] Frame %d, subframe %d RRC Measurements (idx %d, Cell id %d) => rsrp: %3.1f dBm/RE (%d), rsrq: %3.1f dB\n",
+    		  procID_ue_rrc_measurements,
             ue->Mod_id,
             ue->proc.proc_rxtx[subframe&1].frame_rx,subframe,eNB_offset,
             (eNB_offset>0) ? ue->measurements.adj_cell_id[eNB_offset-1] : ue->frame_parms.Nid_cell,
@@ -461,7 +466,7 @@ void lte_ue_measurements(PHY_VARS_UE *ue,
                          uint8_t subframe)
 {
 
-
+	int procID_lte_ue_measurements = gettid();
   int aarx,aatx,eNB_id=0; //,gain_offset=0;
   //int rx_power[NUMBER_OF_CONNECTED_eNB_MAX];
   int i;
@@ -591,7 +596,8 @@ void lte_ue_measurements(PHY_VARS_UE *ue,
     ue->measurements.wideband_cqi_avg[eNB_id] = dB_fixed2(ue->measurements.rx_power_avg[eNB_id],ue->measurements.n0_power_avg);
     ue->measurements.rx_rssi_dBm[eNB_id] = ue->measurements.rx_power_avg_dB[eNB_id] - ue->rx_total_gain_dB;
 #ifdef DEBUG_MEAS_UE
-      LOG_I(PHY,"[eNB %d] Subframe %d, RSSI %d dBm, RSSI (digital) %d dB, WBandCQI %d dB, rxPwrAvg %d, n0PwrAvg %d\n",
+      LOG_I(PHY,"[PID-%d][eNB %d] Subframe %d, RSSI %d dBm, RSSI (digital) %d dB, WBandCQI %d dB, rxPwrAvg %d, n0PwrAvg %d\n",
+    		  procID_lte_ue_measurements,
             eNB_id,
             subframe,
             ue->measurements.rx_rssi_dBm[eNB_id],

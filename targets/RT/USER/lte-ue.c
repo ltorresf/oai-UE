@@ -966,6 +966,7 @@ void *UE_thread(void *arg) {
                                        UE->rx_offset_diff;
                     }
 
+                    //LA: [Rx] here we read a whole subframe and store it in "rxp"
                     AssertFatal(readBlockSize ==
                                 UE->rfdevice.trx_read_func(&UE->rfdevice,
                                                            &timestamp,
@@ -1002,7 +1003,7 @@ void *UE_thread(void *arg) {
                         //UE->proc.proc_rxtx[0].frame_rx++;
                         //UE->proc.proc_rxtx[1].frame_rx++;
                         for (th_id=0; th_id < RX_NB_TH; th_id++) {
-                            UE->proc.proc_rxtx[th_id].frame_rx++;
+                            UE->proc.proc_rxtx[th_id].frame_rx++;	//LA: in the next iteration it wil act upon the next Rx frame
                         }
                     }
                     //UE->proc.proc_rxtx[0].gotIQs=readTime(gotIQs);
@@ -1019,7 +1020,7 @@ void *UE_thread(void *arg) {
 
                     proc->instance_cnt_rxtx++;
                     //LOG_D( PHY, "[SCHED][UE %d] UE RX instance_cnt_rxtx %d subframe %d !!\n", UE->Mod_id, proc->instance_cnt_rxtx,proc->subframe_rx);
-                    LOG_I( PHY, "[SCHED][UE %d] UE RX instance_cnt_rxtx %d subframe %d !!\n", UE->Mod_id, proc->instance_cnt_rxtx,proc->subframe_rx);
+                    LOG_I( PHY, "[PID-%d][SCHED][UE %d]  UE RX instance_cnt_rxtx %d subframe %d !!\n",procID_UE_thread, UE->Mod_id,proc->instance_cnt_rxtx,proc->subframe_rx);
                     if (proc->instance_cnt_rxtx == 0) {
                       if (pthread_cond_signal(&proc->cond_rxtx) != 0) {
                         LOG_E( PHY, "[SCHED][UE %d] ERROR pthread_cond_signal for UE RX thread\n", UE->Mod_id);
@@ -1063,6 +1064,7 @@ void *UE_thread(void *arg) {
  * and the locking between them.
  */
 void init_UE_threads(PHY_VARS_UE *UE) {
+	int procID_init_UE_threads = gettid();
     struct rx_tx_thread_data *rtd;
 
     pthread_attr_init (&UE->proc.attr_ue);
@@ -1083,7 +1085,7 @@ void init_UE_threads(PHY_VARS_UE *UE) {
         pthread_cond_init(&UE->proc.proc_rxtx[i].cond_rxtx,NULL);
         UE->proc.proc_rxtx[i].sub_frame_start=i;
         UE->proc.proc_rxtx[i].sub_frame_step=nb_threads;
-        LOG_I(PHY,"Init_UE_threads rtd %d proc %d nb_threads %d i %d\n",rtd->proc->sub_frame_start, UE->proc.proc_rxtx[i].sub_frame_start,nb_threads, i);
+        LOG_I(PHY,"[PID: %d] Init_UE_threads: rtd->proc->sub_frame_start (rtd) = %d, UE->proc.proc_rxtx[%d].sub_frame_start (proc) = %d nb_threads = %d, i = %d\n",procID_init_UE_threads,rtd->proc->sub_frame_start,%i,UE->proc.proc_rxtx[i].sub_frame_start,nb_threads, i);
         pthread_create(&UE->proc.proc_rxtx[i].pthread_rxtx, NULL, UE_thread_rxn_txnp4, rtd);
 
 #ifdef UE_SLOT_PARALLELISATION

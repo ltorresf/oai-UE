@@ -43,7 +43,7 @@
 #include "assertions.h" 
 #include "T.h"
 
-//#define DEBUG_DCI_ENCODING 1
+#define DEBUG_DCI_ENCODING 1
 //#define DEBUG_DCI_DECODING 1
 //#define DEBUG_PHY
 

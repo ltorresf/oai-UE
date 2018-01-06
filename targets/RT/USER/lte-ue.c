@@ -1013,7 +1013,7 @@ void *UE_thread(void *arg) {
                         //UE->proc.proc_rxtx[0].frame_rx++;
                         //UE->proc.proc_rxtx[1].frame_rx++;
                         for (th_id=0; th_id < RX_NB_TH; th_id++) {
-                            UE->proc.proc_rxtx[th_id].frame_rx++;	//LA: in the next iteration it wil act upon the next Rx frame
+                            UE->proc.proc_rxtx[th_id].frame_rx++;	//LA: in the next iteration it will act upon the next Rx frame
                         }
                     }
                     //UE->proc.proc_rxtx[0].gotIQs=readTime(gotIQs);

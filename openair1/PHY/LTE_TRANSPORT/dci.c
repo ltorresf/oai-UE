@@ -3249,7 +3249,7 @@ uint16_t dci_decoding_procedure(PHY_VARS_UE *ue,
                                 int16_t eNB_id,
                                 uint8_t subframe)
 {
-	printf("-------------------------- Start: [dci_decoding_procedure]  --------------------------\n");
+	printf("||||||||||||||||||||||||||||||||||||||||||+ Start: [dci_decoding_procedure] +||||||||||||||||||||||||||||||||||||||||||\n");
 
   uint8_t  dci_cnt=0,old_dci_cnt=0;
   uint32_t CCEmap0=0,CCEmap1=0,CCEmap2=0;
@@ -4278,7 +4278,7 @@ uint16_t dci_decoding_procedure(PHY_VARS_UE *ue,
     //#endif  //ALL_AGGREGATION
 
   }
-  printf("-------------------------- Start: [dci_decoding_procedure]  --------------------------\n");
+  printf("||||||||||||||||||||||||||||||||||||||||||+ Start: [dci_decoding_procedure] +||||||||||||||||||||||||||||||||||||||||||\n");
 
   return(dci_cnt);
 }

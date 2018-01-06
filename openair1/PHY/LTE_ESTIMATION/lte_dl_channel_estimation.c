@@ -95,7 +95,7 @@ int lte_dl_channel_estimation(PHY_VARS_UE *ue,
 
   k = (nu + nushift)%6;
 
-  LOG_I(PHY,"[PID-%d] Channel Estimation : ThreadId = %d, eNB_offset = %d, cell_id = %d, ch_offset = %d, OFDM size = %d, Ncp = %d, symbol within slot (l) = %d, "
+  LOG_I(PHY,"[PID-%d] Channel Estimation : ThreadId = %d, eNB_offset = %d, cell_id = %d, ch_offset = %d, OFDM size = %d, Ncp = %d, OFDM symbol within slot (l) = %d, "
 		  "Slot number (Ns) = %d, RS freq shift (k) = %d\n",procID_lte_dl_channel_estimation,ue->current_thread_id[Ns>>1], eNB_offset,Nid_cell,
 		  ch_offset,ue->frame_parms.ofdm_symbol_size,ue->frame_parms.Ncp,l,Ns,k);
 #ifdef DEBUG_CH

@@ -2609,7 +2609,7 @@ void ue_measurement_procedures(
     uint8_t abstraction_flag,runmode_t mode)
 {
 	int procID_ue_measurement_procedures = gettid();
-	printf("-------------------------- Start: [ue_measurement_procedures] [OFDM Symbol: %"PRIu16"] [PID: %d] --------------------------\n",l,procID_ue_measurement_procedures);
+	//printf("-------------------------- Start: [ue_measurement_procedures] [OFDM Symbol: %"PRIu16"] [PID: %d] --------------------------\n",l,procID_ue_measurement_procedures);
 
   //LOG_I(PHY,"ue_measurement_procedures l %d Ncp %d\n",l,ue->frame_parms.Ncp);
 
@@ -2697,7 +2697,7 @@ void ue_measurement_procedures(
     }
 
   }
-  printf("-------------------------- End: [ue_measurement_procedures] [OFDM Symbol: %"PRIu16"] [PID: %d] --------------------------\n",l,procID_ue_measurement_procedures);
+  //printf("-------------------------- End: [ue_measurement_procedures] [OFDM Symbol: %"PRIu16"] [PID: %d] --------------------------\n",l,procID_ue_measurement_procedures);
   VCD_SIGNAL_DUMPER_DUMP_FUNCTION_BY_NAME(VCD_SIGNAL_DUMPER_FUNCTIONS_UE_MEASUREMENT_PROCEDURES, VCD_FUNCTION_OUT);
 }
 
@@ -3062,6 +3062,7 @@ void ue_pbch_procedures(uint8_t eNB_id,PHY_VARS_UE *ue,UE_rxtx_proc_t *proc, uin
 
 int ue_pdcch_procedures(uint8_t eNB_id,PHY_VARS_UE *ue,UE_rxtx_proc_t *proc,uint8_t abstraction_flag)
 {
+	//LA: PDCCH procedures called after reading the 4th OFDM symbol in each subframe.
 	int procID_initial_pdcch = gettid();
 	printf("-------------------------- Start: [ue_pdcch_procedures] [PID: %d] --------------------------\n",procID_initial_pdcch);
 
@@ -5187,7 +5188,7 @@ int phy_procedures_UE_RX(PHY_VARS_UE *ue,UE_rxtx_proc_t *proc,uint8_t eNB_id,
       if ((l==pilot1) ||
 	  ((pmch_flag==1)&(l==l2)))  {
 	//LOG_D(PHY,"[UE  %d] Frame %d: Calling pdcch procedures (eNB %d)\n",ue->Mod_id,frame_rx,eNB_id);
-	LOG_I(PHY,"[PID-%d][UE  %d] Frame %d: Calling pdcch procedures (eNB %d)\n",procID_phy_procedures_UE_RX,ue->Mod_id,frame_rx,eNB_id);
+	LOG_I(PHY,"[PID-%d][UE  %d] (Only for OFDM symbol 4) Frame %d: Calling pdcch procedures (eNB %d)\n",procID_phy_procedures_UE_RX,ue->Mod_id,frame_rx,eNB_id);
 
 	//start_meas(&ue->rx_pdcch_stats[ue->current_thread_id[subframe_rx]]);
 	if (ue_pdcch_procedures(eNB_id,ue,proc,abstraction_flag) == -1) {
@@ -5209,8 +5210,7 @@ int phy_procedures_UE_RX(PHY_VARS_UE *ue,UE_rxtx_proc_t *proc,uint8_t eNB_id,
   ue_measurement_procedures(l-1,ue,proc,eNB_id,(subframe_rx<<1),abstraction_flag,mode);
 
   //LOG_D(PHY," ------  end FFT/ChannelEst/PDCCH slot 0: AbsSubframe %d.%d ------  \n", frame_rx%1024, subframe_rx);
-  LOG_I(PHY,"[PID-%d] ------  end FFT/ChannelEst/PDCCH slot 0: AbsSubframe %d.%d ------  \n",procID_phy_procedures_UE_RX,
-		  frame_rx%1024, subframe_rx);
+  LOG_I(PHY,"[PID-%d] ------  end FFT/ChannelEst/PDCCH slot 0: AbsSubframe %d.%d ------  \n",procID_phy_procedures_UE_RX,frame_rx%1024, subframe_rx);
     // If this is PMCH, call procedures and return
   if (pmch_flag == 1) {
     ue_pmch_procedures(ue,proc,eNB_id,abstraction_flag);

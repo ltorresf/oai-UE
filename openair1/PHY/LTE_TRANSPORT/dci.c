@@ -2620,7 +2620,7 @@ void dci_decoding(uint8_t DCI_LENGTH,
 #ifdef DEBUG_DCI_DECODING
 
   for (i=0; i<16+DCI_LENGTH; i++)
-    LOG_I(PHY," DCI %d : (%d,%d,%d)\n",i,*(d_rx+96+(3*i)),*(d_rx+97+(3*i)),*(d_rx+98+(3*i)));
+    LOG_D(PHY," DCI %d : (%d,%d,%d)\n",i,*(d_rx+96+(3*i)),*(d_rx+97+(3*i)),*(d_rx+98+(3*i)));
 
 #endif
   memset(decoded_output,0,2+((16+DCI_LENGTH)>>3));
@@ -2629,7 +2629,7 @@ void dci_decoding(uint8_t DCI_LENGTH,
   printf("Before Viterbi\n");
 
   for (i=0; i<16+DCI_LENGTH; i++)
-    printf("%d : (%d,%d,%d)\n",i,*(d_rx+96+(3*i)),*(d_rx+97+(3*i)),*(d_rx+98+(3*i)));
+	  LOG_D(PHY,"%d : (%d,%d,%d)\n",i,*(d_rx+96+(3*i)),*(d_rx+97+(3*i)),*(d_rx+98+(3*i)));
 
 #endif
   //debug_printf("Doing DCI Viterbi \n");
@@ -4142,7 +4142,7 @@ printf("Luis");
 
     // Now check UE_SPEC format 1E_2A_M10PRB search spaces aggregation 1
 #ifdef DEBUG_DCI_DECODING
-    LOG_I(PHY," MU-MIMO check UE_SPEC format 1E_2A_M10PRB\n");
+    LOG_D(PHY," MU-MIMO check UE_SPEC format 1E_2A_M10PRB\n");
 #endif
     old_dci_cnt=dci_cnt;
     dci_decoding_procedure0(pdcch_vars,0,mode,

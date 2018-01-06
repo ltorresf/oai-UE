@@ -3245,7 +3245,7 @@ uint16_t dci_CRNTI_decoding_procedure(PHY_VARS_UE *ue,
 
 uint16_t dci_decoding_procedure(PHY_VARS_UE *ue,
                                 DCI_ALLOC_t *dci_alloc,
-                                int do_common,
+                                int do_common,	//LA: If 1 perform search in common search-space else ue-specific search-space
                                 int16_t eNB_id,
                                 uint8_t subframe)
 {
@@ -3459,6 +3459,7 @@ uint16_t dci_decoding_procedure(PHY_VARS_UE *ue,
     break;
   }
 
+  //LA: 1 in our case
   if (do_common == 1) {
 #ifdef DEBUG_DCI_DECODING
     printf("[DCI search] doing common search/format0 aggregation 4\n");
@@ -3588,7 +3589,9 @@ uint16_t dci_decoding_procedure(PHY_VARS_UE *ue,
 
   if (ue->UE_mode[eNB_id] <= PRACH)
     return(dci_cnt);
+printf("Luis");
 
+//LA: The next ones are UE-specific search-space, which we will not be exploring for the moment
   if (ue->prach_resources[eNB_id])
     ra_rnti = ue->prach_resources[eNB_id]->ra_RNTI;
 

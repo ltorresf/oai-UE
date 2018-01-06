@@ -3108,15 +3108,17 @@ int ue_pdcch_procedures(uint8_t eNB_id,PHY_VARS_UE *ue,UE_rxtx_proc_t *proc,uint
     //agregation level == FF means no configuration on
     if(ue->pdcch_vars[ue->current_thread_id[subframe_rx]][eNB_id]->agregationLevel == 0xFF || ue->decode_SIB)
     {
+    		LOG_I(PHY,"[PID-%d] Searching all possible DCIs (common and UE-specific search spaces)\n",procID_initial_pdcch);	//LA
         // search all possible dcis
         dci_cnt = dci_decoding_procedure(ue,
                 dci_alloc_rx,
-                (ue->UE_mode[eNB_id] < PUSCH)? 1 : 0,  // if we're in PUSCH don't listen to common search space,
+                (ue->UE_mode[eNB_id] < PUSCH)? 1 : 0,  // if we're in PUSCH don't listen to common search space,	//LA: 1 in our case -> search in common search-space
                                                        // later when we need paging or RA during connection, update this ...
                 eNB_id,subframe_rx);
     }
     else
     {
+		LOG_I(PHY,"[PID-%d] Searching only C-RNTI DCI\n",procID_initial_pdcch);	//LA
         // search only preconfigured dcis
         // search C RNTI dci
         dci_cnt = dci_CRNTI_decoding_procedure(ue,

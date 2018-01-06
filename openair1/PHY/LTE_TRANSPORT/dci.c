@@ -2626,7 +2626,7 @@ void dci_decoding(uint8_t DCI_LENGTH,
   memset(decoded_output,0,2+((16+DCI_LENGTH)>>3));
 
 #ifdef DEBUG_DCI_DECODING
-  printf("Before Viterbi\n");
+  LOG_D(PHY,"Before Viterbi\n");
 
   for (i=0; i<16+DCI_LENGTH; i++)
 	  LOG_D(PHY,"%d : (%d,%d,%d)\n",i,*(d_rx+96+(3*i)),*(d_rx+97+(3*i)),*(d_rx+98+(3*i)));
@@ -2931,6 +2931,7 @@ void dci_decoding_procedure0(LTE_UE_PDCCH **pdcch_vars,
     if (CCEmap_cand == 0) {
 #ifdef DEBUG_DCI_DECODING
 
+    	//LA: default: do_common=1
       if (do_common == 1)
         LOG_I(PHY,"[DCI search nPdcch %d - common] Attempting candidate %d Aggregation Level %d DCI length %d at CCE %d/%d (CCEmap %x,CCEmap_cand %x)\n",
                 pdcch_vars[eNB_id]->num_pdcch_symbols,m,L2,sizeof_bits,CCEind,nCCE,*CCEmap,CCEmap_mask);
@@ -2950,7 +2951,7 @@ void dci_decoding_procedure0(LTE_UE_PDCCH **pdcch_vars,
       */
       crc = (crc16(&dci_decoded_output[current_thread_id][0],sizeof_bits)>>16) ^ extract_crc(&dci_decoded_output[current_thread_id][0],sizeof_bits);
 #ifdef DEBUG_DCI_DECODING
-      printf("crc =>%x\n",crc);
+      LOG_I(PHY,"crc =>%x\n",crc);
 #endif
 
       if (((L>1) && ((crc == si_rnti)||
@@ -3459,7 +3460,7 @@ uint16_t dci_decoding_procedure(PHY_VARS_UE *ue,
     break;
   }
 
-  //LA: 1 in our case
+  //LA: 1 in our case. After this if-statement is executed, the dci_cnt value is returned in the next if-statement and the function is exited.
   if (do_common == 1) {
 #ifdef DEBUG_DCI_DECODING
     printf("[DCI search] doing common search/format0 aggregation 4\n");
@@ -3589,7 +3590,7 @@ uint16_t dci_decoding_procedure(PHY_VARS_UE *ue,
 
   if (ue->UE_mode[eNB_id] <= PRACH)
     return(dci_cnt);
-printf("Luis");
+
 
 //LA: The next ones are UE-specific search-space, which we will not be exploring for the moment
   if (ue->prach_resources[eNB_id])

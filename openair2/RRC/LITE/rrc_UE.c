@@ -3332,18 +3332,14 @@ static void dump_sib3( SystemInformationBlockType3_t *sib3 )
   }
 
   //LA
-  if (sib3->ext1.s_IntraSearch_v920->s_IntraSearchP_r9) {
-    LOG_I( RRC, "ext1.s_IntraSearch_v920->s_IntraSearchP_r9 : %ld\n", *(sib3->ext1.s_IntraSearch_v920->s_IntraSearchP_r9) );
+  if (sib3->ext1.s_IntraSearch_v920) {
+    LOG_I( RRC, "ext1.s_IntraSearch_v920->s_IntraSearchP_r9 : %ld\n", (sib3->ext1.s_IntraSearch_v920->s_IntraSearchP_r9) );
+    LOG_I( RRC, "ext1.s_IntraSearch_v920->s_IntraSearchQ_r9 : %ld\n", (sib3->ext1.s_IntraSearch_v920->s_IntraSearchQ_r9) );
   } else {
     LOG_I( RRC, "ext1.s_IntraSearch_v920->s_IntraSearchP_r9 : not defined\n" );
-  }
-
-  //LA
-  if (sib3->ext1.s_IntraSearch_v920->s_IntraSearchQ_r9) {
-    LOG_I( RRC, "ext1.s_IntraSearch_v920->s_IntraSearchQ_r9 : %ld\n", *(sib3->ext1.s_IntraSearch_v920->s_IntraSearchQ_r9) );
-  } else {
     LOG_I( RRC, "ext1.s_IntraSearch_v920->s_IntraSearchQ_r9 : not defined\n" );
   }
+
 
   if (sib3->intraFreqCellReselectionInfo.allowedMeasBandwidth) {
     LOG_I( RRC, "intraFreqCellReselectionInfo.allowedMeasBandwidth : %ld\n", *(sib3->intraFreqCellReselectionInfo.allowedMeasBandwidth) );

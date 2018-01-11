@@ -57,31 +57,35 @@ int pbch_detection(PHY_VARS_UE *ue, runmode_t mode)
         ue->rx_offset);
 #endif
 
+  //LA: The next two for-loops convert the first subframe to the frequency domain
+  //LA Converts the first 7 OFDM symbols of slot 0 to the frequency domain
   for (l=0; l<frame_parms->symbols_per_tti/2; l++) {
 
     slot_fep(ue,
 	     l,
-	     0,
+	     0, //LA: Slot number (0..19)
 	     ue->rx_offset,
 	     0,
 	     1);
   }
+  //LA Converts the first 7 OFDM symbols of slot 1 to the frequency domain
   for (l=0; l<frame_parms->symbols_per_tti/2; l++) {
 
     slot_fep(ue,
 	     l,
-	     1,
+	     1, //LA: Slot number (0..19)
 	     ue->rx_offset,
 	     0,
 	     1);
   }
   slot_fep(ue,
-	   0,
-	   2,
+	   0,	//LA: OFDM symbol 0
+	   2,	//LA: Slot number (0..19)
 	   ue->rx_offset,
 	   0,
 	   1);
 
+  //LA: this function fills the PHY_VARS_UE->PHY_measurement structure
   lte_ue_measurements(ue,
 		      ue->rx_offset,
 		      0,
@@ -557,7 +561,8 @@ int initial_sync(PHY_VARS_UE *ue, runmode_t mode)
 	  phich_string[ue->frame_parms.phich_config_common.phich_resource],
 	  ue->frame_parms.nb_antenna_ports_eNB);
 #else
-    LOG_I(PHY, "[UE %d] Frame %d RRC Measurements => rssi %3.1f dBm (dig %3.1f dB, gain %d), N0 %d dBm,  rsrp %3.1f dBm/RE, rsrq %3.1f dB\n",ue->Mod_id,
+    //LOG_I(PHY, "[UE %d] Frame %d RRC Measurements => rssi = %3.1f dBm (dig %3.1f dB, rx_total_gain_dB = %d), Estimated_Noise_power = %d dBm,  rsrp %3.1f dBm/RE, rsrq %3.1f dB\n",ue->Mod_id,
+    LOG_I(PHY, "[UE %d] Frame %d RRC Measurements => rssi = %3.1f dBm (dig %3.1f dBm, rx_total_gain_dB = %d), Estimated_Noise_power = %d dBm,  rsrp =  %3.1f dBm/RE, rsrq = %3.1f dB\n",ue->Mod_id,
 	  ue->proc.proc_rxtx[0].frame_rx,
 	  10*log10(ue->measurements.rssi)-ue->rx_total_gain_dB,
 	  10*log10(ue->measurements.rssi),
@@ -615,7 +620,7 @@ int initial_sync(PHY_VARS_UE *ue, runmode_t mode)
   }
 
   // gain control
-  if (ret!=0) { //we are not synched, so we cannot use rssi measurement (which is based on channel estimates)
+  if (ret!=0) { //we are not synched (PBCH not found), so we cannot use rssi measurement (which is based on channel estimates)
     rx_power = 0;
 
     // do a measurement on the best guess of the PSS
@@ -639,24 +644,28 @@ int initial_sync(PHY_VARS_UE *ue, runmode_t mode)
   LOG_I(PHY,"[UE%d] Initial sync : Estimated power: %d dB\n",ue->Mod_id,ue->measurements.rx_power_avg_dB[0] );
 #endif
 
-#ifndef OAI_USRP
+//#ifndef OAI_USRP //LA
 #ifndef OAI_BLADERF
 #ifndef OAI_LMSSDR
-  phy_adjust_gain(ue,ue->measurements.rx_power_avg_dB[0],0);
+  phy_adjust_gain(ue,
+		  ue->measurements.rx_power_avg_dB[0], //LA: estimated received signal power (sum of all TX/RX antennas, time average, in dB)
+		  0);
 #endif
 #endif
-#endif
+//#endif
 
   }
   else {
 
-#ifndef OAI_USRP
+//#ifndef OAI_USRP
 #ifndef OAI_BLADERF
 #ifndef OAI_LMSSDR
-  phy_adjust_gain(ue,dB_fixed(ue->measurements.rssi),0);
+  phy_adjust_gain(ue,
+		  dB_fixed(ue->measurements.rssi), //LA: RRC measurement
+		  0);
 #endif
 #endif
-#endif
+//#endif
 
   }
 

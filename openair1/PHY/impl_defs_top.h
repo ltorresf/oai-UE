@@ -295,7 +295,7 @@ typedef struct {
   //unsigned short rx_avg_power_dB[NUMBER_OF_CONNECTED_eNB_MAX];              //! estimated avg received signal power (dB)
 
   // RRC measurements
-  uint32_t rssi;
+  uint32_t rssi;	//This value is in Watts, should be converted to dbm using 10.log10(rssi)
   int n_adj_cells;
   unsigned int adj_cell_id[6];
   uint32_t rsrq[7];

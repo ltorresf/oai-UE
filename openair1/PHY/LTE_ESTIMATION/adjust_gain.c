@@ -29,12 +29,12 @@ phy_adjust_gain (PHY_VARS_UE *ue, uint32_t rx_power_fil_dB, uint8_t eNB_id)
 {
 	int procID_phy_adjust_gain = gettid();
   //LOG_I(PHY,"[PID-%d] Gain control: rssi %d (%d,%d)\n",
-LOG_I(PHY,"[PID-%d] Gain control: rx_power_fil_dB (rssi) = %d, ue->measurements.rssi = %d, ue->measurements.rx_power_avg_dB[eNB_id=%d] = %d)\n",
+LOG_I(PHY,"[PID-%d] Gain control: Rx_power (RSSI) = %d, ue->measurements.rssi = %d, ue->measurements.rx_power_avg_dB[eNB_id=%d] = %d)\n",
 	procID_phy_adjust_gain,
-	rx_power_fil_dB,
-	ue->measurements.rssi,
+	rx_power_fil_dB,		//LA: "RRC measurement" in case of OFDM symbol processing, "estimated received signal power" during cell search procedure. This value is in dBm
+	ue->measurements.rssi,	//LA: "RCC measurement"
 	eNB_id,
-	ue->measurements.rx_power_avg_dB[eNB_id]
+	ue->measurements.rx_power_avg_dB[eNB_id]	//LA: "estimated received signal power" (is this calculated by PHY?)
         );
 
   // Gain control with hysterisis
@@ -66,7 +66,7 @@ LOG_I(PHY,"[PID-%d] Gain control: rx_power_fil_dB (rssi) = %d, ue->measurements.
   }
 
   //LOG_D(PHY,"Gain control: rx_total_gain_dB = %d (max %d,rxpf %d)\n",ue->rx_total_gain_dB,MAX_RF_GAIN,rx_power_fil_dB);
-  LOG_I(PHY,"[PID-%d] Gain control: rx_total_gain_dB = %d, MAX_RF_GAIN = %d, x_power_fil_dB (rxpf) = %d)\n",procID_phy_adjust_gain,ue->rx_total_gain_dB,MAX_RF_GAIN,rx_power_fil_dB);
+  LOG_I(PHY,"[PID-%d] Gain control: rx_total_gain_dB = %d, openair0_cfg->rx_gain_offset = %d, MAX_RF_GAIN = %d, Rx_power (RSSI) = %d)\n",procID_phy_adjust_gain,ue->rx_total_gain_dB,openair0_cfg->rx_gain_offset[0],MAX_RF_GAIN,rx_power_fil_dB);
 
 #ifdef DEBUG_PHY
   /*  if ((ue->frame%100==0) || (ue->frame < 10))

@@ -2668,25 +2668,27 @@ void ue_measurement_procedures(
   }
 
   // accumulate and filter timing offset estimation every subframe (instead of every frame)
-  if (( (slot%2) == 0) && (l==(4-frame_parms->Ncp))) {
+  if (( (slot%2) == 0) && (l==(4-frame_parms->Ncp))) {	//LA: so only at slots 0, 2, 4, 6, 8, 10, 12, 14, 16, or 18, AND OFDM symbol 4
 
     // AGC
 
     VCD_SIGNAL_DUMPER_DUMP_FUNCTION_BY_NAME(VCD_SIGNAL_DUMPER_FUNCTIONS_UE_GAIN_CONTROL, VCD_FUNCTION_IN);
 
-#ifndef OAI_USRP
+//#ifndef OAI_USRP //LA
 #ifndef OAI_BLADERF
 #ifndef OAI_LMSSDR
-    phy_adjust_gain (ue,dB_fixed(ue->measurements.rssi),0);
+    phy_adjust_gain (ue,
+    		dB_fixed(ue->measurements.rssi),	//LA: RRC measurement
+			0);
 #endif
 #endif
-#endif
+//#endif
 
     VCD_SIGNAL_DUMPER_DUMP_FUNCTION_BY_NAME(VCD_SIGNAL_DUMPER_FUNCTIONS_UE_GAIN_CONTROL, VCD_FUNCTION_OUT);
 
     eNB_id = 0;
 
-    if (abstraction_flag == 0) {
+    if (abstraction_flag == 0) {	//LA abstraction_flag is always =0 when phy_procedures_UE_RX is called
       if (ue->no_timing_correction==0)
   lte_adjust_synch(&ue->frame_parms,
        ue,
@@ -5101,16 +5103,17 @@ int phy_procedures_UE_RX(PHY_VARS_UE *ue,UE_rxtx_proc_t *proc,uint8_t eNB_id,
 #endif
 
   pmch_flag = is_pmch_subframe(frame_rx,subframe_rx,&ue->frame_parms) ? 1 : 0;
+  LOG_I(PHY,"Is this a PMCH subframe (i.e. MBSFN)? : %d [1:Yes, 0:No]",pmch_flag);
 
   if (do_pdcch_flag) {	// deactivate reception until we scan pdcch
 	  //LA: This value is = 1, when called by "UE_thread_rxn_txnp4"
-	  //LA: basically the if-statements check whether the pointer is allocated to a valid memory address, whatever that be
+	  //LA: basically the if-statement conditions check whether the pointer is allocated to a valid memory address, whatever that be
   if (ue->dlsch[ue->current_thread_id[subframe_rx]][eNB_id][0])				//LA: 1st RxTx Thread
     ue->dlsch[ue->current_thread_id[subframe_rx]][eNB_id][0]->active = 0;		//LA: Active flag for DLSCH demodulation
   if (ue->dlsch[ue->current_thread_id[subframe_rx]][eNB_id][1])				//LA: 2nd RxTx Thread
     ue->dlsch[ue->current_thread_id[subframe_rx]][eNB_id][1]->active = 0;		//LA: Active flag for DLSCH demodulation
 
-  //LA: basically the if-statements check whether the pointer is allocated to a valid memory address, whatever that be
+  //LA: basically the if-statement conditions check whether the pointer is allocated to a valid memory address, whatever that be
   if (ue->dlsch_SI[eNB_id])
     ue->dlsch_SI[eNB_id]->active = 0;	//LA: Active flag for DLSCH demodulation
   if (ue->dlsch_p[eNB_id])
@@ -5150,7 +5153,7 @@ int phy_procedures_UE_RX(PHY_VARS_UE *ue,UE_rxtx_proc_t *proc,uint8_t eNB_id,
     l=0;
   } else {
     //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    // RX processing of OFDM symbols l=1...l2 (l=0 is done in last scheduling epoch)
+    // RX processing of OFDM symbols l=1...l2 (l=0 is done in last scheduling epoch)	//LA: check where the processing of OFDM symbol 0 was done
     //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     l=1;
   }
@@ -5168,7 +5171,7 @@ int phy_procedures_UE_RX(PHY_VARS_UE *ue,UE_rxtx_proc_t *proc,uint8_t eNB_id,
       VCD_SIGNAL_DUMPER_DUMP_FUNCTION_BY_NAME(VCD_SIGNAL_DUMPER_FUNCTIONS_UE_SLOT_FEP, VCD_FUNCTION_IN);
       slot_fep(ue,
          l,					//LA: symbol within slot (0..6)
-         (subframe_rx<<1),	//LA: Slot number (0..19)
+         (subframe_rx<<1),	//LA: Slot number (0..19). Multiplies the subframe number by 2 to obtain the slot number
          0,					//LA: offset within rxdata (points to beginning of subframe)
          0,					//LA: always zero (false)
          0);					//LA: always zero (false)
@@ -5182,8 +5185,8 @@ int phy_procedures_UE_RX(PHY_VARS_UE *ue,UE_rxtx_proc_t *proc,uint8_t eNB_id,
 							ue,
 							proc,
 							eNB_id,
-							(subframe_rx<<1),
-							abstraction_flag,
+							(subframe_rx<<1),  //LA: slot number = subframe number x 2 + offset (rest: % operation)
+							abstraction_flag,	//LA: =0 when phy_procedures_UE_RX is called
 							mode);
 
     if (do_pdcch_flag) {	//LA: This value is = 1, when called by "UE_thread_rxn_txnp4"

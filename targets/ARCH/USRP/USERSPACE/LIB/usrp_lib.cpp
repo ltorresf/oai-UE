@@ -833,6 +833,7 @@ extern "C" {
                 s->usrp->set_rx_rate(openair0_cfg[0].sample_rate,i);
                 s->usrp->set_rx_freq(openair0_cfg[0].rx_freq[i],i);
                 set_rx_gain_offset(&openair0_cfg[0],i,bw_gain_adjust);
+                LOG_I(PHY,"rx_gain_offset = %f\n",openair0_cfg[0].rx_gain_offset[i]);
 
                 ::uhd::gain_range_t gain_range = s->usrp->get_rx_gain_range(i);
                 // limit to maximum gain
@@ -841,7 +842,7 @@ extern "C" {
                              //"RX Gain too high, lower by %f dB\n",
                              openair0_cfg[0].rx_gain[i]-openair0_cfg[0].rx_gain_offset[i] - gain_range.stop(),gain_range.stop(),openair0_cfg[0].rx_gain_offset[i]);
                 s->usrp->set_rx_gain(openair0_cfg[0].rx_gain[i]-openair0_cfg[0].rx_gain_offset[i],i);
-                LOG_I(PHY,"RX Gain %d %f (%f) => %f (max %f)\n",i,
+                LOG_I(PHY,"RX Gain %d %f (rx_gain_offset = %f) => rx_gain - rx_gain_offset = %f (max %f)\n",i,
                       openair0_cfg[0].rx_gain[i],openair0_cfg[0].rx_gain_offset[i],
                       openair0_cfg[0].rx_gain[i]-openair0_cfg[0].rx_gain_offset[i],gain_range.stop());
             }

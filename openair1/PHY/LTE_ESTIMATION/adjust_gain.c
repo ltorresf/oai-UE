@@ -66,7 +66,7 @@ LOG_I(PHY,"[PID-%d] Gain control: Rx_power (RSSI) = %d, ue->measurements.rssi = 
   }
 
   //LOG_D(PHY,"Gain control: rx_total_gain_dB = %d (max %d,rxpf %d)\n",ue->rx_total_gain_dB,MAX_RF_GAIN,rx_power_fil_dB);
-  LOG_I(PHY,"[PID-%d] Gain control: rx_total_gain_dB = %d, openair0_cfg->rx_gain_offset = %d, MAX_RF_GAIN = %d, Rx_power (RSSI) = %d)\n",procID_phy_adjust_gain,ue->rx_total_gain_dB,openair0_cfg->rx_gain_offset[0],MAX_RF_GAIN,rx_power_fil_dB);
+  LOG_I(PHY,"[PID-%d] Gain control: rx_total_gain_dB = %d, MAX_RF_GAIN = %d, Rx_power (RSSI) = %d)\n",procID_phy_adjust_gain,ue->rx_total_gain_dB,MAX_RF_GAIN,rx_power_fil_dB);
 
 #ifdef DEBUG_PHY
   /*  if ((ue->frame%100==0) || (ue->frame < 10))

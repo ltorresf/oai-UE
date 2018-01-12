@@ -832,8 +832,9 @@ extern "C" {
             if (i<openair0_cfg[0].rx_num_channels) {
                 s->usrp->set_rx_rate(openair0_cfg[0].sample_rate,i);
                 s->usrp->set_rx_freq(openair0_cfg[0].rx_freq[i],i);
+                LOG_I(PHY,"After: rx_gain_offset = %f\n",openair0_cfg[0].rx_gain_offset[i]);
                 set_rx_gain_offset(&openair0_cfg[0],i,bw_gain_adjust);
-                LOG_I(PHY,"rx_gain_offset = %f\n",openair0_cfg[0].rx_gain_offset[i]);
+                LOG_I(PHY,"After: rx_gain_offset = %f\n",openair0_cfg[0].rx_gain_offset[i]);
 
                 ::uhd::gain_range_t gain_range = s->usrp->get_rx_gain_range(i);
                 // limit to maximum gain

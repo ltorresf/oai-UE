@@ -492,7 +492,8 @@ int trx_usrp_set_freq(openair0_device* device, openair0_config_t *openair0_cfg, 
     usrp_state_t *s = (usrp_state_t*)device->priv;
     pthread_t f_thread;
 
-    printf("Setting USRP Tx Freq %f MHz, Rx Freq %f MHz.\n",openair0_cfg[0].tx_freq[0]/1000000,openair0_cfg[0].rx_freq[0]/1000000);
+    printf("Setting USRP Tx Freq = %f MHz, Rx Freq = %f MHz, rx_gain = %f, rx_gain_offset = %d.\n",openair0_cfg[0].tx_freq[0]/1000000,openair0_cfg[0].rx_freq[0]/1000000,
+    		openair0_cfg[0].rx_gain[0],openair0_cfg[0].rx_gain_offset[0]);
     //LA:printf("Setting USRP Tx Freq %f, Rx Freq %f\n",openair0_cfg[0].tx_freq[0],openair0_cfg[0].rx_freq[0]);
 
     // spawn a thread to handle the frequency change to not block the calling thread
@@ -629,7 +630,7 @@ void set_rx_gain_offset(openair0_config_t *openair0_cfg, int chain_index,int bw_
     }
     while (openair0_cfg->rx_gain_calib_table[i].freq>0) {
         diff = fabs(openair0_cfg->rx_freq[chain_index] - openair0_cfg->rx_gain_calib_table[i].freq);
-        LOG_I(PHY,"calibration # %d: freq %f, offset %f, diff %f\n",
+        LOG_I(PHY,"calibration # %d: freq %f Hz, offset %f dB, diff %f Hz\n",
               i,
               openair0_cfg->rx_gain_calib_table[i].freq,
               openair0_cfg->rx_gain_calib_table[i].offset,diff);

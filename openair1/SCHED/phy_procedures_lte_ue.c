@@ -2860,7 +2860,7 @@ void restart_phy(PHY_VARS_UE *ue,UE_rxtx_proc_t *proc, uint8_t eNB_id,uint8_t ab
 void ue_pbch_procedures(uint8_t eNB_id,PHY_VARS_UE *ue,UE_rxtx_proc_t *proc, uint8_t abstraction_flag)
 {
 	int procID_ue_pbch_procedures = gettid();
-	printf("-------------------------- Start: [ue_pdsch_procedures] [PID: %d] --------------------------\n",procID_ue_pbch_procedures);
+	printf("-------------------------- Start: [ue_pbch_procedures] [PID: %d] --------------------------\n",procID_ue_pbch_procedures);
   //  int i;
   int pbch_tx_ant=0;
   uint8_t pbch_phase;
@@ -3058,7 +3058,7 @@ void ue_pbch_procedures(uint8_t eNB_id,PHY_VARS_UE *ue,UE_rxtx_proc_t *proc, uin
   ue->pbch_vars[eNB_id]->pdu_errors,
   ue->pbch_vars[eNB_id]->pdu_errors_conseq);
 #endif
-  printf("-------------------------- End: [ue_pdsch_procedures] [PID: %d] --------------------------\n",procID_ue_pbch_procedures);
+  printf("-------------------------- End: [ue_pbch_procedures] [PID: %d] --------------------------\n",procID_ue_pbch_procedures);
   VCD_SIGNAL_DUMPER_DUMP_FUNCTION_BY_NAME(VCD_SIGNAL_DUMPER_FUNCTIONS_UE_PBCH_PROCEDURES, VCD_FUNCTION_OUT);
 }
 
@@ -3070,9 +3070,19 @@ int ue_pdcch_procedures(uint8_t eNB_id,PHY_VARS_UE *ue,UE_rxtx_proc_t *proc,uint
 
   unsigned int dci_cnt=0, i;
 
-  int frame_rx = proc->frame_rx;
-  int subframe_rx = proc->subframe_rx;
-  DCI_ALLOC_t dci_alloc_rx[8];	//LA: why 8?
+  int frame_rx = proc->frame_rx;		//LA: frame number
+  int subframe_rx = proc->subframe_rx;	//LA: subframe number
+
+  //LA: Structure that stores the DCI:
+  // dci_length: 	length of DCI (in bits)
+  // L: 			aggregation level
+  // firstCCE: 		position of 1st CCE
+  // ra_flag: 		is this a RA response? then =1
+  // rnti: 			rnti value
+  // format: 		DCI format (e.g. format1A (=2), format1C (=4), and so on up to 14)
+  // search_space: 	Could be:   DCI_COMMON_SPACE (=0) or DCI_UE_SPACE (=1)
+  //dci_pdu[8]:		DCI PDU
+  DCI_ALLOC_t dci_alloc_rx[8];			//LA: why 8?
 
   uint8_t next1_thread_id = ue->current_thread_id[subframe_rx]== (RX_NB_TH-1) ? 0:(ue->current_thread_id[subframe_rx]+1);
   uint8_t next2_thread_id = next1_thread_id== (RX_NB_TH-1) ? 0:(next1_thread_id+1);
@@ -3093,11 +3103,12 @@ int ue_pdcch_procedures(uint8_t eNB_id,PHY_VARS_UE *ue,UE_rxtx_proc_t *proc,uint
   if (abstraction_flag == 0)  {	//LA: always = 0, when called by "UE_thread_rxn_txnp4"
 
     VCD_SIGNAL_DUMPER_DUMP_FUNCTION_BY_NAME(VCD_SIGNAL_DUMPER_FUNCTIONS_RX_PDCCH, VCD_FUNCTION_IN);
+    LOG_I(PHY,"ue->frame_parms.mode1_flag = %"PRIu8"\n",ue->frame_parms.mode1_flag);  //LA: This value is set to 0 (ue->frame_parms.mode1_flag = 0), then ALAMOUTI is inputed. Why is set to 0?
     rx_pdcch(ue,
-             proc->frame_rx,
-             subframe_rx,
+             proc->frame_rx,	//LA: Frame number
+             subframe_rx,		//LA: subframe number
              eNB_id,
-             (ue->frame_parms.mode1_flag == 1) ? SISO : ALAMOUTI,
+             (ue->frame_parms.mode1_flag == 1) ? SISO : ALAMOUTI,	//LA: MIMO_mode_t mimo_mode. ALAMOUTI = 1 corresponds to MIMO mode ALAMOUTI. It must be TRUE to process it as SISO
              ue->high_speed_flag,
              ue->is_secondary_ue);
 
@@ -5103,7 +5114,7 @@ int phy_procedures_UE_RX(PHY_VARS_UE *ue,UE_rxtx_proc_t *proc,uint8_t eNB_id,
 #endif
 
   pmch_flag = is_pmch_subframe(frame_rx,subframe_rx,&ue->frame_parms) ? 1 : 0;
-  LOG_I(PHY,"Is this a PMCH subframe (i.e. MBSFN)? : %d [1:Yes, 0:No]",pmch_flag);
+  LOG_I(PHY,"Is this a PMCH subframe (i.e. MBSFN)? : %d [1:Yes, 0:No]\n",pmch_flag);
 
   if (do_pdcch_flag) {	// deactivate reception until we scan pdcch
 	  //LA: This value is = 1, when called by "UE_thread_rxn_txnp4"
@@ -5181,6 +5192,7 @@ int phy_procedures_UE_RX(PHY_VARS_UE *ue,UE_rxtx_proc_t *proc,uint8_t eNB_id,
 #endif
     }
 
+    //LA: RS measurements are p
     ue_measurement_procedures(l-1,
 							ue,
 							proc,
@@ -5190,7 +5202,7 @@ int phy_procedures_UE_RX(PHY_VARS_UE *ue,UE_rxtx_proc_t *proc,uint8_t eNB_id,
 							mode);
 
     if (do_pdcch_flag) {	//LA: This value is = 1, when called by "UE_thread_rxn_txnp4"
-      if ((l==pilot1) ||
+      if ((l==pilot1) ||	//LA: So this is only executed for l=4 (OFDM symbol = 4)
 	  ((pmch_flag==1)&(l==l2)))  {
 	//LOG_D(PHY,"[UE  %d] Frame %d: Calling pdcch procedures (eNB %d)\n",ue->Mod_id,frame_rx,eNB_id);
 	LOG_I(PHY,"[PID-%d][UE  %d] (Only for OFDM symbol 4) Frame %d: Calling pdcch procedures (eNB %d)\n",procID_phy_procedures_UE_RX,ue->Mod_id,frame_rx,eNB_id);

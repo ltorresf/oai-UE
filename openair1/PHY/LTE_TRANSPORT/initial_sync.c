@@ -130,6 +130,7 @@ int pbch_detection(PHY_VARS_UE *ue, runmode_t mode)
   pbch_decoded = 0;
 
   for (frame_mod4=0; frame_mod4<4; frame_mod4++) {
+	  //LA: rx_pbch function returns the number of Tx antennas at the eNB (we obtain 2)
     pbch_tx_ant = rx_pbch(&ue->common_vars,
                           ue->pbch_vars[0],
                           frame_parms,
@@ -140,6 +141,7 @@ int pbch_detection(PHY_VARS_UE *ue, runmode_t mode)
 
     if ((pbch_tx_ant>0) && (pbch_tx_ant<=2)) {
       pbch_decoded = 1;
+      LOG_I(PHY,"PBCH Decoded using SISO configuration\n");
       break;
     }
 
@@ -153,6 +155,7 @@ int pbch_detection(PHY_VARS_UE *ue, runmode_t mode)
 
     if ((pbch_tx_ant>0) && (pbch_tx_ant<=2)) {
       pbch_decoded = 1;
+      LOG_I(PHY,"PBCH Decoded using Alamouti (Tx Diversity) configuration\n");
       break;
     }
   }
@@ -162,8 +165,9 @@ int pbch_detection(PHY_VARS_UE *ue, runmode_t mode)
 
     frame_parms->nb_antenna_ports_eNB = pbch_tx_ant;
 
-    // set initial transmission mode to 1 or 2 depending on number of detected TX antennas
+    // set initial transmission mode to 1 or 2 depending on number of detected TX antennas at the eNodeB
     frame_parms->mode1_flag = (pbch_tx_ant==1);
+    LOG_I(PHY,"Number of eNB Tx antennas detected = %d, Transmission mode set to: TM = %s\n",pbch_tx_ant, (pbch_tx_ant==1) ? "SISO" : "Tx Diversity");
     // openair_daq_vars.dlsch_transmission_mode = (pbch_tx_ant>1) ? 2 : 1;
 
 
@@ -257,7 +261,7 @@ int pbch_detection(PHY_VARS_UE *ue, runmode_t mode)
         ue->proc.proc_rxtx[i].frame_tx = ue->proc.proc_rxtx[0].frame_rx;
     }
 #ifdef DEBUG_INITIAL_SYNCH
-    LOG_I(PHY,"[UE%d] Initial sync: pbch decoded sucessfully mode1_flag %d, tx_ant %d, frame %d, N_RB_DL %d, phich_duration %d, phich_resource %s!\n",
+    LOG_I(PHY,"[UE%d] Initial sync: pbch decoded sucessfully mode1_flag %d, eNB_tx_ant %d, frame %d, N_RB_DL %d, phich_duration %d, phich_resource %s!\n",
           ue->Mod_id,
           frame_parms->mode1_flag,
           pbch_tx_ant,

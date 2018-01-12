@@ -630,7 +630,7 @@ void set_rx_gain_offset(openair0_config_t *openair0_cfg, int chain_index,int bw_
     }
     while (openair0_cfg->rx_gain_calib_table[i].freq>0) {
         diff = fabs(openair0_cfg->rx_freq[chain_index] - openair0_cfg->rx_gain_calib_table[i].freq);
-        LOG_I(PHY,"calibration # %d: freq %f Hz, offset %f dB, diff %f, gain_adj = %f Hz\n",
+        LOG_I(PHY,"calibration # %d: freq %f Hz, offset %f dB, diff %f Hz, gain_adj = %f dB\n",
               i,
               openair0_cfg->rx_gain_calib_table[i].freq,
               openair0_cfg->rx_gain_calib_table[i].offset,diff,gain_adj);

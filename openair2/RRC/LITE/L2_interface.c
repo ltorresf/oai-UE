@@ -41,6 +41,8 @@
 #include "pdcp.h"
 #include "msc.h"
 
+#include "../../../targets/RT/USER/rt_wrapper.h"
+
 #ifdef PHY_EMUL
 #include "SIMULATION/simulation_defs.h"
 extern EMULATION_VARS *Emul_vars;
@@ -344,6 +346,8 @@ mac_rrc_data_ind(
 )
 //--------------------------------------------------------------------------
 {
+	int procID_mac_rrc_data_ind = gettid();
+	printf("{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{ [PID-%d] [Start: mac_rrc_data_ind] }}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}\n",procID_mac_rrc_data_ind);
   SRB_INFO *Srb_info;
   protocol_ctxt_t ctxt;
   sdu_size_t      sdu_size = 0;
@@ -351,6 +355,8 @@ mac_rrc_data_ind(
   /* for no gcc warnings */
   (void)sdu_size;
 
+  LOG_I(PHY,"[PID-%d] CC_id = %d, frameP = %"PRIu32", sub_frameP = %"PRIu32", rntiP = %"PRIu16", srb_idP = %"PRIu16", eNB_flagP = %d\n",
+		  procID_mac_rrc_data_ind,CC_id,frameP,sub_frameP,rntiP,srb_idP,eNB_flagP);
   /*
   int si_window;
    */
@@ -358,7 +364,7 @@ mac_rrc_data_ind(
 
   if(eNB_flagP == ENB_FLAG_NO) {
     if(srb_idP == BCCH) {
-      LOG_D(RRC,"[UE %d] Received SDU for BCCH on SRB %d from eNB %d\n",module_idP,srb_idP,eNB_indexP);
+      LOG_I(RRC,"[PID-%d][UE %d] Received SDU for BCCH on SRB %d from eNB %d\n",procID_mac_rrc_data_ind,module_idP,srb_idP,eNB_indexP);
 
 #if defined(ENABLE_ITTI)
       {
@@ -390,12 +396,12 @@ mac_rrc_data_ind(
     }
 
     if(srb_idP == PCCH) {
-      LOG_D(RRC,"[UE %d] Received SDU for PCCH on SRB %d from eNB %d\n",module_idP,srb_idP,eNB_indexP);
+      LOG_I(RRC,"[PID-%d][UE %d] Received SDU for PCCH on SRB %d from eNB %d\n",procID_mac_rrc_data_ind,module_idP,srb_idP,eNB_indexP);
       decode_PCCH_DLSCH_Message(&ctxt,eNB_indexP,(uint8_t*)sduP,sdu_lenP);
     }
     if((srb_idP & RAB_OFFSET) == CCCH) {
       if (sdu_lenP>0) {
-        LOG_T(RRC,"[UE %d] Received SDU for CCCH on SRB %d from eNB %d\n",module_idP,srb_idP & RAB_OFFSET,eNB_indexP);
+        LOG_I(RRC,"[PID-%d][UE %d] Received SDU for CCCH on SRB %d from eNB %d\n",procID_mac_rrc_data_ind,module_idP,srb_idP & RAB_OFFSET,eNB_indexP);
 
 #if defined(ENABLE_ITTI)
         {
@@ -431,7 +437,7 @@ mac_rrc_data_ind(
 #if defined(Rel10) || defined(Rel14)
 
     if ((srb_idP & RAB_OFFSET) == MCCH) {
-      LOG_T(RRC,"[UE %d] Frame %d: Received SDU on MBSFN sync area %d for MCCH on SRB %d from eNB %d\n",
+      LOG_I(RRC,"[PID-%d][UE %d] Frame %d: Received SDU on MBSFN sync area %d for MCCH on SRB %d from eNB %d\n",procID_mac_rrc_data_ind,
             module_idP,frameP, mbsfn_sync_areaP, srb_idP & RAB_OFFSET,eNB_indexP);
 
 #if defined(ENABLE_ITTI)
@@ -498,7 +504,7 @@ mac_rrc_data_ind(
 
 #endif
   }
-
+  printf("{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{ [PID-%d] [End: mac_rrc_data_ind] }}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}\n",procID_mac_rrc_data_ind);
   return(0);
 
 }

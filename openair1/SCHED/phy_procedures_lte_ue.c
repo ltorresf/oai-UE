@@ -2860,7 +2860,7 @@ void restart_phy(PHY_VARS_UE *ue,UE_rxtx_proc_t *proc, uint8_t eNB_id,uint8_t ab
 void ue_pbch_procedures(uint8_t eNB_id,PHY_VARS_UE *ue,UE_rxtx_proc_t *proc, uint8_t abstraction_flag)
 {
 	int procID_ue_pbch_procedures = gettid();
-	printf("-------------------------- Start: [ue_pbch_procedures] [PID: %d] --------------------------\n",procID_ue_pbch_procedures);
+	printf("-------------------------- [PID-%d] [Start: ue_pbch_procedures]  --------------------------\n",procID_ue_pbch_procedures);
   //  int i;
   int pbch_tx_ant=0;
   uint8_t pbch_phase;
@@ -2926,12 +2926,12 @@ void ue_pbch_procedures(uint8_t eNB_id,PHY_VARS_UE *ue,UE_rxtx_proc_t *proc, uin
       dummy[2] = ue->pbch_vars[eNB_id]->decoded_output[0];
       trace_pdu(1, dummy, 3, ue->Mod_id, 0, 0,
           frame_rx, subframe_rx, 0, 0);
-      LOG_D(OPT,"[UE %d][PBCH] Frame %d trace pdu for PBCH\n",
+      LOG_D(OPT,"[PID-%d][UE %d][PBCH] Frame %d trace pdu for PBCH\n",procID_ue_pbch_procedures,
           ue->Mod_id, subframe_rx);
     }
 
     if (pbch_tx_ant>2) {
-      LOG_W(PHY,"[openair][SCHED][SYNCH] PBCH decoding: pbch_tx_ant>2 not supported\n");
+      LOG_W(PHY,"[PID-%d][openair][SCHED][SYNCH] PBCH decoding: pbch_tx_ant>2 not supported\n",procID_ue_pbch_procedures);
       VCD_SIGNAL_DUMPER_DUMP_FUNCTION_BY_NAME(VCD_SIGNAL_DUMPER_FUNCTIONS_UE_PBCH_PROCEDURES, VCD_FUNCTION_OUT);
       return;
     }
@@ -2962,7 +2962,7 @@ void ue_pbch_procedures(uint8_t eNB_id,PHY_VARS_UE *ue,UE_rxtx_proc_t *proc, uin
         ue->proc.proc_rxtx[th_id].frame_rx = proc->frame_rx;
         ue->proc.proc_rxtx[th_id].frame_tx = proc->frame_tx;
 
-        printf("[UE %d] frame %d, subframe %d: Adjusting frame counter (PBCH ant_tx=%d, frame_tx=%d, phase %d, rx_offset %d) => new frame %d\n",
+        printf("[PID-%d][UE %d] frame %d, subframe %d: Adjusting frame counter (PBCH ant_tx=%d, frame_tx=%d, phase %d, rx_offset %d) => new frame %d\n",procID_ue_pbch_procedures,
  	    ue->Mod_id,
  	    ue->proc.proc_rxtx[th_id].frame_rx,
  	    subframe_rx,
@@ -2979,7 +2979,7 @@ void ue_pbch_procedures(uint8_t eNB_id,PHY_VARS_UE *ue,UE_rxtx_proc_t *proc, uin
     } else if (((frame_tx & 0x03FF) != (proc->frame_rx & 0x03FF))) {
       //(pbch_tx_ant != ue->frame_parms.nb_antennas_tx)) {
       //LOG_D(PHY,"[UE %d] frame %d, subframe %d: Re-adjusting frame counter (PBCH ant_tx=%d, frame_rx=%d, frame%%1024=%d, phase %d).\n",
-	  LOG_I(PHY,"[UE %d] frame %d, subframe %d: Re-adjusting frame counter (PBCH ant_tx=%d, frame_rx=%d, frame%%1024=%d, phase %d).\n",
+	  LOG_I(PHY,"[PID-%d][UE %d] frame %d, subframe %d: Re-adjusting frame counter (PBCH ant_tx=%d, frame_rx=%d, frame%%1024=%d, phase %d).\n",procID_ue_pbch_procedures,
       ue->Mod_id,
       proc->frame_rx,
       subframe_rx,
@@ -3002,7 +3002,8 @@ void ue_pbch_procedures(uint8_t eNB_id,PHY_VARS_UE *ue,UE_rxtx_proc_t *proc, uin
 
 #ifdef DEBUG_PHY_PROC
     //LOG_D(PHY,"[UE %d] frame %d, subframe %d, Received PBCH (MIB): mode1_flag %d, tx_ant %d, frame_tx %d. N_RB_DL %d, phich_duration %d, phich_resource %d/6!\n",
-    LOG_I(PHY,"[UE %d] frame %d, subframe %d, Received PBCH (MIB): mode1_flag %d, tx_ant %d, frame_tx %d. N_RB_DL %d, phich_duration %d, phich_resource %d/6!\n",
+    LOG_I(PHY,"[PID-%d][UE %d] frame %d, subframe %d, Received PBCH (MIB): mode1_flag %d, tx_ant %d, frame_tx %d. N_RB_DL %d, phich_duration %d, phich_resource %d/6!\n",
+    		procID_ue_pbch_procedures,
     ue->Mod_id,
     frame_rx,
     subframe_rx,
@@ -3058,7 +3059,7 @@ void ue_pbch_procedures(uint8_t eNB_id,PHY_VARS_UE *ue,UE_rxtx_proc_t *proc, uin
   ue->pbch_vars[eNB_id]->pdu_errors,
   ue->pbch_vars[eNB_id]->pdu_errors_conseq);
 #endif
-  printf("-------------------------- End: [ue_pbch_procedures] [PID: %d] --------------------------\n",procID_ue_pbch_procedures);
+  printf("-------------------------- [PID-%d] [End: ue_pbch_procedures]  --------------------------\n",procID_ue_pbch_procedures);
   VCD_SIGNAL_DUMPER_DUMP_FUNCTION_BY_NAME(VCD_SIGNAL_DUMPER_FUNCTIONS_UE_PBCH_PROCEDURES, VCD_FUNCTION_OUT);
 }
 
@@ -3066,7 +3067,7 @@ int ue_pdcch_procedures(uint8_t eNB_id,PHY_VARS_UE *ue,UE_rxtx_proc_t *proc,uint
 {
 	//LA: PDCCH procedures called after reading the 4th OFDM symbol in each subframe.
 	int procID_initial_pdcch = gettid();
-	printf("-------------------------- Start: [ue_pdcch_procedures] [PID: %d] --------------------------\n",procID_initial_pdcch);
+	printf("-------------------------- [PID-%d] [Start: ue_pdcch_procedures] --------------------------\n",procID_initial_pdcch);
 
   unsigned int dci_cnt=0, i;
 
@@ -3103,13 +3104,13 @@ int ue_pdcch_procedures(uint8_t eNB_id,PHY_VARS_UE *ue,UE_rxtx_proc_t *proc,uint
   if (abstraction_flag == 0)  {	//LA: always = 0, when called by "UE_thread_rxn_txnp4"
 
     VCD_SIGNAL_DUMPER_DUMP_FUNCTION_BY_NAME(VCD_SIGNAL_DUMPER_FUNCTIONS_RX_PDCCH, VCD_FUNCTION_IN);
-    LOG_I(PHY,"ue->frame_parms.mode1_flag = %"PRIu8"\n",ue->frame_parms.mode1_flag);  //LA: This value is set to 0 (ue->frame_parms.mode1_flag = 0), then ALAMOUTI is inputed. Why is set to 0?
+    LOG_I(PHY,"[PID-%d] ue->frame_parms.mode1_flag = %"PRIu8"\n",procID_initial_pdcch,ue->frame_parms.mode1_flag);  //LA: This value is set to 0 (ue->frame_parms.mode1_flag = 0), then ALAMOUTI is inputed. Why is set to 0?
     rx_pdcch(ue,
              proc->frame_rx,	//LA: Frame number
              subframe_rx,		//LA: subframe number
              eNB_id,
-             (ue->frame_parms.mode1_flag == 1) ? SISO : ALAMOUTI,	//LA: MIMO_mode_t mimo_mode. ALAMOUTI = 1 corresponds to MIMO mode ALAMOUTI. It must be TRUE to process it as SISO
-             ue->high_speed_flag,
+             (ue->frame_parms.mode1_flag == 1) ? SISO : ALAMOUTI,	//LA: MIMO_mode_t mimo_mode. ALAMOUTI = 1 corresponds to MIMO mode ALAMOUTI. So actually process it as ALAMOUTI.
+             ue->high_speed_flag,	//LA: set to 1
              ue->is_secondary_ue);
 
     VCD_SIGNAL_DUMPER_DUMP_FUNCTION_BY_NAME(VCD_SIGNAL_DUMPER_FUNCTIONS_RX_PDCCH, VCD_FUNCTION_OUT);
@@ -3209,7 +3210,8 @@ int ue_pdcch_procedures(uint8_t eNB_id,PHY_VARS_UE *ue,UE_rxtx_proc_t *proc,uint
 
   LOG_D(PHY,"current_thread %d next1_thread %d next2_thread %d \n", ue->current_thread_id[subframe_rx], next1_thread_id, next2_thread_id);
 
-  LOG_I(PHY,"[UE  %d] AbsSubFrame %d.%d, Mode %s: DCI found %i --> rnti %x / crnti %x : format %d\n",
+  LOG_I(PHY,"[PID-%d][UE  %d] AbsSubFrame %d.%d, Mode %s: DCI found %i --> rnti %x / crnti %x : format %d\n",
+		  procID_initial_pdcch,
        ue->Mod_id,frame_rx%1024,subframe_rx,mode_string[ue->UE_mode[eNB_id]],
        dci_cnt,
        dci_alloc_rx[0].rnti,
@@ -3230,7 +3232,8 @@ int ue_pdcch_procedures(uint8_t eNB_id,PHY_VARS_UE *ue,UE_rxtx_proc_t *proc,uint
 	(dci_alloc_rx[i].rnti == ue->pdcch_vars[ue->current_thread_id[subframe_rx]][eNB_id]->crnti) &&
 	(dci_alloc_rx[i].format != format0)) {
 
-      LOG_I(PHY,"[UE  %d][DCI][PDSCH %x] AbsSubframe %d.%d: format %d, num_pdcch_symbols %d, nCCE %d, total CCEs %d\n",
+      LOG_I(PHY,"[PID-%d][UE  %d][DCI][PDSCH %x] AbsSubframe %d.%d: format %d, num_pdcch_symbols %d, nCCE %d, total CCEs %d\n",
+    		  procID_initial_pdcch,
 	    ue->Mod_id,dci_alloc_rx[i].rnti,
 	    frame_rx%1024,subframe_rx,
 	    dci_alloc_rx[i].format,
@@ -3282,15 +3285,15 @@ int ue_pdcch_procedures(uint8_t eNB_id,PHY_VARS_UE *ue,UE_rxtx_proc_t *proc,uint
   ue->dlsch_received[eNB_id]++;
 
 #ifdef DEBUG_PHY_PROC
-	LOG_I(PHY,"[UE  %d] Generated UE DLSCH C_RNTI format %d\n",ue->Mod_id,dci_alloc_rx[i].format);
+	LOG_I(PHY,"[PID-%d][UE  %d] Generated UE DLSCH C_RNTI format %d\n",procID_initial_pdcch,ue->Mod_id,dci_alloc_rx[i].format);
 	dump_dci(&ue->frame_parms, &dci_alloc_rx[i]);
-	LOG_I(PHY,"[UE %d] *********** dlsch->active in subframe %d=> %d\n",ue->Mod_id,subframe_rx,ue->dlsch[ue->current_thread_id[subframe_rx]][eNB_id][0]->active);
+	LOG_I(PHY,"[PID-%d][UE %d] *********** dlsch->active in subframe %d=> %d\n",procID_initial_pdcch,ue->Mod_id,subframe_rx,ue->dlsch[ue->current_thread_id[subframe_rx]][eNB_id][0]->active);
 #endif
 
   // we received a CRNTI, so we're in PUSCH
   if (ue->UE_mode[eNB_id] != PUSCH) {
 #ifdef DEBUG_PHY_PROC
-          LOG_I(PHY,"[UE  %d] Frame %d, subframe %d: Received DCI with CRNTI %x => Mode PUSCH\n",ue->Mod_id,frame_rx,subframe_rx,ue->pdcch_vars[subframe_rx&1][eNB_id]->crnti);
+          LOG_I(PHY,"[PID-%d][UE  %d] Frame %d, subframe %d: Received DCI with CRNTI %x => Mode PUSCH\n",procID_initial_pdcch,ue->Mod_id,frame_rx,subframe_rx,ue->pdcch_vars[subframe_rx&1][eNB_id]->crnti);
 #endif
     //dump_dci(&ue->frame_parms, &dci_alloc_rx[i]);
     ue->UE_mode[eNB_id] = PUSCH;
@@ -3306,7 +3309,7 @@ int ue_pdcch_procedures(uint8_t eNB_id,PHY_VARS_UE *ue,UE_rxtx_proc_t *proc,uint
        ((dci_alloc_rx[i].format == format1A) || (dci_alloc_rx[i].format == format1C))) {
 
 #ifdef DEBUG_PHY_PROC
-      LOG_I(PHY,"[UE  %d] subframe %d: Found rnti %x, format 1%s, dci_cnt %d\n",ue->Mod_id,subframe_rx,dci_alloc_rx[i].rnti,dci_alloc_rx[i].format==format1A?"A":"C",i);
+      LOG_I(PHY,"[PID-%d][UE  %d] subframe %d: Found rnti %x, format 1%s, dci_cnt %d\n",procID_initial_pdcch,ue->Mod_id,subframe_rx,dci_alloc_rx[i].rnti,dci_alloc_rx[i].format==format1A?"A":"C",i);
 #endif
 
 
@@ -3329,7 +3332,7 @@ int ue_pdcch_procedures(uint8_t eNB_id,PHY_VARS_UE *ue,UE_rxtx_proc_t *proc,uint
   ue->dlsch_SI_received[eNB_id]++;
 
 
-  LOG_I(PHY,"[UE  %d] Frame %d, subframe %d : Generate UE DLSCH SI_RNTI format 1%s\n",ue->Mod_id,frame_rx,subframe_rx,dci_alloc_rx[i].format==format1A?"A":"C");
+  LOG_I(PHY,"[PID-%d][UE  %d] Frame %d, subframe %d : Generate UE DLSCH SI_RNTI format 1%s\n",procID_initial_pdcch,ue->Mod_id,frame_rx,subframe_rx,dci_alloc_rx[i].format==format1A?"A":"C");
   //dump_dci(&ue->frame_parms, &dci_alloc_rx[i]);
 
       }
@@ -3339,7 +3342,7 @@ int ue_pdcch_procedures(uint8_t eNB_id,PHY_VARS_UE *ue,UE_rxtx_proc_t *proc,uint
        ((dci_alloc_rx[i].format == format1A) || (dci_alloc_rx[i].format == format1C))) {
 
 #ifdef DEBUG_PHY_PROC
-      LOG_I(PHY,"[UE  %d] subframe %d: Found rnti %x, format 1%s, dci_cnt %d\n",ue->Mod_id,subframe_rx,dci_alloc_rx[i].rnti,dci_alloc_rx[i].format==format1A?"A":"C",i);
+      LOG_I(PHY,"[PID-%d][UE  %d] subframe %d: Found rnti %x, format 1%s, dci_cnt %d\n",procID_initial_pdcch,ue->Mod_id,subframe_rx,dci_alloc_rx[i].rnti,dci_alloc_rx[i].format==format1A?"A":"C",i);
 #endif
 
 
@@ -3360,7 +3363,7 @@ int ue_pdcch_procedures(uint8_t eNB_id,PHY_VARS_UE *ue,UE_rxtx_proc_t *proc,uint
                                             0)==0) {
 
   ue->dlsch_p_received[eNB_id]++;
-  LOG_D(PHY,"[UE  %d] Frame %d, subframe %d : Generate UE DLSCH P_RNTI format 1%s\n",ue->Mod_id,frame_rx,subframe_rx,dci_alloc_rx[i].format==format1A?"A":"C");
+  LOG_I(PHY,"[PID-%d][UE  %d] Frame %d, subframe %d : Generate UE DLSCH P_RNTI format 1%s\n",procID_initial_pdcch,ue->Mod_id,frame_rx,subframe_rx,dci_alloc_rx[i].format==format1A?"A":"C");
   //dump_dci(&ue->frame_parms, &dci_alloc_rx[i]);
 
       }
@@ -3371,7 +3374,7 @@ int ue_pdcch_procedures(uint8_t eNB_id,PHY_VARS_UE *ue,UE_rxtx_proc_t *proc,uint
        (dci_alloc_rx[i].format == format1A)) {
 
 #ifdef DEBUG_PHY_PROC
-      LOG_D(PHY,"[UE  %d][RAPROC] subframe %d: Found RA rnti %x, format 1A, dci_cnt %d\n",ue->Mod_id,subframe_rx,dci_alloc_rx[i].rnti,i);
+      LOG_I(PHY,"[PID-%d][UE  %d][RAPROC] subframe %d: Found RA rnti %x, format 1A, dci_cnt %d\n",procID_initial_pdcch,ue->Mod_id,subframe_rx,dci_alloc_rx[i].rnti,i);
 
       //if (((frame_rx%100) == 0) || (frame_rx < 20))
       //dump_dci(&ue->frame_parms, &dci_alloc_rx[i]);
@@ -3484,7 +3487,7 @@ int ue_pdcch_procedures(uint8_t eNB_id,PHY_VARS_UE *ue,UE_rxtx_proc_t *proc,uint
 
     else {
 #ifdef DEBUG_PHY_PROC
-      LOG_I(PHY,"[UE  %d] frame %d, subframe %d: received DCI %d with RNTI=%x (C-RNTI:%x, CBA_RNTI %x) and format %d!\n",ue->Mod_id,frame_rx,subframe_rx,i,dci_alloc_rx[i].rnti,
+      LOG_I(PHY,"[PID-%d][UE  %d] frame %d, subframe %d: received DCI %d with RNTI=%x (C-RNTI:%x, CBA_RNTI %x) and format %d!\n",procID_initial_pdcch,ue->Mod_id,frame_rx,subframe_rx,i,dci_alloc_rx[i].rnti,
 	    ue->pdcch_vars[ue->current_thread_id[subframe_rx]][eNB_id]->crnti,
 	    ue->ulsch[eNB_id]->cba_rnti[0],
 	    dci_alloc_rx[i].format);
@@ -3498,7 +3501,7 @@ int ue_pdcch_procedures(uint8_t eNB_id,PHY_VARS_UE *ue,UE_rxtx_proc_t *proc,uint
   stop_meas(&ue->dlsch_rx_pdcch_stats);
 #endif
   VCD_SIGNAL_DUMPER_DUMP_FUNCTION_BY_NAME(VCD_SIGNAL_DUMPER_FUNCTIONS_UE_PDCCH_PROCEDURES, VCD_FUNCTION_OUT);
-  printf("-------------------------- End: [ue_pdcch_procedures] [PID: %d] --------------------------\n",procID_initial_pdcch);
+  printf("-------------------------- [PID-%d] [End: ue_pdcch_procedures] --------------------------\n",procID_initial_pdcch);
   return(0);
 }
 
@@ -3902,12 +3905,12 @@ void ue_dlsch_procedures(PHY_VARS_UE *ue,
 
   harq_pid = dlsch0->current_harq_pid;
   is_cw0_active = dlsch0->harq_processes[harq_pid]->status;
-
+  //LAis_cw0_active =1; //LA: Even forcing it to 1, it doesn't work
   if(dlsch1)
     is_cw1_active = dlsch1->harq_processes[harq_pid]->status;
 
-  LOG_D(PHY,"AbsSubframe %d.%d Start Turbo Decoder for CW0 [harq_pid %d] ? %d \n", frame_rx%1024, subframe_rx, harq_pid, is_cw0_active);
-  LOG_D(PHY,"AbsSubframe %d.%d Start Turbo Decoder for CW1 [harq_pid %d] ? %d \n", frame_rx%1024, subframe_rx, harq_pid, is_cw1_active);
+  LOG_I(PHY,"AbsSubframe %d.%d Start Turbo Decoder for CW0 [harq_pid %d] ? is_cw0_active = %d \n", frame_rx%1024, subframe_rx, harq_pid, is_cw0_active);
+  LOG_I(PHY,"AbsSubframe %d.%d Start Turbo Decoder for CW1 [harq_pid %d] ? is_cw1_active = %d \n", frame_rx%1024, subframe_rx, harq_pid, is_cw1_active);
 
   if(is_cw0_active && is_cw1_active)
   {
@@ -3919,6 +3922,7 @@ void ue_dlsch_procedures(PHY_VARS_UE *ue,
       dlsch0->Kmimo = 1;
   }
   if (1) {
+	  LOG_I(PHY,"[PID-%d] pdsch = %d\n",procID_ue_dlsch_procedures,pdsch);
     switch (pdsch) {
     case SI_PDSCH:
       pdsch_vars = ue->pdsch_vars_SI[eNB_id];
@@ -4112,7 +4116,7 @@ void ue_dlsch_procedures(PHY_VARS_UE *ue,
 
       if(dlsch0->rnti != 0xffff)
       {
-      LOG_D(PHY,"[UE  %d][PDSCH %x/%d] AbsSubframe %d.%d : DLSCH CW0 in error (rv %d,round %d, mcs %d,TBS %d)\n",
+      LOG_I(PHY,"[PID-%d][UE  %d][PDSCH %x/%d] AbsSubframe %d.%d : DLSCH CW0 in error (rv %d,round %d, mcs %d,TBS %d)\n",procID_ue_dlsch_procedures,
             ue->Mod_id,dlsch0->rnti,
             harq_pid,frame_rx,subframe_rx,
             dlsch0->harq_processes[harq_pid]->rvidx,
@@ -4125,7 +4129,7 @@ void ue_dlsch_procedures(PHY_VARS_UE *ue,
     } else {
         if(dlsch0->rnti != 0xffff)
         {
-      LOG_D(PHY,"[UE  %d][PDSCH %x/%d] AbsSubframe %d.%d : Received DLSCH CW0 (rv %d,round %d, mcs %d,TBS %d)\n",
+      LOG_I(PHY,"[PID-%d][UE  %d][PDSCH %x/%d] AbsSubframe %d.%d : Received DLSCH CW0 (rv %d,round %d, mcs %d,TBS %d)\n",procID_ue_dlsch_procedures,
             ue->Mod_id,dlsch0->rnti,
             harq_pid,frame_rx,subframe_rx,
             dlsch0->harq_processes[harq_pid]->rvidx,
@@ -4235,7 +4239,7 @@ void ue_dlsch_procedures(PHY_VARS_UE *ue,
     }
 
 #ifdef DEBUG_PHY_PROC
-    LOG_D(PHY,"[UE  %d][PDSCH %x/%d] Frame %d subframe %d: PDSCH/DLSCH decoding iter %d (mcs %d, rv %d, TBS %d)\n",
+    LOG_I(PHY,"[PID-%d][UE  %d][PDSCH %x/%d] Frame %d subframe %d: PDSCH/DLSCH decoding iter %d (mcs %d, rv %d, TBS %d)\n",procID_ue_dlsch_procedures,
     ue->Mod_id,
     dlsch0->rnti,harq_pid,
     frame_rx,subframe_rx,ret,
@@ -4244,7 +4248,7 @@ void ue_dlsch_procedures(PHY_VARS_UE *ue,
     dlsch0->harq_processes[harq_pid]->TBS);
 
     if (frame_rx%100==0) {
-      LOG_D(PHY,"[UE  %d][PDSCH %x] Frame %d subframe %d dlsch_errors %d, dlsch_received %d, dlsch_fer %d, current_dlsch_cqi %d\n",
+      LOG_I(PHY,"[PID-%d][UE  %d][PDSCH %x] Frame %d subframe %d dlsch_errors %d, dlsch_received %d, dlsch_fer %d, current_dlsch_cqi %d\n",procID_ue_dlsch_procedures,
       ue->Mod_id,dlsch0->rnti,
       frame_rx,subframe_rx,
       ue->dlsch_errors[eNB_id],
@@ -5083,7 +5087,7 @@ int phy_procedures_UE_RX(PHY_VARS_UE *ue,UE_rxtx_proc_t *proc,uint8_t eNB_id,
 			 uint8_t abstraction_flag,uint8_t do_pdcch_flag,runmode_t mode,
 			 relaying_type_t r_type,PHY_VARS_RN *phy_vars_rn) {
 	int procID_phy_procedures_UE_RX = gettid();
-	printf("*************************************************************** Start : [phy_procedures_UE_RX] [PID: %d] ***************************************************************\n",procID_phy_procedures_UE_RX);
+	printf("*************************************************************** [PID-%d] [Start: phy_procedures_UE_RX] ***************************************************************\n",procID_phy_procedures_UE_RX);
   int l,l2;
   int pilot1;
   int pmch_flag=0;
@@ -5114,7 +5118,7 @@ int phy_procedures_UE_RX(PHY_VARS_UE *ue,UE_rxtx_proc_t *proc,uint8_t eNB_id,
 #endif
 
   pmch_flag = is_pmch_subframe(frame_rx,subframe_rx,&ue->frame_parms) ? 1 : 0;
-  LOG_I(PHY,"Is this a PMCH subframe (i.e. MBSFN)? : %d [1:Yes, 0:No]\n",pmch_flag);
+  LOG_I(PHY,"[PID-%d] Is this a PMCH subframe (i.e. MBSFN)? : %d [1:Yes, 0:No]\n",procID_phy_procedures_UE_RX,pmch_flag);
 
   if (do_pdcch_flag) {	// deactivate reception until we scan pdcch
 	  //LA: This value is = 1, when called by "UE_thread_rxn_txnp4"
@@ -5174,7 +5178,7 @@ int phy_procedures_UE_RX(PHY_VARS_UE *ue,UE_rxtx_proc_t *proc,uint8_t eNB_id,
   //LOG_I(PHY,"[PID-%d] ------ slot 0 Processing: AbsSubframe %d.%d ------  \n",procID_phy_procedures_UE_RX, frame_rx%1024, subframe_rx);
   LOG_I(PHY,"[PID-%d] ------  --> FFT/ChannelEst/PDCCH slot 0: AbsSubframe %d.%d ------  \n",procID_phy_procedures_UE_RX, frame_rx%1024, subframe_rx);
   for (; l<=l2; l++) {
-	  printf(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Start processing OFDM symbol: %d <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n",l);
+	  printf(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> [PID-%d] Start processing OFDM symbol: %d <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n",procID_phy_procedures_UE_RX,l);
     if (abstraction_flag == 0) {	//LA: always = 0, when called by "UE_thread_rxn_txnp4"
 #if UE_TIMING_TRACE
         start_meas(&ue->ofdm_demod_stats);
@@ -5222,7 +5226,7 @@ int phy_procedures_UE_RX(PHY_VARS_UE *ue,UE_rxtx_proc_t *proc,uint8_t eNB_id,
 			ue->pdcch_vars[ue->current_thread_id[subframe_rx]][eNB_id]->num_pdcch_symbols);
       }
     }
-    printf(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> End processing OFDM symbol: %d <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n",l);
+    printf(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> [PID-%d] End processing OFDM symbol: %d <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n",procID_phy_procedures_UE_RX,l);
   } // for l=1..l2
   ue_measurement_procedures(l-1,ue,proc,eNB_id,(subframe_rx<<1),abstraction_flag,mode);
 
@@ -5591,7 +5595,7 @@ int phy_procedures_UE_RX(PHY_VARS_UE *ue,UE_rxtx_proc_t *proc,uint8_t eNB_id,
 
   //LOG_D(PHY," ****** end RX-Chain  for AbsSubframe %d.%d ******  \n", frame_rx%1024, subframe_rx);
   LOG_I(PHY,"[PID-%d] ****** end RX-Chain  for AbsSubframe %d.%d ******  \n", procID_phy_procedures_UE_RX,frame_rx%1024, subframe_rx);
-  printf("*************************************************************** End : [phy_procedures_UE_RX] [PID: %d] ***************************************************************\n",procID_phy_procedures_UE_RX);
+  printf("*************************************************************** [PID-%d] [End: phy_procedures_UE_RX] ***************************************************************\n",procID_phy_procedures_UE_RX);
   return (0);
 }
 

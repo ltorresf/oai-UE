@@ -245,7 +245,7 @@ uint32_t  dlsch_decoding(PHY_VARS_UE *phy_vars_ue,
   }
 
   if (dlsch->harq_ack[subframe].ack != 2) {
-    LOG_D(PHY, "[UE %d] DLSCH @ SF%d : ACK bit is %d instead of DTX even before PDSCH is decoded!\n",
+    LOG_I(PHY, "[UE %d] DLSCH @ SF%d : ACK bit is %d instead of DTX even before PDSCH is decoded!\n",
         phy_vars_ue->Mod_id, subframe, dlsch->harq_ack[subframe].ack);
   }
 
@@ -486,7 +486,7 @@ uint32_t  dlsch_decoding(PHY_VARS_UE *phy_vars_ue,
 #if UE_TIMING_TRACE
         start_meas(dlsch_turbo_decoding_stats);
 #endif
-      LOG_D(PHY,"AbsSubframe %d.%d Start turbo segment %d/%d \n",frame%1024,subframe,r,harq_process->C-1);
+      LOG_I(PHY,"AbsSubframe %d.%d Start turbo segment %d/%d \n",frame%1024,subframe,r,harq_process->C-1);
       ret = tc
             (&harq_process->d[r][96],
              harq_process->c[r],
@@ -690,7 +690,7 @@ uint32_t  dlsch_decoding(PHY_VARS_UE *phy_vars_ue,
     }
     if(is_crnti)
     {
-    LOG_D(PHY,"[UE %d] DLSCH: Setting NACK for subframe %d (pid %d, pid status %d, round %d/Max %d, TBS %d)\n",
+    LOG_I(PHY,"[UE %d] DLSCH: Setting NACK for subframe %d (pid %d, pid status %d, round %d/Max %d, TBS %d)\n",
                phy_vars_ue->Mod_id,subframe,harq_pid,harq_process->status,harq_process->round,dlsch->Mdlharq,harq_process->TBS);
     }
 
@@ -711,7 +711,7 @@ uint32_t  dlsch_decoding(PHY_VARS_UE *phy_vars_ue,
 
     if(is_crnti)
     {
-    LOG_D(PHY,"[UE %d] DLSCH: Setting ACK for subframe %d (pid %d, round %d, TBS %d)\n",phy_vars_ue->Mod_id,subframe,harq_pid,harq_process->round,harq_process->TBS);
+    LOG_I(PHY,"[UE %d] DLSCH: Setting ACK for subframe %d (pid %d, round %d, TBS %d)\n",phy_vars_ue->Mod_id,subframe,harq_pid,harq_process->round,harq_process->TBS);
     }
     //LOG_D(PHY,"[UE %d] DLSCH: Setting ACK for subframe %d (pid %d, round %d)\n",phy_vars_ue->Mod_id,subframe,harq_pid,harq_process->round);
 

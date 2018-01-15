@@ -6,3 +6,15 @@ cmake_targets/log/
 cmake_targets/lte_build_oai/
 cmake_targets/nas_sim_tools/build/
 targets/bin/
+a
+MIB.log
+UE_tx90_rx115.log
+lte_noS1_build_oai/CMakeLists.txt
+lte_noS1_build_oai/build/
+rxdata00.m
+sync_corr0_ue_0.m
+sync_corr1_ue_0.m
+sync_corr2_ue_0.m
+cmake_targets/lte_noS1_build_oai/CMakeLists.txt
+cmake_targets/lte_noS1_build_oai/build/
+

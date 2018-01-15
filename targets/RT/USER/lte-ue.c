@@ -1037,7 +1037,7 @@ void *UE_thread(void *arg) {
                         exit_fun("nothing to add");
                       }
                     } else {
-                      LOG_E( PHY, "[SCHED][UE %d] UE RX thread busy (IC %d)!!\n", UE->Mod_id, proc->instance_cnt_rxtx);
+                      LOG_E( PHY, "[PID-%d][SCHED][UE %d] UE RX thread busy (IC %d)!!\n", procID_UE_thread,UE->Mod_id, proc->instance_cnt_rxtx);
                       if (proc->instance_cnt_rxtx > 2)
                         exit_fun("instance_cnt_rxtx > 2");
                     }

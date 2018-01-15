@@ -67,6 +67,8 @@
 
 #include "SIMULATION/TOOLS/defs.h" // for taus
 
+#include "../../../targets/RT/USER/rt_wrapper.h"
+
 #define DEBUG_HEADER_PARSING 1
 #define ENABLE_MAC_PAYLOAD_DEBUG 1
 
@@ -512,12 +514,14 @@ ue_send_sdu(
 
 void ue_decode_si(module_id_t module_idP,int CC_id,frame_t frameP, uint8_t eNB_index, void *pdu,uint16_t len)
 {
+	int procID_ue_decode_si = gettid();
+	printf("{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{ [PID-%d] [Start: ue_decode_si] }}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}\n",procID_ue_decode_si);
 #if UE_TIMING_TRACE
     start_meas(&UE_mac_inst[module_idP].rx_si);
 #endif
   VCD_SIGNAL_DUMPER_DUMP_FUNCTION_BY_NAME(VCD_SIGNAL_DUMPER_FUNCTIONS_UE_DECODE_SI, VCD_FUNCTION_IN);
 
-  LOG_D(MAC,"[UE %d] Frame %d Sending SI to RRC (LCID Id %d,len %d)\n",module_idP,frameP,BCCH,len);
+  LOG_I(MAC,"[PID-%d][UE %d] Frame %d Sending SI to RRC (LCID Id %d,len %d)\n",procID_ue_decode_si,module_idP,frameP,BCCH,len);
 
   mac_rrc_data_ind(module_idP,
                    CC_id,
@@ -544,9 +548,10 @@ void ue_decode_si(module_id_t module_idP,int CC_id,frame_t frameP, uint8_t eNB_i
 	      UE_mac_inst[module_idP].rxSubframe,
 	      0,
 	      0);
-    LOG_D(OPT,"[UE %d][BCH] Frame %d trace pdu for CC_id %d rnti %x with size %d\n",
+    LOG_I(OPT,"[PID-%d][UE %d][BCH] Frame %d trace pdu for CC_id %d rnti %x with size %d\n",procID_ue_decode_si,
 	    module_idP, frameP, CC_id, 0xffff, len);
   }
+  printf("{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{ [PID-%d] [End: ue_decode_si] }}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}\n",procID_ue_decode_si);
 }
 
 void ue_decode_p(module_id_t module_idP,int CC_id,frame_t frameP, uint8_t eNB_index, void *pdu,uint16_t len)

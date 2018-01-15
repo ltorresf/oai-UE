@@ -30,7 +30,7 @@
 * \warning
 */
 
-//#define DEBUG_SCRAMBLING 1
+#define DEBUG_SCRAMBLING 1 //LA
 
 #include "PHY/defs.h"
 #include "PHY/CODING/extern.h"
@@ -100,7 +100,7 @@ void dlsch_scrambling(LTE_DL_FRAME_PARMS *frame_parms,
   for (i=0; i<(1+(G>>5)); i++) {
 
 #ifdef DEBUG_SCRAMBLING
-    printf("scrambling %d : %d => ",k,e[k]);
+    //printf("scrambling %d : %d => ",i,e[i]);
 #endif
 
                 
@@ -141,7 +141,7 @@ void dlsch_scrambling(LTE_DL_FRAME_PARMS *frame_parms,
     //    ((__m128i *)e)[0] = _mm_xor_si128(((__m128i *)e)[0],((__m128i *)scrambling_lut)[s&65535]);
     //    ((__m128i *)e)[1] = _mm_xor_si128(((__m128i *)e)[1],((__m128i *)scrambling_lut)[s>>16]);
 #ifdef DEBUG_SCRAMBLING
-    printf("%d\n",e[k]);
+    //printf("%d\n",e[i]);
 #endif
     
     
@@ -182,11 +182,11 @@ void dlsch_unscrambling(LTE_DL_FRAME_PARMS *frame_parms,
   for (i=0; i<(1+(G>>5)); i++) {
     for (j=0; j<32; j++,k++) {
 #ifdef DEBUG_SCRAMBLING
-      printf("unscrambling %d : %d => ",k,llr[k]);
+//LA      printf("unscrambling %d : %d => ",k,llr[k]);
 #endif
       llr[k] = ((2*((s>>j)&1))-1)*llr[k];
 #ifdef DEBUG_SCRAMBLING
-      printf("%d\n",llr[k]);
+//LA      printf("%d\n",llr[k]);
 #endif
     }
 

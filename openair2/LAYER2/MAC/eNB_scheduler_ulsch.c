@@ -48,6 +48,8 @@
 #include "RRC/LITE/extern.h"
 #include "RRC/L2_INTERFACE/openair_rrc_L2_interface.h"
 
+#include "../../../targets/RT/USER/rt_wrapper.h"
+
 //#include "LAYER2/MAC/pre_processor.c"
 #include "pdcp.h"
 
@@ -74,6 +76,8 @@ void rx_sdu(const module_id_t enb_mod_idP,
 	    uint8_t          *msg3_flagP)
 {
 
+	int procID_rx_sdu = gettid();
+	printf("{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{ [PID-%d] [Start: rx_sdu] }}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}\n",procID_rx_sdu);
   unsigned char  rx_ces[MAX_NUM_CE],num_ce,num_sdu,i,*payload_ptr;
   unsigned char  rx_lcids[NB_RB_MAX];
   unsigned short rx_lengths[NB_RB_MAX];
@@ -498,6 +502,7 @@ void rx_sdu(const module_id_t enb_mod_idP,
 
   VCD_SIGNAL_DUMPER_DUMP_FUNCTION_BY_NAME(VCD_SIGNAL_DUMPER_FUNCTIONS_RX_SDU,0);
   stop_meas(&eNB->rx_ulsch_sdu);
+  printf("{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{ [PID-%d] [End: rx_sdu] }}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}\n",procID_rx_sdu);
 }
 
 

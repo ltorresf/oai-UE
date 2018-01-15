@@ -43,6 +43,7 @@
 #include "LAYER2/MAC/extern.h"
 #include "LAYER2/MAC/defs.h"
 
+#include "../../../targets/RT/USER/rt_wrapper.h"	//LA
 //#define DEBUG_DCI
 
 uint32_t localRIV2alloc_LUT6[32];
@@ -2831,6 +2832,7 @@ int generate_eNB_dlsch_params_from_dci(int frame,
 
 int dump_dci(LTE_DL_FRAME_PARMS *frame_parms, DCI_ALLOC_t *dci)
 {
+	int procID_dump_dci = gettid();
   switch (dci->format) {
 
   case format0:   // This is an UL SCH allocation so nothing here, inform MAC
@@ -2968,7 +2970,8 @@ int dump_dci(LTE_DL_FRAME_PARMS *frame_parms, DCI_ALLOC_t *dci)
 
       switch(frame_parms->N_RB_DL) {
       case 6:
-        LOG_I(PHY,"DCI format1 (TDD 1.5 MHz), rnti %x (%x): rah %d, rb_alloc %x, mcs %d, harq_pid %d, ndi %d, RV %d, TPC %d, dai %d\n",
+        LOG_I(PHY,"[PID-%d] DCI format1 (TDD 1.5 MHz), rnti %x (%x): rah %d, rb_alloc %x, mcs %d, harq_pid %d, ndi %d, RV %d, TPC %d, dai %d\n",
+        		procID_dump_dci,
               dci->rnti,
               ((uint32_t*)&dci->dci_pdu)[0],
               ((DCI1_1_5MHz_TDD_t *)&dci->dci_pdu[0])->rah,
@@ -2982,7 +2985,8 @@ int dump_dci(LTE_DL_FRAME_PARMS *frame_parms, DCI_ALLOC_t *dci)
         break;
 
       case 25:
-        LOG_I(PHY,"DCI format1 (TDD 5 MHz), rnti %x (%x): rah %d, rb_alloc %x, mcs %d, harq_pid %d, ndi %d, RV %d, TPC %d, dai %d\n",
+        LOG_I(PHY,"[PID-%d] DCI format1 (TDD 5 MHz), rnti %x (%x): rah %d, rb_alloc %x, mcs %d, harq_pid %d, ndi %d, RV %d, TPC %d, dai %d\n",
+        		procID_dump_dci,
               dci->rnti,
               ((uint32_t*)&dci->dci_pdu)[0],
               ((DCI1_5MHz_TDD_t *)&dci->dci_pdu[0])->rah,
@@ -3057,7 +3061,7 @@ int dump_dci(LTE_DL_FRAME_PARMS *frame_parms, DCI_ALLOC_t *dci)
         break;
 
       case 50:
-        LOG_I(PHY,"DCI format1 (FDD, 10 MHz), rnti %x (%x): rah %d, rb_alloc %x, mcs %d, harq_pid %d, ndi %d, RV %d, TPC %d\n",
+        LOG_I(PHY,"[PID-%d] DCI format1 (FDD, 10 MHz), rnti %x (%x): rah %d, rb_alloc %x, mcs %d, harq_pid %d, ndi %d, RV %d, TPC %d\n",procID_dump_dci,
               dci->rnti,
               ((uint32_t*)&dci->dci_pdu)[0],
               ((DCI1_10MHz_FDD_t *)&dci->dci_pdu[0])->rah,
@@ -3070,7 +3074,7 @@ int dump_dci(LTE_DL_FRAME_PARMS *frame_parms, DCI_ALLOC_t *dci)
         break;
 
       case 100:
-        LOG_I(PHY,"DCI format1 (FDD, 20 MHz), rnti %x (%x): rah %d, rb_alloc %x, mcs %d, harq_pid %d, ndi %d, RV %d, TPC %d\n",
+        LOG_I(PHY,"[PID-%d] DCI format1 (FDD, 20 MHz), rnti %x (%x): rah %d, rb_alloc %x, mcs %d, harq_pid %d, ndi %d, RV %d, TPC %d\n",procID_dump_dci,
               dci->rnti,
               ((uint32_t*)&dci->dci_pdu)[0],
               ((DCI1_20MHz_FDD_t *)&dci->dci_pdu[0])->rah,
@@ -3155,18 +3159,18 @@ int dump_dci(LTE_DL_FRAME_PARMS *frame_parms, DCI_ALLOC_t *dci)
     } else if (frame_parms->frame_type == FDD) {
       switch (frame_parms->N_RB_DL) {
       case 6:
-        LOG_D(PHY,"DCI format1A(FDD, 1.5MHz), rnti %x (%x)\n",dci->rnti,((uint32_t*)&dci->dci_pdu[0])[0]);
-        LOG_D(PHY,"VRB_TYPE %d\n",((DCI1A_1_5MHz_FDD_t *)&dci->dci_pdu[0])->vrb_type);
-        LOG_D(PHY,"RB_ALLOC %x (NB_RB %d)\n",((DCI1A_1_5MHz_FDD_t *)&dci->dci_pdu[0])->rballoc,RIV2nb_rb_LUT25[((DCI1A_1_5MHz_FDD_t *)&dci->dci_pdu[0])->rballoc]);
-        LOG_D(PHY,"MCS %d\n",((DCI1A_1_5MHz_FDD_t *)&dci->dci_pdu[0])->mcs);
-        LOG_D(PHY,"HARQ_PID %d\n",((DCI1A_1_5MHz_FDD_t *)&dci->dci_pdu[0])->harq_pid);
-        LOG_D(PHY,"NDI %d\n",((DCI1A_1_5MHz_FDD_t *)&dci->dci_pdu[0])->ndi);
-        LOG_D(PHY,"RV %d\n",((DCI1A_1_5MHz_FDD_t *)&dci->dci_pdu[0])->rv);
-        LOG_D(PHY,"TPC %d\n",((DCI1A_1_5MHz_FDD_t *)&dci->dci_pdu[0])->TPC);
+        LOG_D(PHY,"[PID-%d] DCI format1A (FDD, 1.5MHz), rnti %x (%x)\n",procID_dump_dci,dci->rnti,((uint32_t*)&dci->dci_pdu[0])[0]);
+        LOG_D(PHY,"[PID-%d] VRB_TYPE %d\n",procID_dump_dci,((DCI1A_1_5MHz_FDD_t *)&dci->dci_pdu[0])->vrb_type);
+        LOG_D(PHY,"[PID-%d] RB_ALLOC %x (NB_RB %d)\n",procID_dump_dci,((DCI1A_1_5MHz_FDD_t *)&dci->dci_pdu[0])->rballoc,RIV2nb_rb_LUT25[((DCI1A_1_5MHz_FDD_t *)&dci->dci_pdu[0])->rballoc]);
+        LOG_D(PHY,"[PID-%d] MCS %d\n",procID_dump_dci,((DCI1A_1_5MHz_FDD_t *)&dci->dci_pdu[0])->mcs);
+        LOG_D(PHY,"[PID-%d] HARQ_PID %d\n",procID_dump_dci,((DCI1A_1_5MHz_FDD_t *)&dci->dci_pdu[0])->harq_pid);
+        LOG_D(PHY,"[PID-%d] NDI %d\n",procID_dump_dci,((DCI1A_1_5MHz_FDD_t *)&dci->dci_pdu[0])->ndi);
+        LOG_D(PHY,"[PID-%d] RV %d\n",procID_dump_dci,((DCI1A_1_5MHz_FDD_t *)&dci->dci_pdu[0])->rv);
+        LOG_D(PHY,"[PID-%d] TPC %d\n",procID_dump_dci,((DCI1A_1_5MHz_FDD_t *)&dci->dci_pdu[0])->TPC);
         break;
 
       case 25:
-        LOG_D(PHY,"DCI format1A(FDD, 5MHz), rnti %x (%x)\n",dci->rnti,((uint32_t*)&dci->dci_pdu[0])[0]);
+        LOG_D(PHY,"DCI format1A (FDD, 5MHz), rnti %x (%x)\n",dci->rnti,((uint32_t*)&dci->dci_pdu[0])[0]);
         LOG_D(PHY,"VRB_TYPE %d\n",((DCI1A_5MHz_FDD_t *)&dci->dci_pdu[0])->vrb_type);
         LOG_D(PHY,"RB_ALLOC %x (NB_RB %d)\n",((DCI1A_5MHz_FDD_t *)&dci->dci_pdu[0])->rballoc,RIV2nb_rb_LUT25[((DCI1A_5MHz_FDD_t *)&dci->dci_pdu[0])->rballoc]);
         LOG_D(PHY,"MCS %d\n",((DCI1A_5MHz_FDD_t *)&dci->dci_pdu[0])->mcs);
@@ -3177,25 +3181,25 @@ int dump_dci(LTE_DL_FRAME_PARMS *frame_parms, DCI_ALLOC_t *dci)
         break;
 
       case 50:
-        LOG_I(PHY,"DCI format1A(FDD, 10MHz), rnti %x (%x)\n",dci->rnti,((uint32_t*)&dci->dci_pdu[0])[0]);
-        LOG_I(PHY,"VRB_TYPE %d\n",((DCI1A_10MHz_FDD_t *)&dci->dci_pdu[0])->vrb_type);
-        LOG_I(PHY,"RB_ALLOC %x (NB_RB %d)\n",((DCI1A_10MHz_FDD_t *)&dci->dci_pdu[0])->rballoc,RIV2nb_rb_LUT50[((DCI1A_10MHz_FDD_t *)&dci->dci_pdu[0])->rballoc]);
-        LOG_I(PHY,"MCS %d\n",((DCI1A_10MHz_FDD_t *)&dci->dci_pdu[0])->mcs);
-        LOG_I(PHY,"HARQ_PID %d\n",((DCI1A_10MHz_FDD_t *)&dci->dci_pdu[0])->harq_pid);
-        LOG_I(PHY,"NDI %d\n",((DCI1A_10MHz_FDD_t *)&dci->dci_pdu[0])->ndi);
-        LOG_I(PHY,"RV %d\n",((DCI1A_10MHz_FDD_t *)&dci->dci_pdu[0])->rv);
-        LOG_I(PHY,"TPC %d\n",((DCI1A_10MHz_FDD_t *)&dci->dci_pdu[0])->TPC);
+        LOG_I(PHY,"[PID-%d] DCI format1A (FDD, 10MHz), rnti %x (%x)\n",procID_dump_dci,dci->rnti,((uint32_t*)&dci->dci_pdu[0])[0]);
+        LOG_I(PHY,"[PID-%d] VRB_TYPE %d\n",procID_dump_dci,((DCI1A_10MHz_FDD_t *)&dci->dci_pdu[0])->vrb_type);
+        LOG_I(PHY,"[PID-%d] RB_ALLOC %x (NB_RB %d)\n",procID_dump_dci,((DCI1A_10MHz_FDD_t *)&dci->dci_pdu[0])->rballoc,RIV2nb_rb_LUT50[((DCI1A_10MHz_FDD_t *)&dci->dci_pdu[0])->rballoc]);
+        LOG_I(PHY,"[PID-%d] MCS %d\n",procID_dump_dci,((DCI1A_10MHz_FDD_t *)&dci->dci_pdu[0])->mcs);
+        LOG_I(PHY,"[PID-%d] HARQ_PID %d\n",procID_dump_dci,((DCI1A_10MHz_FDD_t *)&dci->dci_pdu[0])->harq_pid);
+        LOG_I(PHY,"[PID-%d] NDI %d\n",procID_dump_dci,((DCI1A_10MHz_FDD_t *)&dci->dci_pdu[0])->ndi);
+        LOG_I(PHY,"[PID-%d] RV %d\n",procID_dump_dci,((DCI1A_10MHz_FDD_t *)&dci->dci_pdu[0])->rv);
+        LOG_I(PHY,"[PID-%d] TPC %d\n",procID_dump_dci,((DCI1A_10MHz_FDD_t *)&dci->dci_pdu[0])->TPC);
         break;
 
       case 100:
-        LOG_I(PHY,"DCI format1A(FDD, 20MHz), rnti %x (%x)\n",dci->rnti,((uint32_t*)&dci->dci_pdu[0])[0]);
-        LOG_I(PHY,"VRB_TYPE %d\n",((DCI1A_20MHz_FDD_t *)&dci->dci_pdu[0])->vrb_type);
-        LOG_I(PHY,"RB_ALLOC %x (NB_RB %d)\n",((DCI1A_20MHz_FDD_t *)&dci->dci_pdu[0])->rballoc,RIV2nb_rb_LUT100[((DCI1A_20MHz_FDD_t *)&dci->dci_pdu[0])->rballoc]);
-        LOG_I(PHY,"MCS %d\n",((DCI1A_20MHz_FDD_t *)&dci->dci_pdu[0])->mcs);
-        LOG_I(PHY,"HARQ_PID %d\n",((DCI1A_20MHz_FDD_t *)&dci->dci_pdu[0])->harq_pid);
-        LOG_I(PHY,"NDI %d\n",((DCI1A_20MHz_FDD_t *)&dci->dci_pdu[0])->ndi);
-        LOG_I(PHY,"RV %d\n",((DCI1A_20MHz_FDD_t *)&dci->dci_pdu[0])->rv);
-        LOG_I(PHY,"TPC %d\n",((DCI1A_20MHz_FDD_t *)&dci->dci_pdu[0])->TPC);
+        LOG_I(PHY,"[PID-%d] DCI format1A (FDD, 20MHz), rnti %x (%x)\n",procID_dump_dci,dci->rnti,((uint32_t*)&dci->dci_pdu[0])[0]);
+        LOG_I(PHY,"[PID-%d] VRB_TYPE %d\n",procID_dump_dci,((DCI1A_20MHz_FDD_t *)&dci->dci_pdu[0])->vrb_type);
+        LOG_I(PHY,"[PID-%d] RB_ALLOC %x (NB_RB %d)\n",procID_dump_dci,((DCI1A_20MHz_FDD_t *)&dci->dci_pdu[0])->rballoc,RIV2nb_rb_LUT100[((DCI1A_20MHz_FDD_t *)&dci->dci_pdu[0])->rballoc]);
+        LOG_I(PHY,"[PID-%d] MCS %d\n",procID_dump_dci,((DCI1A_20MHz_FDD_t *)&dci->dci_pdu[0])->mcs);
+        LOG_I(PHY,"[PID-%d] HARQ_PID %d\n",procID_dump_dci,((DCI1A_20MHz_FDD_t *)&dci->dci_pdu[0])->harq_pid);
+        LOG_I(PHY,"[PID-%d] NDI %d\n",procID_dump_dci,((DCI1A_20MHz_FDD_t *)&dci->dci_pdu[0])->ndi);
+        LOG_I(PHY,"[PID-%d] RV %d\n",procID_dump_dci,((DCI1A_20MHz_FDD_t *)&dci->dci_pdu[0])->rv);
+        LOG_I(PHY,"[PID-%d] TPC %d\n",procID_dump_dci,((DCI1A_20MHz_FDD_t *)&dci->dci_pdu[0])->TPC);
         break;
 
       default:
@@ -3223,17 +3227,17 @@ int dump_dci(LTE_DL_FRAME_PARMS *frame_parms, DCI_ALLOC_t *dci)
       break;
 
     case 50:
-      LOG_I(PHY,"DCI format1C (10MHz), rnti %x (%x)\n",dci->rnti,((uint32_t*)&dci->dci_pdu[0])[0]);
-      LOG_I(PHY,"Ngap %d\n",((DCI1C_10MHz_t *)&dci->dci_pdu[0])->Ngap);
-      LOG_I(PHY,"RB_ALLOC %x (NB_RB %d)\n",((DCI1C_10MHz_t *)&dci->dci_pdu[0])->rballoc,RIV2nb_rb_LUT50[conv_1C_RIV(((DCI1C_10MHz_t *)&dci->dci_pdu[0])->rballoc,50)]);
-      LOG_I(PHY,"MCS %d\n",((DCI1C_10MHz_t *)&dci->dci_pdu[0])->mcs);
+      LOG_I(PHY,"[PID-%d] DCI format1C (10MHz), rnti %x (%x)\n",procID_dump_dci,dci->rnti,((uint32_t*)&dci->dci_pdu[0])[0]);
+      LOG_I(PHY,"[PID-%d] Ngap %d\n",procID_dump_dci,((DCI1C_10MHz_t *)&dci->dci_pdu[0])->Ngap);
+      LOG_I(PHY,"[PID-%d] RB_ALLOC %x (NB_RB %d)\n",procID_dump_dci,((DCI1C_10MHz_t *)&dci->dci_pdu[0])->rballoc,RIV2nb_rb_LUT50[conv_1C_RIV(((DCI1C_10MHz_t *)&dci->dci_pdu[0])->rballoc,50)]);
+      LOG_I(PHY,"[PID-%d] MCS %d\n",procID_dump_dci,((DCI1C_10MHz_t *)&dci->dci_pdu[0])->mcs);
       break;
 
     case 100:
-      LOG_I(PHY,"DCI format1C (20MHz), rnti %x (%x)\n",dci->rnti,((uint32_t*)&dci->dci_pdu[0])[0]);
-      LOG_I(PHY,"Ngap %d\n",((DCI1C_20MHz_t *)&dci->dci_pdu[0])->Ngap);
-      LOG_I(PHY,"RB_ALLOC %x (NB_RB %d)\n",((DCI1C_20MHz_t *)&dci->dci_pdu[0])->rballoc,RIV2nb_rb_LUT50[conv_1C_RIV(((DCI1C_20MHz_t *)&dci->dci_pdu[0])->rballoc,100)]);
-      LOG_I(PHY,"MCS %d\n",((DCI1C_20MHz_t *)&dci->dci_pdu[0])->mcs);
+      LOG_I(PHY,"[PID-%d] DCI format1C (20MHz), rnti %x (%x)\n",procID_dump_dci,dci->rnti,((uint32_t*)&dci->dci_pdu[0])[0]);
+      LOG_I(PHY,"[PID-%d] Ngap %d\n",procID_dump_dci,((DCI1C_20MHz_t *)&dci->dci_pdu[0])->Ngap);
+      LOG_I(PHY,"[PID-%d] RB_ALLOC %x (NB_RB %d)\n",procID_dump_dci,((DCI1C_20MHz_t *)&dci->dci_pdu[0])->rballoc,RIV2nb_rb_LUT50[conv_1C_RIV(((DCI1C_20MHz_t *)&dci->dci_pdu[0])->rballoc,100)]);
+      LOG_I(PHY,"[PID-%d] MCS %d\n",procID_dump_dci,((DCI1C_20MHz_t *)&dci->dci_pdu[0])->mcs);
       break;
 
 
@@ -3291,7 +3295,7 @@ int dump_dci(LTE_DL_FRAME_PARMS *frame_parms, DCI_ALLOC_t *dci)
           break;
 
         case 50:
-          LOG_D(PHY,"DCI format2 2 antennas (TDD 10 MHz), rnti %x (%x): rah %d, rb_alloc %x, mcs %d|%d, harq_pid %d, ndi %d|%d, RV %d|%d, TPC %d, dai %d, tb_swap %d, tpmi %d\n",
+          LOG_I(PHY,"DCI format2 2 antennas (TDD 10 MHz), rnti %x (%x): rah %d, rb_alloc %x, mcs %d|%d, harq_pid %d, ndi %d|%d, RV %d|%d, TPC %d, dai %d, tb_swap %d, tpmi %d\n",
                 dci->rnti,
                 ((uint32_t*)&dci->dci_pdu)[0],
                 ((DCI2_10MHz_2A_TDD_t *)&dci->dci_pdu[0])->rah,
@@ -3310,7 +3314,7 @@ int dump_dci(LTE_DL_FRAME_PARMS *frame_parms, DCI_ALLOC_t *dci)
           break;
 
         case 100:
-          LOG_D(PHY,"DCI format2 2 antennas (TDD 20 MHz), rnti %x (%x): rah %d, rb_alloc %x, mcs %d|%d, harq_pid %d, ndi %d|%d, RV %d|%d, TPC %d, dai %d, tb_swap %d, tpmi %d\n",
+          LOG_I(PHY,"DCI format2 2 antennas (TDD 20 MHz), rnti %x (%x): rah %d, rb_alloc %x, mcs %d|%d, harq_pid %d, ndi %d|%d, RV %d|%d, TPC %d, dai %d, tb_swap %d, tpmi %d\n",
                 dci->rnti,
                 ((uint32_t*)&dci->dci_pdu)[0],
                 ((DCI2_20MHz_2A_TDD_t *)&dci->dci_pdu[0])->rah,
@@ -3458,7 +3462,7 @@ int dump_dci(LTE_DL_FRAME_PARMS *frame_parms, DCI_ALLOC_t *dci)
           break;
 
         case 50:
-          LOG_D(PHY,"DCI format2 2 antennas (FDD, 10 MHz), rnti %x (%x): rah %d, rb_alloc %x, mcs %d|%d, harq_pid %d, ndi %d|%d, RV %d|%d, tb_swap %d, tpmi %d, TPC %d\n",
+          LOG_I(PHY,"DCI format2 2 antennas (FDD, 10 MHz), rnti %x (%x): rah %d, rb_alloc %x, mcs %d|%d, harq_pid %d, ndi %d|%d, RV %d|%d, tb_swap %d, tpmi %d, TPC %d\n",
                 dci->rnti,
                 ((uint32_t*)&dci->dci_pdu)[0],
                 ((DCI2_10MHz_2A_FDD_t *)&dci->dci_pdu[0])->rah,
@@ -3476,7 +3480,7 @@ int dump_dci(LTE_DL_FRAME_PARMS *frame_parms, DCI_ALLOC_t *dci)
           break;
 
         case 100:
-          LOG_D(PHY,"DCI format2 2 antennas (FDD, 20 MHz), rnti %x (%x): rah %d, rb_alloc %x, mcs %d|%d, harq_pid %d, ndi %d|%d, RV %d|%d, tb_swap %d, tpmi %d, TPC %d\n",
+          LOG_I(PHY,"DCI format2 2 antennas (FDD, 20 MHz), rnti %x (%x): rah %d, rb_alloc %x, mcs %d|%d, harq_pid %d, ndi %d|%d, RV %d|%d, tb_swap %d, tpmi %d, TPC %d\n",
                 dci->rnti,
                 ((uint32_t*)&dci->dci_pdu)[0],
                 ((DCI2_20MHz_2A_FDD_t *)&dci->dci_pdu[0])->rah,
@@ -3789,7 +3793,7 @@ int dump_dci(LTE_DL_FRAME_PARMS *frame_parms, DCI_ALLOC_t *dci)
           break;
 
         case 50:
-          LOG_D(PHY,"DCI format2A 2 antennas (FDD, 10 MHz), rnti %x (%"PRIu64"): rah %d, rb_alloc %x, mcs1 %d, mcs2 %d, harq_pid %d, ndi1 %d, ndi2 %d, RV1 %d, RV2 %d, tb_swap %d, TPC %d\n",
+          LOG_I(PHY,"DCI format2A 2 antennas (FDD, 10 MHz), rnti %x (%"PRIu64"): rah %d, rb_alloc %x, mcs1 %d, mcs2 %d, harq_pid %d, ndi1 %d, ndi2 %d, RV1 %d, RV2 %d, tb_swap %d, TPC %d\n",
                 dci->rnti,
                 ((uint64_t*)&dci->dci_pdu)[0],
                 ((DCI2A_10MHz_2A_FDD_t *)&dci->dci_pdu[0])->rah,
@@ -3806,7 +3810,7 @@ int dump_dci(LTE_DL_FRAME_PARMS *frame_parms, DCI_ALLOC_t *dci)
           break;
 
         case 100:
-          LOG_D(PHY,"DCI format2A 2 antennas (FDD, 20 MHz), rnti %x (%"PRIu64"): rah %d, rb_alloc %x, mcs1 %d, mcs2 %d, harq_pid %d, ndi1 %d, ndi2 %d, RV1 %d, RV2 %d, tb_swap %d, TPC %d\n",
+          LOG_I(PHY,"DCI format2A 2 antennas (FDD, 20 MHz), rnti %x (%"PRIu64"): rah %d, rb_alloc %x, mcs1 %d, mcs2 %d, harq_pid %d, ndi1 %d, ndi2 %d, RV1 %d, RV2 %d, tb_swap %d, TPC %d\n",
                 dci->rnti,
                 ((uint64_t*)&dci->dci_pdu)[0],
                 ((DCI2A_20MHz_2A_FDD_t *)&dci->dci_pdu[0])->rah,
@@ -3916,7 +3920,7 @@ int dump_dci(LTE_DL_FRAME_PARMS *frame_parms, DCI_ALLOC_t *dci)
 
   case format1E_2A_M10PRB:
 
-    LOG_D(PHY,"DCI format1E_2A_M10PRB, rnti %x (%8x): harq_pid %d, rah %d, rb_alloc %x, mcs %d, rv %d, tpmi %d, ndi %d, dl_power_offset %d\n",
+    LOG_I(PHY,"DCI format1E_2A_M10PRB, rnti %x (%8x): harq_pid %d, rah %d, rb_alloc %x, mcs %d, rv %d, tpmi %d, ndi %d, dl_power_offset %d\n",
           dci->rnti,
           ((uint32_t *)&dci->dci_pdu)[0],
           ((DCI1E_5MHz_2A_M10PRB_TDD_t *)&dci->dci_pdu[0])->harq_pid,

@@ -1021,6 +1021,8 @@ uint16_t rx_pbch(LTE_UE_COMMON *lte_ue_common_vars,
   crc = (crc16(pbch_a,PBCH_A)>>16) ^
         (((uint16_t)pbch_a[PBCH_A>>3]<<8)+pbch_a[(PBCH_A>>3)+1]);
 
+  //LA: The number of transmit antenna ports at eNodeB "nb_antenna_ports_eNB" is scrambled with the CRC bits.
+  //LA: So, by checking TS 36.212 Table 5.3.1.1-1 (p147) we can determine the number of Tx antennas in the eNB.
   if (crc == 0x0000)
     return(1);
   else if (crc == 0xffff)

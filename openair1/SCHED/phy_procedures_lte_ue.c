@@ -3906,7 +3906,7 @@ void ue_dlsch_procedures(PHY_VARS_UE *ue,
   harq_pid = dlsch0->current_harq_pid;
   is_cw0_active = dlsch0->harq_processes[harq_pid]->status;
 
-  LOG_I(PHY,"[PID-%d] dlsch0 : rnti  = %"PRIu16" (%x), active = %"PRIu8", mode1_flag; = %"PRIu8", sqrt_rho_a; = %"PRIi16", sqrt_rho_b; = %"PRIi16", antenna_alloc = %"PRIu32", Mdlharq = %"PRIu8", Kmimo = %"PRIu8", last_iteration_cnt = %"PRIu8".",
+  LOG_I(PHY,"[PID-%d] dlsch0 : rnti  = %"PRIu16" (%x), active = %"PRIu8", mode1_flag; = %"PRIu8", sqrt_rho_a; = %"PRIi16", sqrt_rho_b; = %"PRIi16", antenna_alloc = %"PRIu32", Mdlharq = %"PRIu8", Kmimo = %"PRIu8", last_iteration_cnt = %"PRIu8", max_turbo_iterations = %"PRIu8".\n",
   		  procID_ue_dlsch_procedures,
   		  dlsch0->rnti,
 		  dlsch0->rnti,
@@ -3917,10 +3917,11 @@ void ue_dlsch_procedures(PHY_VARS_UE *ue,
   		  dlsch0->antenna_alloc,
   		  dlsch0->Mdlharq,
   		  dlsch0->Kmimo,
-  		  dlsch0->last_iteration_cnt
+  		  dlsch0->last_iteration_cnt,
+		  dlsch0->max_turbo_iterations
   		  );
 
-  LOG_I(PHY,"[PID-%d] dlsch0 harq_process: first_tx  = %"PRIu8", DCINdi = %"PRIu8", status = %d, TBS = %"PRIu32", B = %"PRIu32" bits, round = %"PRIu8", mcs = %"PRIu8", Qm = %"PRIu8", rvidx = %"PRIu8".",
+  LOG_I(PHY,"[PID-%d] dlsch0 harq_process: first_tx  = %"PRIu8", DCINdi = %"PRIu8", status = %d, TBS = %"PRIu32", B = %"PRIu32" bits, round = %"PRIu8", mcs = %"PRIu8", Qm = %"PRIu8", rvidx = %"PRIu8".\n",
 		  procID_ue_dlsch_procedures,
 		  dlsch0->harq_processes[harq_pid]->first_tx,
 		  dlsch0->harq_processes[harq_pid]->DCINdi,
@@ -3933,36 +3934,37 @@ void ue_dlsch_procedures(PHY_VARS_UE *ue,
 		  dlsch0->harq_processes[harq_pid]->rvidx
 		  );
 
-  LOG_I(PHY,"[PID-%d] dlsch1 : rnti  = %"PRIu16" (%x), active = %"PRIu8", mode1_flag; = %"PRIu8", sqrt_rho_a; = %"PRIi16", sqrt_rho_b; = %"PRIi16", antenna_alloc = %"PRIu32", Mdlharq = %"PRIu8", Kmimo = %"PRIu8", last_iteration_cnt = %"PRIu8".",
-  		  procID_ue_dlsch_procedures,
-  		  dlsch1->rnti,
-		  dlsch1->rnti,
-  		  dlsch1->active,
-  		  dlsch1->mode1_flag,
-  		  dlsch1->sqrt_rho_a,
-  		  dlsch1->sqrt_rho_b,
-  		  dlsch1->antenna_alloc,
-  		  dlsch1->Mdlharq,
-  		  dlsch1->Kmimo,
-  		  dlsch1->last_iteration_cnt
-  		  );
-  LOG_I(PHY,"[PID-%d] dlsch1 harq_process: first_tx  = %"PRIu8", DCINdi = %"PRIu8", status = %d, TBS = %"PRIu32", B = %"PRIu32" bits, round = %"PRIu8", mcs = %"PRIu8", Qm = %"PRIu8", rvidx = %"PRIu8".",
-		  procID_ue_dlsch_procedures,
-		  dlsch1->harq_processes[harq_pid]->first_tx,
-		  dlsch1->harq_processes[harq_pid]->DCINdi,
-		  dlsch1->harq_processes[harq_pid]->status,
-		  dlsch1->harq_processes[harq_pid]->TBS,
-		  dlsch1->harq_processes[harq_pid]->B,
-		  dlsch1->harq_processes[harq_pid]->round,
-		  dlsch1->harq_processes[harq_pid]->mcs,
-		  dlsch1->harq_processes[harq_pid]->Qm,
-		  dlsch1->harq_processes[harq_pid]->rvidx
-		  );
+
 
   //LAis_cw0_active =1; //LA: Even forcing it to 1, it doesn't work
-  if(dlsch1)
+  if(dlsch1) {
     is_cw1_active = dlsch1->harq_processes[harq_pid]->status;
-
+    LOG_I(PHY,"[PID-%d] dlsch1 : rnti  = %"PRIu16" (%x), active = %"PRIu8", mode1_flag; = %"PRIu8", sqrt_rho_a; = %"PRIi16", sqrt_rho_b; = %"PRIi16", antenna_alloc = %"PRIu32", Mdlharq = %"PRIu8", Kmimo = %"PRIu8", last_iteration_cnt = %"PRIu8".\n",
+    		  procID_ue_dlsch_procedures,
+    		  dlsch1->rnti,
+  		  dlsch1->rnti,
+    		  dlsch1->active,
+    		  dlsch1->mode1_flag,
+    		  dlsch1->sqrt_rho_a,
+    		  dlsch1->sqrt_rho_b,
+    		  dlsch1->antenna_alloc,
+    		  dlsch1->Mdlharq,
+    		  dlsch1->Kmimo,
+    		  dlsch1->last_iteration_cnt
+    		  );
+    LOG_I(PHY,"[PID-%d] dlsch1 harq_process: first_tx  = %"PRIu8", DCINdi = %"PRIu8", status = %d, TBS = %"PRIu32", B = %"PRIu32" bits, round = %"PRIu8", mcs = %"PRIu8", Qm = %"PRIu8", rvidx = %"PRIu8".\n",
+  		  procID_ue_dlsch_procedures,
+  		  dlsch1->harq_processes[harq_pid]->first_tx,
+  		  dlsch1->harq_processes[harq_pid]->DCINdi,
+  		  dlsch1->harq_processes[harq_pid]->status,
+  		  dlsch1->harq_processes[harq_pid]->TBS,
+  		  dlsch1->harq_processes[harq_pid]->B,
+  		  dlsch1->harq_processes[harq_pid]->round,
+  		  dlsch1->harq_processes[harq_pid]->mcs,
+  		  dlsch1->harq_processes[harq_pid]->Qm,
+  		  dlsch1->harq_processes[harq_pid]->rvidx
+  		  );
+  }
   LOG_I(PHY,"AbsSubframe %d.%d Start Turbo Decoder for CW0 [harq_pid %d] ? is_cw0_active = %d \n", frame_rx%1024, subframe_rx, harq_pid, is_cw0_active);
   LOG_I(PHY,"AbsSubframe %d.%d Start Turbo Decoder for CW1 [harq_pid %d] ? is_cw1_active = %d \n", frame_rx%1024, subframe_rx, harq_pid, is_cw1_active);
 
@@ -4164,8 +4166,10 @@ void ue_dlsch_procedures(PHY_VARS_UE *ue,
 #endif
     }
 
+    printf("ret = %d, max_turbo_iterations = %"PRIu8"\n",ret,dlsch0->max_turbo_iterations);
     // Check CRC for CW 0
-    if (ret == (1+dlsch0->max_turbo_iterations)) {
+    if (ret == (1+dlsch0->max_turbo_iterations)) {	//This condition is normally fulfilled for DCI 1C  (fail)
+    	printf("IN IF\n");
       *dlsch_errors=*dlsch_errors+1;
 
       if(dlsch0->rnti != 0xffff)
@@ -4179,8 +4183,9 @@ void ue_dlsch_procedures(PHY_VARS_UE *ue,
             dlsch0->harq_processes[harq_pid]->TBS);
       }
 
-
-    } else {
+      }
+    } else {		//This condition is normally fulfilled for DCI 1A
+    	printf("IN ELSE\n");
         if(dlsch0->rnti != 0xffff)
         {
       LOG_I(PHY,"[PID-%d][UE  %d][PDSCH %x/%d] AbsSubframe %d.%d : Received DLSCH CW0 (rv %d,round %d, mcs %d,TBS %d)\n",procID_ue_dlsch_procedures,
@@ -4202,10 +4207,12 @@ void ue_dlsch_procedures(PHY_VARS_UE *ue,
       LOG_T(PHY,"\n");
 #endif
 
-
+LOG_I(PHY,"[PID-%d] ue->mac_enabled = %d\n",procID_ue_dlsch_procedures,ue->mac_enabled);
       if (ue->mac_enabled == 1) {
+    	  LOG_I(PHY,"[PID-%d] pdsch = %d\n",pdsch);
   switch (pdsch) {
   case PDSCH:
+	  LOG_I(PHY,"[PID-%d] Case: PDSCH\n",procID_ue_dlsch_procedures);
     mac_xface->ue_send_sdu(ue->Mod_id,
          CC_id,
          frame_rx,
@@ -4215,6 +4222,7 @@ void ue_dlsch_procedures(PHY_VARS_UE *ue,
          eNB_id);
     break;
   case SI_PDSCH:
+	  LOG_I(PHY,"[PID-%d] Case: SI_PDSCH\n",procID_ue_dlsch_procedures);
     mac_xface->ue_decode_si(ue->Mod_id,
           CC_id,
           frame_rx,

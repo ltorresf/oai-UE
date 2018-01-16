@@ -27,7 +27,7 @@
 #include "PHY/defs.h"
 #include "filt96_32.h"
 #include "T.h"
-#include "../../../targets/RT/USER/rt_wrapper.h"	//LA
+//#include "../../../targets/RT/USER/rt_wrapper.h"	//LA
 //#define DEBUG_CH
 
 int lte_dl_channel_estimation(PHY_VARS_UE *ue,
@@ -38,7 +38,7 @@ int lte_dl_channel_estimation(PHY_VARS_UE *ue,
                               unsigned char l,
                               unsigned char symbol)
 {
-	int procID_lte_dl_channel_estimation = gettid();
+//	int procID_lte_dl_channel_estimation = gettid();
   int pilot[2][200] __attribute__((aligned(16)));
   unsigned char nu,aarx;
   unsigned short k;
@@ -95,10 +95,11 @@ int lte_dl_channel_estimation(PHY_VARS_UE *ue,
 
   k = (nu + nushift)%6;
 
-  LOG_I(PHY,"[PID-%d] Channel Estimation : ThreadId = %d, eNB_offset = %d, cell_id = %d, ch_offset = %d, OFDM size = %d, Ncp = %d, OFDM symbol within slot (l) = %d, "
+#ifdef DEBUG_CH
+  LOG_D(PHY,"[PID-%d] Channel Estimation : ThreadId = %d, eNB_offset = %d, cell_id = %d, ch_offset = %d, OFDM size = %d, Ncp = %d, OFDM symbol within slot (l) = %d, "
 		  "Slot number (Ns) = %d, RS freq shift (k) = %d\n",procID_lte_dl_channel_estimation,ue->current_thread_id[Ns>>1], eNB_offset,Nid_cell,
 		  ch_offset,ue->frame_parms.ofdm_symbol_size,ue->frame_parms.Ncp,l,Ns,k);
-#ifdef DEBUG_CH
+
   printf("Channel Estimation : ThreadId %d, eNB_offset %d cell_id %d ch_offset %d, OFDM size %d, Ncp=%d, l=%d, Ns=%d, k=%d\n",ue->current_thread_id[Ns>>1], eNB_offset,Nid_cell,ch_offset,ue->frame_parms.ofdm_symbol_size,
          ue->frame_parms.Ncp,l,Ns,k);
 #endif

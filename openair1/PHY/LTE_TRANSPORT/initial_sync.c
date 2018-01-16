@@ -648,7 +648,7 @@ int initial_sync(PHY_VARS_UE *ue, runmode_t mode)
   LOG_I(PHY,"[UE%d] Initial sync : Estimated power: %d dB\n",ue->Mod_id,ue->measurements.rx_power_avg_dB[0] );
 #endif
 
-//#ifndef OAI_USRP //LA
+#ifndef OAI_USRP //LA
 #ifndef OAI_BLADERF
 #ifndef OAI_LMSSDR
   phy_adjust_gain(ue,
@@ -656,12 +656,12 @@ int initial_sync(PHY_VARS_UE *ue, runmode_t mode)
 		  0);
 #endif
 #endif
-//#endif
+#endif
 
   }
   else {
 
-//#ifndef OAI_USRP
+#ifndef OAI_USRP
 #ifndef OAI_BLADERF
 #ifndef OAI_LMSSDR
   phy_adjust_gain(ue,
@@ -669,7 +669,7 @@ int initial_sync(PHY_VARS_UE *ue, runmode_t mode)
 		  0);
 #endif
 #endif
-//#endif
+#endif
 
   }
 

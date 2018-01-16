@@ -35,7 +35,7 @@ int slot_fep(PHY_VARS_UE *ue,
 	     int reset_freq_est)		//LA: always zero (false)
 {
 
-	int procID_slot_fep = gettid();
+//	int procID_slot_fep = gettid();
 
   LTE_DL_FRAME_PARMS *frame_parms = &ue->frame_parms;
   LTE_UE_COMMON *common_vars   = &ue->common_vars;
@@ -247,8 +247,8 @@ int slot_fep(PHY_VARS_UE *ue,
 #ifdef DEBUG_FEP
   printf("slot_fep: done\n");
 #endif
-  LOG_I(PHY,"[PID-%d] slot_fep: frame %d: slot %d, symbol %d, nb_prefix_samples %d, nb_prefix_samples0 %d, slot_offset %d, subframe_offset %d, sample_offset %d,rx_offset %d, frame_length_samples %d\n", procID_slot_fep,ue->proc.proc_rxtx[(Ns>>1)&1].frame_rx,Ns, symbol,
-                  nb_prefix_samples,nb_prefix_samples0,slot_offset,subframe_offset,sample_offset,rx_offset,frame_length_samples);
+//  LOG_I(PHY,"[PID-%d] slot_fep: frame %d: slot %d, symbol %d, nb_prefix_samples %d, nb_prefix_samples0 %d, slot_offset %d, subframe_offset %d, sample_offset %d,rx_offset %d, frame_length_samples %d\n", procID_slot_fep,ue->proc.proc_rxtx[(Ns>>1)&1].frame_rx,Ns, symbol,
+//LA                  nb_prefix_samples,nb_prefix_samples0,slot_offset,subframe_offset,sample_offset,rx_offset,frame_length_samples);
   return(0);
 }
 

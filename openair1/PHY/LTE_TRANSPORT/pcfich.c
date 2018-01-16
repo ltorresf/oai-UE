@@ -225,8 +225,8 @@ uint8_t rx_pcfich(LTE_DL_FRAME_PARMS *frame_parms,
                   LTE_UE_PDCCH *lte_ue_pdcch_vars,
                   MIMO_mode_t mimo_mode)
 {
-	int procID_rx_pcfich = gettid();
-	printf("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ [PID-%d][Start: rx_pcfich] $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$\n",procID_rx_pcfich);
+	//int procID_rx_pcfich = gettid();
+	//printf("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ [PID-%d][Start: rx_pcfich] $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$\n",procID_rx_pcfich);
   uint8_t pcfich_quad;
   uint8_t i,j;
   uint16_t reg_offset;
@@ -315,6 +315,6 @@ uint8_t rx_pcfich(LTE_DL_FRAME_PARMS *frame_parms,
 #ifdef DEBUG_PCFICH
   msg("[PHY] PCFICH detected for %d PDCCH symbols\n",num_pdcch_symbols);
 #endif
-  printf("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ [PID-%d][End: rx_pcfich] $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$\n",procID_rx_pcfich);
+  //printf("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ [PID-%d][End: rx_pcfich] $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$\n",procID_rx_pcfich);
   return(num_pdcch_symbols);
 }

@@ -347,7 +347,7 @@ mac_rrc_data_ind(
 //--------------------------------------------------------------------------
 {
 	int procID_mac_rrc_data_ind = gettid();
-	printf("{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{ [PID-%d] [Start: mac_rrc_data_ind] }}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}\n",procID_mac_rrc_data_ind);
+	printf("+++++++++++++++++++++++++++++++++++++++++++++ [PID-%d] [Start: mac_rrc_data_ind] +++++++++++++++++++++++++++++++++++++++++++++\n",procID_mac_rrc_data_ind);
   SRB_INFO *Srb_info;
   protocol_ctxt_t ctxt;
   sdu_size_t      sdu_size = 0;
@@ -391,6 +391,7 @@ mac_rrc_data_ind(
         itti_send_msg_to_task (TASK_RRC_UE, ctxt.instance, message_p);
       }
 #else
+      LOG_I(PHY,"[PID-%d] Just before executing decode_BCCH_DLSCH_Message",procID_mac_rrc_data_ind);
       decode_BCCH_DLSCH_Message(&ctxt,eNB_indexP,(uint8_t*)sduP,sdu_lenP, 0, 0);
 #endif
     }
@@ -504,7 +505,7 @@ mac_rrc_data_ind(
 
 #endif
   }
-  printf("{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{ [PID-%d] [End: mac_rrc_data_ind] }}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}\n",procID_mac_rrc_data_ind);
+  printf("+++++++++++++++++++++++++++++++++++++++++++++ [PID-%d] [End: mac_rrc_data_ind] +++++++++++++++++++++++++++++++++++++++++++++\n",procID_mac_rrc_data_ind);
   return(0);
 
 }

@@ -45,7 +45,7 @@
 #include "SCHED/phy_procedures_emos.h"
 #endif
 
-#define DEBUG_PHY_PROC
+//LA#define DEBUG_PHY_PROC
 
 #ifndef PUCCH
 #define PUCCH
@@ -2674,7 +2674,7 @@ void ue_measurement_procedures(
 
     VCD_SIGNAL_DUMPER_DUMP_FUNCTION_BY_NAME(VCD_SIGNAL_DUMPER_FUNCTIONS_UE_GAIN_CONTROL, VCD_FUNCTION_IN);
 
-//#ifndef OAI_USRP //LA
+#ifndef OAI_USRP //LA
 #ifndef OAI_BLADERF
 #ifndef OAI_LMSSDR
     phy_adjust_gain (ue,
@@ -2682,7 +2682,7 @@ void ue_measurement_procedures(
 			0);
 #endif
 #endif
-//#endif
+#endif
 
     VCD_SIGNAL_DUMPER_DUMP_FUNCTION_BY_NAME(VCD_SIGNAL_DUMPER_FUNCTIONS_UE_GAIN_CONTROL, VCD_FUNCTION_OUT);
 
@@ -3104,7 +3104,7 @@ int ue_pdcch_procedures(uint8_t eNB_id,PHY_VARS_UE *ue,UE_rxtx_proc_t *proc,uint
   if (abstraction_flag == 0)  {	//LA: always = 0, when called by "UE_thread_rxn_txnp4"
 
     VCD_SIGNAL_DUMPER_DUMP_FUNCTION_BY_NAME(VCD_SIGNAL_DUMPER_FUNCTIONS_RX_PDCCH, VCD_FUNCTION_IN);
-    LOG_I(PHY,"[PID-%d] ue->frame_parms.mode1_flag = %"PRIu8"\n",procID_initial_pdcch,ue->frame_parms.mode1_flag);  //LA: This value is set to 0 (ue->frame_parms.mode1_flag = 0), then ALAMOUTI is inputed. Why is set to 0?
+    //LALOG_I(PHY,"[PID-%d] ue->frame_parms.mode1_flag = %"PRIu8"\n",procID_initial_pdcch,ue->frame_parms.mode1_flag);  //LA: This value is set to 0 (ue->frame_parms.mode1_flag = 0), then ALAMOUTI is inputed. Why is set to 0?
     rx_pdcch(ue,
              proc->frame_rx,	//LA: Frame number
              subframe_rx,		//LA: subframe number
@@ -3122,7 +3122,7 @@ int ue_pdcch_procedures(uint8_t eNB_id,PHY_VARS_UE *ue,UE_rxtx_proc_t *proc,uint
     //agregation level == FF means no configuration on
     if(ue->pdcch_vars[ue->current_thread_id[subframe_rx]][eNB_id]->agregationLevel == 0xFF || ue->decode_SIB)
     {
-    		LOG_I(PHY,"[PID-%d] Searching all possible DCIs (common and UE-specific search-spaces)\n",procID_initial_pdcch);	//LA: this is executed by default
+//LA    		LOG_I(PHY,"[PID-%d] Searching all possible DCIs (common and UE-specific search-spaces)\n",procID_initial_pdcch);	//LA: this is executed by default
         // search all possible dcis
         dci_cnt = dci_decoding_procedure(ue,
                 dci_alloc_rx,
@@ -3232,7 +3232,7 @@ int ue_pdcch_procedures(uint8_t eNB_id,PHY_VARS_UE *ue,UE_rxtx_proc_t *proc,uint
 	(dci_alloc_rx[i].rnti == ue->pdcch_vars[ue->current_thread_id[subframe_rx]][eNB_id]->crnti) &&
 	(dci_alloc_rx[i].format != format0)) {
 
-      LOG_I(PHY,"[PID-%d][UE  %d][DCI][PDSCH %x] AbsSubframe %d.%d: format %d, num_pdcch_symbols %d, nCCE %d, total CCEs %d\n",
+/*LA      LOG_I(PHY,"[PID-%d][UE  %d][DCI][PDSCH %x] AbsSubframe %d.%d: format %d, num_pdcch_symbols %d, nCCE %d, total CCEs %d\n",
     		  procID_initial_pdcch,
 	    ue->Mod_id,dci_alloc_rx[i].rnti,
 	    frame_rx%1024,subframe_rx,
@@ -3240,7 +3240,7 @@ int ue_pdcch_procedures(uint8_t eNB_id,PHY_VARS_UE *ue,UE_rxtx_proc_t *proc,uint
 	    ue->pdcch_vars[ue->current_thread_id[subframe_rx]][eNB_id]->num_pdcch_symbols,
 	    ue->pdcch_vars[ue->current_thread_id[subframe_rx]][eNB_id]->nCCE[subframe_rx],
 	    get_nCCE(3,&ue->frame_parms,get_mi(&ue->frame_parms,0)));
-
+*/
       //dump_dci(&ue->frame_parms, &dci_alloc_rx[i]);
 
       if ((ue->UE_mode[eNB_id] > PRACH) &&
@@ -3905,6 +3905,60 @@ void ue_dlsch_procedures(PHY_VARS_UE *ue,
 
   harq_pid = dlsch0->current_harq_pid;
   is_cw0_active = dlsch0->harq_processes[harq_pid]->status;
+
+  LOG_I(PHY,"[PID-%d] dlsch0 : rnti  = %"PRIu16" (%x), active = %"PRIu8", mode1_flag; = %"PRIu8", sqrt_rho_a; = %"PRIi16", sqrt_rho_b; = %"PRIi16", antenna_alloc = %"PRIu32", Mdlharq = %"PRIu8", Kmimo = %"PRIu8", last_iteration_cnt = %"PRIu8".",
+  		  procID_ue_dlsch_procedures,
+  		  dlsch0->rnti,
+		  dlsch0->rnti,
+  		  dlsch0->active,
+  		  dlsch0->mode1_flag,
+  		  dlsch0->sqrt_rho_a,
+  		  dlsch0->sqrt_rho_b,
+  		  dlsch0->antenna_alloc,
+  		  dlsch0->Mdlharq,
+  		  dlsch0->Kmimo,
+  		  dlsch0->last_iteration_cnt
+  		  );
+
+  LOG_I(PHY,"[PID-%d] dlsch0 harq_process: first_tx  = %"PRIu8", DCINdi = %"PRIu8", status = %d, TBS = %"PRIu32", B = %"PRIu32" bits, round = %"PRIu8", mcs = %"PRIu8", Qm = %"PRIu8", rvidx = %"PRIu8".",
+		  procID_ue_dlsch_procedures,
+		  dlsch0->harq_processes[harq_pid]->first_tx,
+		  dlsch0->harq_processes[harq_pid]->DCINdi,
+		  dlsch0->harq_processes[harq_pid]->status,
+		  dlsch0->harq_processes[harq_pid]->TBS,
+		  dlsch0->harq_processes[harq_pid]->B,
+		  dlsch0->harq_processes[harq_pid]->round,
+		  dlsch0->harq_processes[harq_pid]->mcs,
+		  dlsch0->harq_processes[harq_pid]->Qm,
+		  dlsch0->harq_processes[harq_pid]->rvidx
+		  );
+
+  LOG_I(PHY,"[PID-%d] dlsch1 : rnti  = %"PRIu16" (%x), active = %"PRIu8", mode1_flag; = %"PRIu8", sqrt_rho_a; = %"PRIi16", sqrt_rho_b; = %"PRIi16", antenna_alloc = %"PRIu32", Mdlharq = %"PRIu8", Kmimo = %"PRIu8", last_iteration_cnt = %"PRIu8".",
+  		  procID_ue_dlsch_procedures,
+  		  dlsch1->rnti,
+		  dlsch1->rnti,
+  		  dlsch1->active,
+  		  dlsch1->mode1_flag,
+  		  dlsch1->sqrt_rho_a,
+  		  dlsch1->sqrt_rho_b,
+  		  dlsch1->antenna_alloc,
+  		  dlsch1->Mdlharq,
+  		  dlsch1->Kmimo,
+  		  dlsch1->last_iteration_cnt
+  		  );
+  LOG_I(PHY,"[PID-%d] dlsch1 harq_process: first_tx  = %"PRIu8", DCINdi = %"PRIu8", status = %d, TBS = %"PRIu32", B = %"PRIu32" bits, round = %"PRIu8", mcs = %"PRIu8", Qm = %"PRIu8", rvidx = %"PRIu8".",
+		  procID_ue_dlsch_procedures,
+		  dlsch1->harq_processes[harq_pid]->first_tx,
+		  dlsch1->harq_processes[harq_pid]->DCINdi,
+		  dlsch1->harq_processes[harq_pid]->status,
+		  dlsch1->harq_processes[harq_pid]->TBS,
+		  dlsch1->harq_processes[harq_pid]->B,
+		  dlsch1->harq_processes[harq_pid]->round,
+		  dlsch1->harq_processes[harq_pid]->mcs,
+		  dlsch1->harq_processes[harq_pid]->Qm,
+		  dlsch1->harq_processes[harq_pid]->rvidx
+		  );
+
   //LAis_cw0_active =1; //LA: Even forcing it to 1, it doesn't work
   if(dlsch1)
     is_cw1_active = dlsch1->harq_processes[harq_pid]->status;

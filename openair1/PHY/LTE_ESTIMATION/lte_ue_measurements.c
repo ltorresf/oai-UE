@@ -265,7 +265,7 @@ void ue_rrc_measurements(PHY_VARS_UE *ue,
         ue->measurements.n0_power_tot_dB = (unsigned short) dB_fixed(ue->measurements.n0_power_tot/(12*aarx));
         ue->measurements.n0_power_tot_dBm = ue->measurements.n0_power_tot_dB - ue->rx_total_gain_dB - dB_fixed(ue->frame_parms.ofdm_symbol_size);
         } else {
-            LOG_E(PHY, "Not yet implemented: noise power calculation when prefix length = EXTENDED\n");
+            //LALOG_E(PHY, "Not yet implemented: noise power calculation when prefix length = EXTENDED\n");
         }
         }
         else if ((ue->frame_parms.frame_type == TDD) &&
@@ -347,7 +347,7 @@ void ue_rrc_measurements(PHY_VARS_UE *ue,
         k = (nu + nushift)%6;
 #ifdef DEBUG_MEAS_RRC
         //LOG_I(PHY,"[UE %d] Frame %d subframe %d Doing ue_rrc_measurements rsrp/rssi (Nid_cell %d, nushift %d, eNB_offset %d, k %d, l %d)\n",ue->Mod_id,ue->proc.proc_rxtx[subframe&1].frame_rx,subframe,Nid_cell,nushift,
-        	LOG_I(PHY,"[PID-%d][UE %d] Frame %d subframe %d Doing ue_rrc_measurements (RSRP/RSCP/RSSI measurements) (Nid_cell = %d, nushift = %d, "
+        	LOG_D(PHY,"[PID-%d][UE %d] Frame %d subframe %d Doing ue_rrc_measurements (RSRP/RSCP/RSSI measurements) (Nid_cell = %d, nushift = %d, "
         			"eNB_offset = %d, RS freq shift (k) = %d, OFDM symbol (l) = %d)\n",procID_ue_rrc_measurements,ue->Mod_id,
 					ue->proc.proc_rxtx[subframe&1].frame_rx,subframe,Nid_cell,nushift,
 					eNB_offset,k,l);

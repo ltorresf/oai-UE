@@ -4181,7 +4181,7 @@ void ue_dlsch_procedures(PHY_VARS_UE *ue,
             dlsch0->harq_processes[harq_pid]->round,
             dlsch0->harq_processes[harq_pid]->mcs,
             dlsch0->harq_processes[harq_pid]->TBS);
-      }
+
 
       }
     } else {		//This condition is normally fulfilled for DCI 1A

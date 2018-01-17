@@ -5149,7 +5149,7 @@ int phy_procedures_UE_RX(PHY_VARS_UE *ue,UE_rxtx_proc_t *proc,uint8_t eNB_id,
 			 uint8_t abstraction_flag,uint8_t do_pdcch_flag,runmode_t mode,
 			 relaying_type_t r_type,PHY_VARS_RN *phy_vars_rn) {
 	int procID_phy_procedures_UE_RX = gettid();
-	printf("*************************************************************** [PID-%d] [Start: phy_procedures_UE_RX] ***************************************************************\n",procID_phy_procedures_UE_RX);
+	printf("*************************************************************** [PID-%d] [Start: phy_procedures_UE_RX] %d.%d ***************************************************************\n",procID_phy_procedures_UE_RX,proc->frame_rx%1024, proc->subframe_rx);
   int l,l2;
   int pilot1;
   int pmch_flag=0;

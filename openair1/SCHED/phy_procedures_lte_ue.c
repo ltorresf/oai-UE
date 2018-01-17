@@ -3210,7 +3210,7 @@ int ue_pdcch_procedures(uint8_t eNB_id,PHY_VARS_UE *ue,UE_rxtx_proc_t *proc,uint
 
   LOG_D(PHY,"current_thread %d next1_thread %d next2_thread %d \n", ue->current_thread_id[subframe_rx], next1_thread_id, next2_thread_id);
 
-  LOG_I(PHY,"[PID-%d][UE  %d] AbsSubFrame %d.%d, Mode %s: DCI found %i --> rnti %x / crnti %x : format %d\n",
+  LOG_I(PHY,"[PID-%d][UE  %d] AbsSubFrame %d.%d, Mode %s: DCI found %i --> rnti %x / crnti %x : DCI format %d [2:1A, 4:1C]\n",
 		  procID_initial_pdcch,
        ue->Mod_id,frame_rx%1024,subframe_rx,mode_string[ue->UE_mode[eNB_id]],
        dci_cnt,
@@ -4169,7 +4169,7 @@ void ue_dlsch_procedures(PHY_VARS_UE *ue,
     printf("ret = %d, max_turbo_iterations = %"PRIu8"\n",ret,dlsch0->max_turbo_iterations);
     // Check CRC for CW 0
     if (ret == (1+dlsch0->max_turbo_iterations)) {	//This condition is normally fulfilled for DCI 1C  (fail)
-    	printf("IN IF\n");
+    	printf("IN IF rnti %x (fails)\n",dlsch0->rnti);
       *dlsch_errors=*dlsch_errors+1;
 
       if(dlsch0->rnti != 0xffff)
@@ -4185,7 +4185,7 @@ void ue_dlsch_procedures(PHY_VARS_UE *ue,
 
       }
     } else {		//This condition is normally fulfilled for DCI 1A
-    	printf("IN ELSE\n");
+    	printf("IN ELSE rnti %x (success)\n",dlsch0->rnti);
         if(dlsch0->rnti != 0xffff)
         {
       LOG_I(PHY,"[PID-%d][UE  %d][PDSCH %x/%d] AbsSubframe %d.%d : Received DLSCH CW0 (rv %d,round %d, mcs %d,TBS %d)\n",procID_ue_dlsch_procedures,

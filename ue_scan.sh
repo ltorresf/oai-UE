@@ -9,8 +9,10 @@ cd cmake_targets/lte_build_oai/build/
 #a=2611250000
 #a=2646900000
 #a=2110000000
-a=1845000000
-#a=1815000000
+#a=1830000000	# Deutsche Telekom band 3 (10 MHz)
+#a=806000000	#Vodafone band 20 (10MHz)
+a=796000000	#E-Plus (O2) band 20 (10MHz)
+#a=1815000000	#Deutsche Telekom band 3 (20 MHz)
 gain=125
 rb=50
 

@@ -4209,7 +4209,7 @@ void ue_dlsch_procedures(PHY_VARS_UE *ue,
 
 LOG_I(PHY,"[PID-%d] ue->mac_enabled = %d\n",procID_ue_dlsch_procedures,ue->mac_enabled);
       if (ue->mac_enabled == 1) {
-    	  LOG_I(PHY,"[PID-%d] pdsch = %d\n",pdsch);
+    	  LOG_I(PHY,"[PID-%d] pdsch = %d\n",procID_ue_dlsch_procedures,pdsch);
   switch (pdsch) {
   case PDSCH:
 	  LOG_I(PHY,"[PID-%d] Case: PDSCH\n",procID_ue_dlsch_procedures);
@@ -5447,7 +5447,7 @@ int phy_procedures_UE_RX(PHY_VARS_UE *ue,UE_rxtx_proc_t *proc,uint8_t eNB_id,
   //LA: MIB reading when processing sub-frame 0
   if ( (subframe_rx == 0) && (ue->decode_MIB == 1))
   {
-	  LOG_I("[PID-%d] Processing PBCH & reading MIB (Only executed when processing sub-frame 0)\n",procID_phy_procedures_UE_RX);
+	  LOG_I(PHY,"[PID-%d] Processing PBCH & reading MIB (Only executed when processing sub-frame 0)\n",procID_phy_procedures_UE_RX);
     ue_pbch_procedures(eNB_id,ue,proc,abstraction_flag);
   }
 

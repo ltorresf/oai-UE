@@ -36,7 +36,9 @@
 #include "PHY/CODING/extern.h"
 #include "SCHED/extern.h"
 #include "SIMULATION/TOOLS/defs.h"
-//#define DEBUG_DLSCH_DECODING
+#include "../../../targets/RT/USER/rt_wrapper.h"
+
+#define DEBUG_DLSCH_DECODING
 
 extern double cpuf;
 
@@ -166,7 +168,8 @@ uint32_t  dlsch_decoding(PHY_VARS_UE *phy_vars_ue,
                          uint8_t is_crnti,
                          uint8_t llr8_flag)
 {
-
+	int procID_dlsch_decoding = gettid();
+	printf("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& [PID-%d] [Start: dlsch_decoding] &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&\n",procID_dlsch_decoding);
 #if UE_TIMING_TRACE
   time_stats_t *dlsch_rate_unmatching_stats=&phy_vars_ue->dlsch_rate_unmatching_stats;
   time_stats_t *dlsch_turbo_decoding_stats=&phy_vars_ue->dlsch_turbo_decoding_stats;
@@ -754,7 +757,7 @@ uint32_t  dlsch_decoding(PHY_VARS_UE *phy_vars_ue,
   }
 
   dlsch->last_iteration_cnt = ret;
-
+  printf("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& [PID-%d] [Start: dlsch_decoding] &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&\n",procID_dlsch_decoding);
   return(ret);
 }
 

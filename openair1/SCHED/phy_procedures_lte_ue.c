@@ -3978,7 +3978,7 @@ void ue_dlsch_procedures(PHY_VARS_UE *ue,
       dlsch0->Kmimo = 1;
   }
   if (1) {
-	  LOG_I(PHY,"[PID-%d] pdsch = %d\n",procID_ue_dlsch_procedures,pdsch);
+	  LOG_I(PHY,"[PID-%d] pdsch = %d. Initializing pdsch_vars.\n",procID_ue_dlsch_procedures,pdsch);
     switch (pdsch) {
     case SI_PDSCH:
       pdsch_vars = ue->pdsch_vars_SI[eNB_id];
@@ -4153,7 +4153,7 @@ void ue_dlsch_procedures(PHY_VARS_UE *ue,
                   frame_rx%1024, subframe_rx,(ue->dlsch_decoding_stats[ue->current_thread_id[subframe_rx]].p_time)/(cpuf*1000.0));
       }
 
-      LOG_D(PHY," ------ end turbo decoder for AbsSubframe %d.%d ------  \n", frame_rx, subframe_rx);
+      LOG_I(PHY,"[PID-%d] ------ end turbo decoder for AbsSubframe %d.%d ------  \n", procID_ue_dlsch_procedures,frame_rx, subframe_rx);
     }
 
     else {
@@ -4166,7 +4166,7 @@ void ue_dlsch_procedures(PHY_VARS_UE *ue,
 #endif
     }
 
-    printf("ret = %d, max_turbo_iterations = %"PRIu8"\n",ret,dlsch0->max_turbo_iterations);
+    LOG_I(PHY,"ret = %d, max_turbo_iterations = %"PRIu8"\n",ret,dlsch0->max_turbo_iterations);
     // Check CRC for CW 0
     if (ret == (1+dlsch0->max_turbo_iterations)) {	//This condition is normally fulfilled for DCI 1C  (fail)
     	printf("IN IF rnti %x (fails)\n",dlsch0->rnti);

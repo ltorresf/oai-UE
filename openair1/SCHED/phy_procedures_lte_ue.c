@@ -3119,10 +3119,12 @@ int ue_pdcch_procedures(uint8_t eNB_id,PHY_VARS_UE *ue,UE_rxtx_proc_t *proc,uint
 
     //printf("Decode SIB frame param agregation + DCI %d %d \n",agregationLevel,dciFormat);
 
+    LOG_I(PHY,"[PID-%d] agregationLevel = %x, decode_SIB = %d\n",procID_initial_pdcch,ue->pdcch_vars[ue->current_thread_id[subframe_rx]][eNB_id]->agregationLevel,ue->decode_SIB);	//LA
+
     //agregation level == FF means no configuration on
     if(ue->pdcch_vars[ue->current_thread_id[subframe_rx]][eNB_id]->agregationLevel == 0xFF || ue->decode_SIB)
     {
-//LA    		LOG_I(PHY,"[PID-%d] Searching all possible DCIs (common and UE-specific search-spaces)\n",procID_initial_pdcch);	//LA: this is executed by default
+    		LOG_I(PHY,"[PID-%d] Searching all possible DCIs (common and UE-specific search-spaces)\n",procID_initial_pdcch);	//LA: this is executed by default
         // search all possible dcis
         dci_cnt = dci_decoding_procedure(ue,
                 dci_alloc_rx,

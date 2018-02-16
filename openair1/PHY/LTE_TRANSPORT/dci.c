@@ -3495,6 +3495,7 @@ uint16_t dci_decoding_procedure(PHY_VARS_UE *ue,
     break;
   }
 
+  //LA: do_common If 1 perform search in common search-space else ue-specific search-space
   //LA: 1 in our case. After this if-statement is executed, the dci_cnt value is returned in the next if-statement and the function is exited.
   if (do_common == 1) {
 #ifdef DEBUG_DCI_DECODING
@@ -3506,6 +3507,7 @@ uint16_t dci_decoding_procedure(PHY_VARS_UE *ue,
 
     // First check common search spaces at aggregation 4 (SI_RNTI, P_RNTI and RA_RNTI format 0/1A),
     // and UE_SPEC format0 (PUSCH) too while we're at it
+    start_meas(&ue->generic_stat);//LA
     dci_decoding_procedure0(pdcch_vars,1,mode,subframe,
                             dci_alloc,
                             eNB_id,
@@ -3528,6 +3530,9 @@ uint16_t dci_decoding_procedure(PHY_VARS_UE *ue,
                             &CCEmap0,
                             &CCEmap1,
                             &CCEmap2);
+    stop_meas(&ue->generic_stat);//LA
+    printf("Machine operations: %lli, Time: %15.3f ms \n",(&ue->generic_stat)->p_time,((&ue->generic_stat)->p_time/(cpu_freq_GHz*1000000.0))); //LA
+
 
     if ((CCEmap0==0xffff) ||
         ((format0_found==1)&&(format_c_found==1)))

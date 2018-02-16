@@ -3937,7 +3937,8 @@ int dump_dci(LTE_DL_FRAME_PARMS *frame_parms, DCI_ALLOC_t *dci)
     break;
 
   default:
-    LOG_E(PHY,"dci_tools.c: dump_dci, unknown format %d\n",dci->format);
+    //LA:LOG_E(PHY,"dci_tools.c: dump_dci, unknown format %d\n",dci->format);
+	  printf("Error: dci->format = %d.\n",dci->format);
     return(-1);
   }
 

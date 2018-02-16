@@ -43,7 +43,7 @@
 #include "assertions.h" 
 #include "T.h"
 
-//#include "../../../targets/RT/USER/rt_wrapper.h"
+#include "../../../targets/RT/USER/rt_wrapper.h"
 
 //#define DEBUG_DCI_ENCODING 1
 //#define DEBUG_DCI_DECODING 1
@@ -2856,7 +2856,8 @@ void dci_decoding_procedure0(LTE_UE_PDCCH **pdcch_vars,
                              uint32_t *CCEmap1,
                              uint32_t *CCEmap2)
 {
-	//int procID_dci_decoding_procedure0 = gettid();
+	int procID_dci_decoding_procedure0 = gettid();
+	printf("Start: dci_decoding_procedure0\n");
   uint16_t crc,CCEind,nCCE;
   uint32_t *CCEmap=NULL,CCEmap_mask=0;
   int L2=(1<<L);
@@ -2983,14 +2984,14 @@ void dci_decoding_procedure0(LTE_UE_PDCCH **pdcch_vars,
         printf("dci_decoded_output[%d] => %x\n",i,dci_decoded_output[i]);
       */
       crc = (crc16(&dci_decoded_output[current_thread_id][0],sizeof_bits)>>16) ^ extract_crc(&dci_decoded_output[current_thread_id][0],sizeof_bits);
+      LOG_I(PHY,"[PID-%d] m = %d, crc = %x\n",procID_dci_decoding_procedure0,m,crc);
+
 #ifdef DEBUG_DCI_DECODING
       LOG_I(PHY,"[PID-%d] crc =>%x\n",procID_dci_decoding_procedure0,crc);
 #endif
 
-      if (((L>1) && ((crc == si_rnti)||
-		     (crc == p_rnti)||
-                     (crc == ra_rnti)))||
-          (crc == pdcch_vars[eNB_id]->crnti))   {
+      //LA:if (((L>1) && ((crc == si_rnti)|| (crc == p_rnti)|| (crc == ra_rnti))) || (crc == pdcch_vars[eNB_id]->crnti))   {
+	  if (L>1) { //LA: C-RNTI used for DCI decoding no matter its value
         dci_alloc[*dci_cnt].dci_length = sizeof_bits;
         dci_alloc[*dci_cnt].rnti       = crc;
         dci_alloc[*dci_cnt].L          = L;
@@ -3089,7 +3090,7 @@ void dci_decoding_procedure0(LTE_UE_PDCCH **pdcch_vars,
 
 #endif
         dump_dci(frame_parms,&dci_alloc[*dci_cnt-1]);
-         return;
+         //LA:return;
       } // rnti match
     }  // CCEmap_cand == 0
 /*    
@@ -3495,6 +3496,8 @@ uint16_t dci_decoding_procedure(PHY_VARS_UE *ue,
     break;
   }
 
+
+  LOG_I(PHY,"Searching all possible DCIs (common search-spaces)\n");
   //LA: do_common If 1 perform search in common search-space else ue-specific search-space
   //LA: 1 in our case. After this if-statement is executed, the dci_cnt value is returned in the next if-statement and the function is exited.
   if (do_common == 1) {
@@ -3517,7 +3520,7 @@ uint16_t dci_decoding_procedure(PHY_VARS_UE *ue,
                             ((ue->decode_SIB == 1) ? SI_RNTI : 0) ,
                             ra_rnti,
 			    P_RNTI,
-                            2,
+                            2, //LA: aggregation level divided by 2
                             format1A,
                             format1A,
                             format1A,
@@ -3531,13 +3534,12 @@ uint16_t dci_decoding_procedure(PHY_VARS_UE *ue,
                             &CCEmap1,
                             &CCEmap2);
     stop_meas(&ue->generic_stat);//LA
-    printf("Machine operations: %lli, Time: %15.3f ms \n",(&ue->generic_stat)->p_time,((&ue->generic_stat)->p_time/(cpu_freq_GHz*1000000.0))); //LA
+      printf("1. Machine operations: %lli, Time: %15.3f ms \n",(&ue->generic_stat)->p_time,((&ue->generic_stat)->p_time/(cpu_freq_GHz*1000000.0))); //LA
 
+    //LA:if ((CCEmap0==0xffff) || ((format0_found==1)&&(format_c_found==1)))
+    //  return(dci_cnt);
 
-    if ((CCEmap0==0xffff) ||
-        ((format0_found==1)&&(format_c_found==1)))
-      return(dci_cnt);
-
+    start_meas(&ue->generic_stat);//LA
     // Now check common search spaces at aggregation 4 (SI_RNTI,P_RNTI and RA_RNTI and C-RNTI format 1C),
     // and UE_SPEC format0 (PUSCH) too while we're at it
     dci_decoding_procedure0(pdcch_vars,1,mode,subframe,
@@ -3562,10 +3564,11 @@ uint16_t dci_decoding_procedure(PHY_VARS_UE *ue,
                             &CCEmap0,
                             &CCEmap1,
                             &CCEmap2);
+    stop_meas(&ue->generic_stat);//LA
+      printf("2. Machine operations: %lli, Time: %15.3f ms \n",(&ue->generic_stat)->p_time,((&ue->generic_stat)->p_time/(cpu_freq_GHz*1000000.0))); //LA
 
-    if ((CCEmap0==0xffff) ||
-        ((format0_found==1)&&(format_c_found==1)))
-      return(dci_cnt);
+    //LA:if ((CCEmap0==0xffff) || ((format0_found==1)&&(format_c_found==1)))
+    //  return(dci_cnt);
 
     // Now check common search spaces at aggregation 8 (SI_RNTI,P_RNTI and RA_RNTI format 1A),
     // and UE_SPEC format0 (PUSCH) too while we're at it
@@ -3573,6 +3576,7 @@ uint16_t dci_decoding_procedure(PHY_VARS_UE *ue,
 #ifdef DEBUG_DCI_DECODING
     printf("[PID-%d][DCI search] doing common search/format0 aggregation 8\n",procID_dci_decoding_procedure);
 #endif
+    start_meas(&ue->generic_stat);//LA
     dci_decoding_procedure0(pdcch_vars,1,mode,subframe,
                             dci_alloc,
                             eNB_id,
@@ -3596,10 +3600,13 @@ uint16_t dci_decoding_procedure(PHY_VARS_UE *ue,
                             &CCEmap1,
                             &CCEmap2);
 
-    if ((CCEmap0==0xffff)||
-        ((format0_found==1)&&(format_c_found==1)))
-      return(dci_cnt);
+    stop_meas(&ue->generic_stat);//LA
+    printf("3. Machine operations: %lli, Time: %15.3f ms \n",(&ue->generic_stat)->p_time,((&ue->generic_stat)->p_time/(cpu_freq_GHz*1000000.0))); //LA
 
+    //LA:if ((CCEmap0==0xffff)||((format0_found==1)&&(format_c_found==1)))
+    //  return(dci_cnt);
+
+    start_meas(&ue->generic_stat);//LA
     // Now check common search spaces at aggregation 8 (SI_RNTI and RA_RNTI and C-RNTI format 1C),
     // and UE_SPEC format0 (PUSCH) too while we're at it
     dci_decoding_procedure0(pdcch_vars,1,mode,subframe,
@@ -3626,12 +3633,17 @@ uint16_t dci_decoding_procedure(PHY_VARS_UE *ue,
                             &CCEmap2);
     //#endif
 
+    stop_meas(&ue->generic_stat);//LA
+      printf("4. Machine operations: %lli, Time: %15.3f ms \n",(&ue->generic_stat)->p_time,((&ue->generic_stat)->p_time/(cpu_freq_GHz*1000000.0))); //LA
   }
 
-  if (ue->UE_mode[eNB_id] <= PRACH)
-    return(dci_cnt);
 
 
+  //LA:if (ue->UE_mode[eNB_id] <= PRACH)
+  //  return(dci_cnt);
+
+
+  LOG_I(PHY,"Searching all possible DCIs (UE-specific search-spaces)\n");
 //LA: The next ones are UE-specific search-space, which we will not be exploring for the moment
   if (ue->prach_resources[eNB_id])
     ra_rnti = ue->prach_resources[eNB_id]->ra_RNTI;

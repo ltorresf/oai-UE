@@ -3634,7 +3634,7 @@ uint16_t dci_decoding_procedure(PHY_VARS_UE *ue,
     //#endif
 
     stop_meas(&ue->generic_stat);//LA
-      printf("4. Machine operations: %lli, Time: %15.3f ms \n",(&ue->generic_stat)->p_time,((&ue->generic_stat)->p_time/(cpu_freq_GHz*1000000.0))); //LA
+      printf("4. Machine operations: %lli, Time: %15.3f ms \n",(&ue->generic_stat)->p_time,((&ue->generic_stat)->p_time/(cpu_freq_GHz*1000000.0))); //LAx
   }
 
 

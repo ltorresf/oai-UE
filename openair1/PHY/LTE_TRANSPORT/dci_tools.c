@@ -3192,7 +3192,7 @@ int dump_dci(LTE_DL_FRAME_PARMS *frame_parms, DCI_ALLOC_t *dci)
         break;
 
       case 100:
-        LOG_I(PHY,"[PID-%d] DCI format1A (FDD, 20MHz), rnti %x (%x)\n",procID_dump_dci,dci->rnti,((uint32_t*)&dci->dci_pdu[0])[0]);
+        LOG_I(PHY,"[PID-%d] DCI format1A (FDD, 20MHz), rnti %x (PDU: %x)\n",procID_dump_dci,dci->rnti,((uint32_t*)&dci->dci_pdu[0])[0]);
         LOG_I(PHY,"[PID-%d] VRB_TYPE %d\n",procID_dump_dci,((DCI1A_20MHz_FDD_t *)&dci->dci_pdu[0])->vrb_type);
         LOG_I(PHY,"[PID-%d] RB_ALLOC %x (NB_RB %d)\n",procID_dump_dci,((DCI1A_20MHz_FDD_t *)&dci->dci_pdu[0])->rballoc,RIV2nb_rb_LUT100[((DCI1A_20MHz_FDD_t *)&dci->dci_pdu[0])->rballoc]);
         LOG_I(PHY,"[PID-%d] MCS %d\n",procID_dump_dci,((DCI1A_20MHz_FDD_t *)&dci->dci_pdu[0])->mcs);

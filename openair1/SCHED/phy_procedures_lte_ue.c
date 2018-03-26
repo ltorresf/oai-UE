@@ -3131,6 +3131,7 @@ int ue_pdcch_procedures(uint8_t eNB_id,PHY_VARS_UE *ue,UE_rxtx_proc_t *proc,uint
                 (ue->UE_mode[eNB_id] < PUSCH)? 1 : 0,  // if we're in PUSCH don't listen to common search space,	//LA: 1 in our case -> search in common search-space
                                                        // later when we need paging or RA during connection, update this ...
                 eNB_id,subframe_rx);
+        LOG_I(PHY,"[PID-%d] dci_cnt = %d\n",procID_initial_pdcch,dci_cnt);	//LA
     }
     else
     {

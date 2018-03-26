@@ -46,7 +46,7 @@
 #include "../../../targets/RT/USER/rt_wrapper.h"
 
 //#define DEBUG_DCI_ENCODING 1
-//#define DEBUG_DCI_DECODING 1
+#define DEBUG_DCI_DECODING 1
 //#define DEBUG_PHY
 
 //#undef ALL_AGGREGATION
@@ -120,7 +120,7 @@ uint32_t check_phich_reg(LTE_DL_FRAME_PARMS *frame_parms,uint32_t kprime,uint8_t
 uint16_t extract_crc(uint8_t *dci,uint8_t dci_len)
 {
 
-//	int procID_extract_crc = gettid();
+	int procID_extract_crc = gettid();
   uint16_t crc16;
   //  uint8_t i;
 
@@ -1133,7 +1133,7 @@ void pdcch_extract_rbs_dual(int32_t **rxdataF,
                             uint32_t high_speed_flag,
                             LTE_DL_FRAME_PARMS *frame_parms)
 {
-	//int procID_pdcch_extract_rbs_dual = gettid();
+	int procID_pdcch_extract_rbs_dual = gettid();
 	//printf("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ [PID-%d] [Start: pdcch_extract_rbs_dual] ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n",procID_pdcch_extract_rbs_dual);
 
 
@@ -1390,7 +1390,7 @@ void pdcch_channel_compensation(int32_t **rxdataF_ext,
                                 uint8_t symbol,
                                 uint8_t output_shift)
 {
-//	int procID_pdcch_channel_compensation = gettid();
+	int procID_pdcch_channel_compensation = gettid();
 
   uint16_t rb;
 #if defined(__x86_64__) || defined(__i386__)
@@ -1711,7 +1711,7 @@ int32_t rx_pdcch(PHY_VARS_UE *ue,
                  uint8_t is_secondary_ue)
 {
 
-	//int procID_rx_pdcch = gettid();
+	int procID_rx_pdcch = gettid();
 	//printf("++++++++++++++++++++++++++++++++++++++++++++ [PID-%d] [Start: rx_pdcch] +++++++++++++++++++++++++++++++++++++++++++++\n",procID_rx_pdcch);
 
   LTE_UE_COMMON *common_vars      = &ue->common_vars;
@@ -2608,7 +2608,7 @@ void dci_decoding(uint8_t DCI_LENGTH,
                   uint8_t *decoded_output)
 {
 
-	//int procID_dci_decoding = gettid();
+	int procID_dci_decoding = gettid();
 	//printf("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& [PID-%d] [Start: dci_decoding] &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&\n",procID_dci_decoding);
   uint8_t dummy_w_rx[3*(MAX_DCI_SIZE_BITS+16+64)];
   int8_t w_rx[3*(MAX_DCI_SIZE_BITS+16+32)],d_rx[96+(3*(MAX_DCI_SIZE_BITS+16))];
@@ -2959,6 +2959,7 @@ void dci_decoding_procedure0(LTE_UE_PDCCH **pdcch_vars,
     }
 
     CCEmap_cand = (*CCEmap)&CCEmap_mask;
+    LOG_I(PHY,"[PID-%d] CCEmap_cand = %i\n",procID_dci_decoding_procedure0,CCEmap_cand);
 
     // CCE is not allocated yet
 
@@ -3285,7 +3286,7 @@ uint16_t dci_decoding_procedure(PHY_VARS_UE *ue,
                                 int16_t eNB_id,
                                 uint8_t subframe)
 {
-	//int procID_dci_decoding_procedure = gettid();
+	int procID_dci_decoding_procedure = gettid();
 	//printf("++++++++++++++++++++++++++++++++++++++++ [PID-%d] [Start: dci_decoding_procedure] ++++++++++++++++++++++++++++++++++++++++\n",procID_dci_decoding_procedure);
 
   uint8_t  dci_cnt=0,old_dci_cnt=0;
@@ -3479,6 +3480,7 @@ uint16_t dci_decoding_procedure(PHY_VARS_UE *ue,
       format0_size_bytes = sizeof(DCI0_20MHz_FDD_t);
       format1_size_bits  = sizeof_DCI1_20MHz_FDD_t;
       format1_size_bytes = sizeof(DCI1_20MHz_FDD_t);
+      LOG_I(PHY,"DCI 1A size: %d bits. DCI 1C size: %d bits.\n",format1A_size_bits,format1C_size_bits);
 
       if (frame_parms->nb_antenna_ports_eNB == 2) {
         format2_size_bits  = sizeof_DCI2_20MHz_2A_FDD_t;

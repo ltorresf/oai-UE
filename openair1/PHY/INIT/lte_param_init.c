@@ -97,8 +97,11 @@ void lte_param_init(unsigned char N_tx_port_eNB,
   eNB->transmission_mode[0] = transmission_mode;
   UE->transmission_mode[0] = transmission_mode;
 
+
   phy_init_lte_top(frame_parms);
+  printf("1. UE->transmission_mode[0] = %d\n",UE->transmission_mode[0]);
   dump_frame_parms(frame_parms);
+  printf("2. UE->transmission_mode[0] = %d\n",UE->transmission_mode[0]);
 
   UE->measurements.n_adj_cells=0;
   UE->measurements.adj_cell_id[0] = Nid_cell+1;

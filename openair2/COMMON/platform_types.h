@@ -174,6 +174,20 @@ typedef uint32_t           m_tmsi_t;
 #if ! defined(NOT_A_RNTI)
 #define NOT_A_RNTI (rnti_t)0
 #endif
+//LA:
+#if ! defined(SI_RNTI2)
+#define SI_RNTI2     (rnti_t)0xFFF9
+#endif
+#if ! defined(SC_N_RNTI)
+#define SC_N_RNTI     (rnti_t)0xFFFA
+#endif
+#if ! defined(SC_RNTI)
+#define SC_RNTI     (rnti_t)0xFFFB
+#endif
+#if ! defined(CC_RNTI)
+#define CC_RNTI     (rnti_t)0xFFFC
+#endif
+//
 #if ! defined(M_RNTI)
 #define M_RNTI     (rnti_t)0xFFFD
 #endif

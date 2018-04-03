@@ -1715,7 +1715,7 @@ int main( int argc, char **argv ) {
 
 
     dump_frame_parms(frame_parms[0]);
-
+    printf("transmission_mode = %d\n",transmission_mode);
     init_openair0();
 
 

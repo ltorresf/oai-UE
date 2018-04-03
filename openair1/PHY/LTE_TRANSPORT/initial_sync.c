@@ -332,7 +332,7 @@ int initial_sync(PHY_VARS_UE *ue, runmode_t mode)
   else
     ue->rx_offset = FRAME_LENGTH_COMPLEX_SAMPLES + sync_pos2 - sync_pos_slot;
 
-  LOG_I(PHY,"[%d] sync_pos_slot = %"PRIi32", timing offset = %d\n",procID_initial_sync,sync_pos_slot,ue->rx_offset);
+  //LOG_I(PHY,"[%d] sync_pos_slot = %"PRIi32", timing offset = %d\n",procID_initial_sync,sync_pos_slot,ue->rx_offset);
 
   if (((sync_pos2 - sync_pos_slot) >=0 ) && ((sync_pos2 - sync_pos_slot) < ((FRAME_LENGTH_COMPLEX_SAMPLES-frame_parms->samples_per_tti/2)))) {
 #ifdef DEBUG_INITIAL_SYNCH
@@ -347,7 +347,7 @@ int initial_sync(PHY_VARS_UE *ue, runmode_t mode)
 
     init_frame_parms(&ue->frame_parms,1);
     lte_gold(frame_parms,ue->lte_gold_table[0],frame_parms->Nid_cell);
-    LOG_I(PHY, "[1/4] Ncp=NORMAL, frame_type=FDD. Before PBCH detection: N_RB_DL = %d \n",ue->frame_parms.N_RB_DL);
+    //LOG_I(PHY, "[1/4] Ncp=NORMAL, frame_type=FDD. Before PBCH detection: N_RB_DL = %d \n",ue->frame_parms.N_RB_DL);
     ret = pbch_detection(ue,mode);
     //   write_output("rxdata2.m","rxd2",ue->common_vars.rxdata[0],10*frame_parms->samples_per_tti,1,1);
 
@@ -396,7 +396,7 @@ int initial_sync(PHY_VARS_UE *ue, runmode_t mode)
 
       init_frame_parms(&ue->frame_parms,1);
       lte_gold(frame_parms,ue->lte_gold_table[0],frame_parms->Nid_cell);
-      LOG_I(PHY, "[2/4] Ncp=EXTENDED, frame_type=FDD. Before PBCH detection: N_RB_DL = %d \n",ue->frame_parms.N_RB_DL);
+      //LOG_I(PHY, "[2/4] Ncp=EXTENDED, frame_type=FDD. Before PBCH detection: N_RB_DL = %d \n",ue->frame_parms.N_RB_DL);
       ret = pbch_detection(ue,mode);
       //     write_output("rxdata3.m","rxd3",ue->common_vars.rxdata[0],10*frame_parms->samples_per_tti,1,1);
 #ifdef DEBUG_INITIAL_SYNCH
@@ -441,7 +441,7 @@ int initial_sync(PHY_VARS_UE *ue, runmode_t mode)
       init_frame_parms(&ue->frame_parms,1);
 
       lte_gold(frame_parms,ue->lte_gold_table[0],frame_parms->Nid_cell);
-      LOG_I(PHY, "[3/4] Ncp=NORMAL, frame_type=TDD. Before PBCH detection: N_RB_DL = %d \n",ue->frame_parms.N_RB_DL);
+      //LOG_I(PHY, "[3/4] Ncp=NORMAL, frame_type=TDD. Before PBCH detection: N_RB_DL = %d \n",ue->frame_parms.N_RB_DL);
       ret = pbch_detection(ue,mode);
       //      write_output("rxdata4.m","rxd4",ue->common_vars.rxdata[0],10*frame_parms->samples_per_tti,1,1);
 
@@ -479,7 +479,7 @@ int initial_sync(PHY_VARS_UE *ue, runmode_t mode)
 
         init_frame_parms(&ue->frame_parms,1);
         lte_gold(frame_parms,ue->lte_gold_table[0],frame_parms->Nid_cell);
-        LOG_I(PHY, "[4/4] Ncp=EXTENDED, frame_type=TDD. Before PBCH detection: N_RB_DL = %d \n",ue->frame_parms.N_RB_DL);
+        //LOG_I(PHY, "[4/4] Ncp=EXTENDED, frame_type=TDD. Before PBCH detection: N_RB_DL = %d \n",ue->frame_parms.N_RB_DL);
         ret = pbch_detection(ue,mode);
 
 	//	write_output("rxdata5.m","rxd5",ue->common_vars.rxdata[0],10*frame_parms->samples_per_tti,1,1);
@@ -566,14 +566,14 @@ int initial_sync(PHY_VARS_UE *ue, runmode_t mode)
 	  ue->frame_parms.nb_antenna_ports_eNB);
 #else
     //LOG_I(PHY, "[UE %d] Frame %d RRC Measurements => rssi = %3.1f dBm (dig %3.1f dB, rx_total_gain_dB = %d), Estimated_Noise_power = %d dBm,  rsrp %3.1f dBm/RE, rsrq %3.1f dB\n",ue->Mod_id,
-    LOG_I(PHY, "[UE %d] Frame %d RRC Measurements => rssi = %3.1f dBm (dig %3.1f dBm, rx_total_gain_dB = %d), Estimated_Noise_power = %d dBm,  rsrp =  %3.1f dBm/RE, rsrq = %3.1f dB\n",ue->Mod_id,
+    /*LOG_I(PHY, "[UE %d] Frame %d RRC Measurements => rssi = %3.1f dBm (dig %3.1f dBm, rx_total_gain_dB = %d), Estimated_Noise_power = %d dBm,  rsrp =  %3.1f dBm/RE, rsrq = %3.1f dB\n",ue->Mod_id,
 	  ue->proc.proc_rxtx[0].frame_rx,
 	  10*log10(ue->measurements.rssi)-ue->rx_total_gain_dB,
 	  10*log10(ue->measurements.rssi),
 	  ue->rx_total_gain_dB,
 	  ue->measurements.n0_power_tot_dBm,
 	  10*log10(ue->measurements.rsrp[0])-ue->rx_total_gain_dB,
-	  (10*log10(ue->measurements.rsrq[0])));
+	  (10*log10(ue->measurements.rsrq[0])));*/
 
     LOG_I(PHY, "[UE %d] Frame %d MIB Information => %s, %s, NidCell %d, N_RB_DL %d, PHICH DURATION %d, PHICH RESOURCE %s, TX_ANT %d\n",
 	  ue->Mod_id,

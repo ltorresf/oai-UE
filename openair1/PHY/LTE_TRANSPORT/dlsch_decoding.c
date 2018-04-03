@@ -38,7 +38,7 @@
 #include "SIMULATION/TOOLS/defs.h"
 #include "../../../targets/RT/USER/rt_wrapper.h"
 
-#define DEBUG_DLSCH_DECODING
+//#define DEBUG_DLSCH_DECODING
 
 extern double cpuf;
 

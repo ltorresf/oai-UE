@@ -33,8 +33,8 @@
 #define k1 ((long long int) 1000)
 #define k2 ((long long int) (1024-k1))
 
-#define DEBUG_MEAS_RRC
-#define DEBUG_MEAS_UE
+//#define DEBUG_MEAS_RRC
+//#define DEBUG_MEAS_UE
 //#define DEBUG_RANK_EST
 
 int16_t cond_num_threshold = 0;
@@ -431,13 +431,13 @@ void ue_rrc_measurements(PHY_VARS_UE *ue,
     //    if (slot == 0) {
 
       if (eNB_offset == 0)
-       LOG_I(PHY,"[PID-%d][UE %d] Frame %d, subframe %d RRC Measurements => rssi %3.1f dBm (digital: %3.1f dB, gain %d), N0 %d dBm\n",procID_ue_rrc_measurements,ue->Mod_id,
+       LOG_D(PHY,"[PID-%d][UE %d] Frame %d, subframe %d RRC Measurements => rssi %3.1f dBm (digital: %3.1f dB, gain %d), N0 %d dBm\n",procID_ue_rrc_measurements,ue->Mod_id,
               ue->proc.proc_rxtx[subframe&1].frame_rx,subframe,10*log10(ue->measurements.rssi)-ue->rx_total_gain_dB,
               10*log10(ue->measurements.rssi),
               ue->rx_total_gain_dB,
               ue->measurements.n0_power_tot_dBm);
 
-      LOG_I(PHY,"[PID-%d][UE %d] Frame %d, subframe %d RRC Measurements (idx %d, Cell id %d) => rsrp: %3.1f dBm/RE (%d), rsrq: %3.1f dB\n",
+      LOG_D(PHY,"[PID-%d][UE %d] Frame %d, subframe %d RRC Measurements (idx %d, Cell id %d) => rsrp: %3.1f dBm/RE (%d), rsrq: %3.1f dB\n",
     		  procID_ue_rrc_measurements,
             ue->Mod_id,
             ue->proc.proc_rxtx[subframe&1].frame_rx,subframe,eNB_offset,

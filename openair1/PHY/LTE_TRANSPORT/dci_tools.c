@@ -2929,7 +2929,7 @@ int dump_dci(LTE_DL_FRAME_PARMS *frame_parms, DCI_ALLOC_t *dci)
         break;
 
       case 50:
-        LOG_D(PHY,"DCI format0 (FDD, 10MHz), rnti %x (%x): hopping %d, rb_alloc %x, mcs %d, ndi %d, TPC %d, cshift %d, cqi_req %d\n",
+        LOG_I(PHY,"DCI format0 (FDD, 10MHz), rnti %x (%x): hopping %d, rb_alloc %x, mcs %d, ndi %d, TPC %d, cshift %d, cqi_req %d\n",
               dci->rnti,
               ((uint32_t*)&dci->dci_pdu[0])[0],
               ((DCI0_10MHz_FDD_t *)&dci->dci_pdu[0])->hopping,
@@ -2942,7 +2942,7 @@ int dump_dci(LTE_DL_FRAME_PARMS *frame_parms, DCI_ALLOC_t *dci)
         break;
 
       case 100:
-        LOG_D(PHY,"DCI format0 (FDD, 20MHz), rnti %x (%x): hopping %d, rb_alloc %x, mcs %d, ndi %d, TPC %d, cshift %d, cqi_req %d\n",
+        LOG_I(PHY,"DCI format0 (FDD, 20MHz), rnti %x (%x): hopping %d, rb_alloc %x, mcs %d, ndi %d, TPC %d, cshift %d, cqi_req %d\n",
               dci->rnti,
               ((uint32_t*)&dci->dci_pdu[0])[0],
               ((DCI0_20MHz_FDD_t *)&dci->dci_pdu[0])->hopping,

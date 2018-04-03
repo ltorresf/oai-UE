@@ -3211,7 +3211,7 @@ int ue_pdcch_procedures(uint8_t eNB_id,PHY_VARS_UE *ue,UE_rxtx_proc_t *proc,uint
   memcpy(nCCE_dest, nCCE_current, sizeof(uint8_t));
   memcpy(nCCE_dest1, nCCE_current, sizeof(uint8_t));
 
-  LOG_D(PHY,"current_thread %d next1_thread %d next2_thread %d \n", ue->current_thread_id[subframe_rx], next1_thread_id, next2_thread_id);
+  LOG_I(PHY,"current_thread %d next1_thread %d next2_thread %d \n", ue->current_thread_id[subframe_rx], next1_thread_id, next2_thread_id);
 
   LOG_I(PHY,"[PID-%d][UE  %d] AbsSubFrame %d.%d, Mode %s: DCI found %i --> rnti %x / crnti %x : DCI format %d [2:1A, 4:1C]\n",
 		  procID_initial_pdcch,
@@ -3227,6 +3227,7 @@ int ue_pdcch_procedures(uint8_t eNB_id,PHY_VARS_UE *ue,UE_rxtx_proc_t *proc,uint
   //emos_dump_UE.dci_cnt[subframe_rx] = dci_cnt;
 #endif
 
+  /*
   for (i=0; i<dci_cnt; i++) {
 
 
@@ -3235,7 +3236,7 @@ int ue_pdcch_procedures(uint8_t eNB_id,PHY_VARS_UE *ue,UE_rxtx_proc_t *proc,uint
 	(dci_alloc_rx[i].rnti == ue->pdcch_vars[ue->current_thread_id[subframe_rx]][eNB_id]->crnti) &&
 	(dci_alloc_rx[i].format != format0)) {
 
-/*LA      LOG_I(PHY,"[PID-%d][UE  %d][DCI][PDSCH %x] AbsSubframe %d.%d: format %d, num_pdcch_symbols %d, nCCE %d, total CCEs %d\n",
+      LOG_I(PHY,"[PID-%d][UE  %d][DCI][PDSCH %x] AbsSubframe %d.%d: format %d, num_pdcch_symbols %d, nCCE %d, total CCEs %d\n",
     		  procID_initial_pdcch,
 	    ue->Mod_id,dci_alloc_rx[i].rnti,
 	    frame_rx%1024,subframe_rx,
@@ -3243,7 +3244,7 @@ int ue_pdcch_procedures(uint8_t eNB_id,PHY_VARS_UE *ue,UE_rxtx_proc_t *proc,uint
 	    ue->pdcch_vars[ue->current_thread_id[subframe_rx]][eNB_id]->num_pdcch_symbols,
 	    ue->pdcch_vars[ue->current_thread_id[subframe_rx]][eNB_id]->nCCE[subframe_rx],
 	    get_nCCE(3,&ue->frame_parms,get_mi(&ue->frame_parms,0)));
-*/
+
       //dump_dci(&ue->frame_parms, &dci_alloc_rx[i]);
 
       if ((ue->UE_mode[eNB_id] > PRACH) &&
@@ -3458,10 +3459,10 @@ int ue_pdcch_procedures(uint8_t eNB_id,PHY_VARS_UE *ue,UE_rxtx_proc_t *proc,uint
 #ifdef DEBUG_PHY_PROC
       LOG_D(PHY,"[UE  %d][PUSCH] Frame %d subframe %d: Found cba rnti %x, format 0, dci_cnt %d\n",
       ue->Mod_id,frame_rx,subframe_rx,dci_alloc_rx[i].rnti,i);
-      /*
+
   if (((frame_rx%100) == 0) || (frame_rx < 20))
   dump_dci(&ue->frame_parms, &dci_alloc_rx[i]);
-      */
+
 #endif
 
       ue->ulsch_no_allocation_counter[eNB_id] = 0;
@@ -3499,7 +3500,8 @@ int ue_pdcch_procedures(uint8_t eNB_id,PHY_VARS_UE *ue,UE_rxtx_proc_t *proc,uint
 #endif
     }
 
-  }
+  } */
+
 #if UE_TIMING_TRACE
   stop_meas(&ue->dlsch_rx_pdcch_stats);
 #endif

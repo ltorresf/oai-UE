@@ -3601,7 +3601,7 @@ uint16_t dci_decoding_procedure(PHY_VARS_UE *ue,
 
       //LOG_I(PHY,"----- CCEmap0 = %"PRIu32", CCEmap1 = %"PRIu32", CCEmap2 = %"PRIu32", %p, %p, %p\n",CCEmap0,CCEmap1,CCEmap2,&CCEmap0,&CCEmap1,&CCEmap2);
     //LA:if ((CCEmap0==0xffff) || ((format0_found==1)&&(format_c_found==1)))
-    //  return(dci_cnt);
+      return(dci_cnt);
 
     //start_meas(&ue->generic_stat);//LA
     // Now check common search spaces at aggregation 4 (SI_RNTI,P_RNTI and RA_RNTI and C-RNTI format 1C),
@@ -3705,7 +3705,7 @@ uint16_t dci_decoding_procedure(PHY_VARS_UE *ue,
 
 
   //LA:if (ue->UE_mode[eNB_id] <= PRACH)
-  //  return(dci_cnt);
+    //return(dci_cnt);
 
 
   LOG_I(PHY,"Searching all possible DCIs (UE-specific search-spaces)\n");
@@ -3741,8 +3741,8 @@ uint16_t dci_decoding_procedure(PHY_VARS_UE *ue,
                           &CCEmap2);
 
  /* if ((CCEmap0==0xffff)||
-      ((format0_found==1)&&(format_c_found==1)))
-    return(dci_cnt);*/
+      ((format0_found==1)&&(format_c_found==1)))*/
+    //return(dci_cnt);
 
   //printf("[DCI search] Format 0 aggregation 1 dci_cnt %d\n",dci_cnt);
 

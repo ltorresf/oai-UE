@@ -173,7 +173,7 @@ void ue_rrc_measurements(PHY_VARS_UE *ue,
     uint8_t slot,
     uint8_t abstraction_flag)
 {
-	int procID_ue_rrc_measurements = gettid();
+	//int procID_ue_rrc_measurements = gettid();
   uint8_t subframe = slot>>1;
   int aarx,rb;
   uint8_t pss_symb;
@@ -466,7 +466,7 @@ void lte_ue_measurements(PHY_VARS_UE *ue,
                          uint8_t subframe)
 {
 
-	int procID_lte_ue_measurements = gettid();
+	//int procID_lte_ue_measurements = gettid();
   int aarx,aatx,eNB_id=0; //,gain_offset=0;
   //int rx_power[NUMBER_OF_CONNECTED_eNB_MAX];
   int i;

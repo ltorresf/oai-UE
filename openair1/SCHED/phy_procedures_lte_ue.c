@@ -3213,13 +3213,13 @@ int ue_pdcch_procedures(uint8_t eNB_id,PHY_VARS_UE *ue,UE_rxtx_proc_t *proc,uint
 
   LOG_I(PHY,"current_thread %d next1_thread %d next2_thread %d \n", ue->current_thread_id[subframe_rx], next1_thread_id, next2_thread_id);
 
-  LOG_I(PHY,"[PID-%d][UE  %d] AbsSubFrame %d.%d, Mode %s: DCI found %i --> rnti %x / crnti %x : DCI format %d [2:1A, 4:1C]\n",
+/*  LOG_I(PHY,"[PID-%d][UE  %d] AbsSubFrame %d.%d, Mode %s: DCI found %i --> rnti %x / crnti %x : DCI format %d [2:1A, 4:1C]\n",
 		  procID_initial_pdcch,
        ue->Mod_id,frame_rx%1024,subframe_rx,mode_string[ue->UE_mode[eNB_id]],
        dci_cnt,
        dci_alloc_rx[0].rnti,
        ue->pdcch_vars[ue->current_thread_id[subframe_rx]][eNB_id]->crnti,
-       dci_alloc_rx[0].format );	//LA: DCI format (1A, 1C, etc)
+       dci_alloc_rx[0].format );	//LA: DCI format (1A, 1C, etc) */
 
   ue->pdcch_vars[ue->current_thread_id[subframe_rx]][eNB_id]->dci_received += dci_cnt;
 

@@ -18,3 +18,4 @@ sync_corr2_ue_0.m
 cmake_targets/lte_noS1_build_oai/CMakeLists.txt
 cmake_targets/lte_noS1_build_oai/build/
 
+/.metadata/

@@ -155,6 +155,9 @@ if (CMAKE_SYSTEM_PROCESSOR MATCHES "x86")
   endif()
 endif()
 
+#LA
+set(PROTOBUF_LIB "protobuf-c")
+
 #
 set(CMAKE_C_FLAGS
   "${CMAKE_C_FLAGS} ${C_FLAGS_PROCESSOR} -std=gnu99 -Wall -Wstrict-prototypes -fno-strict-aliasing -rdynamic -funroll-loops -Wno-packed-bitfield-compat -fPIC ")
@@ -1731,6 +1734,8 @@ add_executable(lte-softmodem
   ${s1ap_h}
   ${OPENAIR_BIN_DIR}/messages_xml.h
   ${OPENAIR_TARGETS}/RT/USER/rt_wrapper.c
+  ${OPENAIR_TARGETS}/RT/USER/subframe2file.pb-c.h	#LA
+  ${OPENAIR_TARGETS}/RT/USER/subframe2file.pb-c.c	#LA
   ${OPENAIR_TARGETS}/RT/USER/lte-ue.c
   ${OPENAIR_TARGETS}/RT/USER/lte-enb.c
   ${OPENAIR_TARGETS}/RT/USER/lte-softmodem.c
@@ -1924,7 +1929,7 @@ target_link_libraries (oaisim_nos1 pthread m ${CONFIG_LIBRARIES} rt crypt ${CRYP
 #Force link with forms, regardless XFORMS option
 target_link_libraries (oaisim_nos1 forms)
 
-#message("protobuflib is  ${PROTOBUF_LIB}")
+message("protobuflib is  ${PROTOBUF_LIB}")
 
 target_link_libraries (oaisim_nos1 ${T_LIB})
 

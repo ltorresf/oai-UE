@@ -118,9 +118,9 @@ typedef enum {
 /*!\brief  openair0 device host type */
 typedef enum {
   MIN_HOST_TYPE = 0,
- /*!\brief device functions within a BBU */
+ /*!\brief device functions within a BBU */ //LA: Baseband Unit -> this is the digital function unit. I reckon this is used since the processing is done in the baseband.
   BBU_HOST,
- /*!\brief device functions within a RRH */
+ /*!\brief device functions within a RRH */ //LA: Remote Radio Head -> this is the radio function unit
   RRH_HOST,
   MAX_HOST_TYPE
 

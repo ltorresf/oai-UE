@@ -3705,7 +3705,7 @@ uint16_t dci_decoding_procedure(PHY_VARS_UE *ue,
 
 
   //LA:if (ue->UE_mode[eNB_id] <= PRACH)
-  //  return(dci_cnt);
+    return(dci_cnt);
 
 
   LOG_I(PHY,"Searching all possible DCIs (UE-specific search-spaces)\n");

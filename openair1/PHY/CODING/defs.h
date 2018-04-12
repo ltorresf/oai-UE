@@ -30,7 +30,8 @@
 #include <stdint.h>
 
 #ifndef NO_OPENAIR1
-#include "PHY/defs.h"
+//LA:#include "PHY/defs.h"
+#include "../defs.h"
 #else
 #include "PHY/TOOLS/time_meas.h"
 #endif

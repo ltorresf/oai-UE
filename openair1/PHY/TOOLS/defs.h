@@ -31,7 +31,8 @@
 
 #include <stdint.h>
 
-#include "PHY/sse_intrin.h"
+//LA: #include "PHY/sse_intrin.h"
+#include "../sse_intrin.h"
 
 
 //defined in rtai_math.h

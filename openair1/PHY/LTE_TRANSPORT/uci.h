@@ -19,7 +19,8 @@
  *      contact@openairinterface.org
  */
 
-#include "PHY/types.h"
+//LA:#include "PHY/types.h"
+#include "../types.h"
 
 
 

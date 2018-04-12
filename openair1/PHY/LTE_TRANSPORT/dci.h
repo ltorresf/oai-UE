@@ -30,7 +30,8 @@
 * \warning
 */
 #ifndef USER_MODE
-#include "PHY/types.h"
+#include "../types.h"
+//LA:#include "PHY/types.h"
 #else
 #include <stdint.h>
 #endif

@@ -39,7 +39,8 @@
 #ifndef __LIST_H__
 #    define __LIST_H__
 
-#    include "UTIL/MEM/mem_block.h"
+//LA:#    include "UTIL/MEM/mem_block.h"
+#    include "../MEM/mem_block.h"
 //-----------------------------------------------------------------------------
 #    ifdef LIST_C
 #        define private_list(x) x
@@ -56,7 +57,8 @@
 #        define public_list2(x) extern x
 #    endif
 //-----------------------------------------------------------------------------
-#include "platform_constants.h"
+//LA:#include "platform_constants.h"
+#include "../../COMMON/platform_constants.h"
 #include<linux/types.h>
 #include<stdlib.h>
 #include<sys/queue.h>

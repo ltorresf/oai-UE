@@ -587,6 +587,55 @@ static void *UE_thread_synch(void *arg) {
     return &UE_thread_synch_retval;
 }
 
+int tttime = 0;
+#include "subframe2file.pb-c.h"
+#include <time.h>
+
+
+
+void dump_subframe_to_file(void *argum){
+    struct rx_tx_thread_data *rx_data = argum;
+    UE_rxtx_proc_t *proc_data = rx_data->proc;
+    PHY_VARS_UE    *UE_data   = rx_data->UE;
+    //String that contains current time to be used in filename
+    time_t	rawtime=time(NULL);
+    struct tm *tm = localtime(&rawtime);
+    char s[20];
+    char filename[50];
+    strftime(s, sizeof(s), "%Y%m%d.%H%M%S_", tm);	//s contains 16 char
+    //printf("now: %s\n", s);
+
+	Dump msg = DUMP__INIT;
+	Frameparms frame_p = FRAMEPARMS__INIT;
+
+	void *buf;
+	unsigned len;
+	frame_p.n_rb_dl = UE_data->frame_parms.N_RB_DL;
+	frame_p.n_rb_ul = UE_data->frame_parms.N_RB_UL;
+
+	msg.frame_param=&frame_p;
+
+
+	len = dump__get_packed_size(&msg);
+	buf = malloc(len);
+	dump__pack(&msg,buf);		//serializes the message.
+
+
+    snprintf(filename,50,"%s%s%d-%d.%d_%d%s",s,"UE_",UE_data->frame_parms.Nid_cell,proc_data->frame_rx,proc_data->subframe_rx,tttime,".dat");
+    printf("Filename: %s, subframe: %d\n",filename,proc_data->subframe_rx);
+    FILE *fd;
+    if ((fd = fopen(filename,"w"))!=NULL ) {
+    	fprintf(stderr,"Writing %d serialized bytes\n",len);
+    	fwrite(buf,len,1,fd);/*
+		fwrite((void*)&UE->frame_parms,
+		sizeof(LTE_DL_FRAME_PARMS),
+		1,
+		fd);*/
+		fclose(fd);
+    }
+    free(buf);
+    //free(argum);
+}
 /*!
  * \brief This is the UE thread for RX subframe n and TX subframe n+4.
  * This thread performs the phy_procedures_UE_RX() on every received slot.
@@ -599,10 +648,11 @@ static void *UE_thread_rxn_txnp4(void *arg) {
 	int procID_rxn_txnp4 = gettid();
 	printf("**************************************************** Start : [UE_thread_rxn_txnp4] [PID: %d] ****************************************************\n",procID_rxn_txnp4);
     static __thread int UE_thread_rxtx_retval;
-    struct rx_tx_thread_data *rtd = arg;
+    struct rx_tx_thread_data *rtd = arg;	//LA: I may be intested in saving this file, since it contains both UE and proc pointers.
     UE_rxtx_proc_t *proc = rtd->proc;
     PHY_VARS_UE    *UE   = rtd->UE;
     int ret;
+
 
     proc->instance_cnt_rxtx=-1;	//LA: Instance count for RXn-TXnp4 processing thread. Always  = 0 for UE_thread_rxn_txnp4 processing.
     proc->subframe_rx=proc->sub_frame_start;
@@ -623,25 +673,39 @@ static void *UE_thread_rxn_txnp4(void *arg) {
                 threadname);
 
     while (!oai_exit) {
+    	//LA: what do we lock here? Why do we do it?
         if (pthread_mutex_lock(&proc->mutex_rxtx) != 0) {
           LOG_E( PHY, "[SCHED][UE] error locking mutex for UE RXTX\n" );
           exit_fun("nothing to add");
         }
-        while (proc->instance_cnt_rxtx < 0) {
+        //LA: Why do we wait here for?
+        while (proc->instance_cnt_rxtx < 0) {	//LA: Initialized with a negative value when processing each Rx subframe, so the condition should normally be fulfilled.
+        	//LA:when is it changed to a positive value?
           // most of the time, the thread is waiting here
+        //LA: there must be a condition here that locks reading the UE values unless something doesn't finishes first
           pthread_cond_wait( &proc->cond_rxtx, &proc->mutex_rxtx );
         }
+        //Only when this mutex is unlocked, we can proceed.
         if (pthread_mutex_unlock(&proc->mutex_rxtx) != 0) {
           LOG_E( PHY, "[SCHED][UE] error unlocking mutex for UE RXn_TXnp4\n" );
           exit_fun("nothing to add");
         }
 
-        initRefTimes(t2);
+        //LA: Why do we have two different timers? what is their importance?
+        initRefTimes(t2);	//LA: What are the values of t2 and t3? where are they defined?
         initRefTimes(t3);
         pickTime(current);
         updateTimes(proc->gotIQs, &t2, 10000, "Delay to wake up UE_Thread_Rx (case 2)");
 
-        // Process Rx data for one sub-frame. //LA: The subframe should have been stored in "rxp"
+        //LA: Saving a subframe in the time domain.
+        if (tttime >= 105 && tttime <= 105){
+        	dump_subframe_to_file(rtd);
+        }
+        tttime++;
+        //printf("int32_t = %d, UE_rxtx_proc_t = %d, PHY_VARS_UE = %d\n",sizeof(int32_t), sizeof(UE_rxtx_proc_t),sizeof(PHY_VARS_UE));
+        //LA: end of saving subframe.
+
+        // Process Rx data for one sub-frame. //LA: The subframe should have been stored in "rxp", which is a memory subsection of the pointer UE
         //LA: In the case of FDD, the value returned is SF_DL for all subframes. This function is only relevant in TDD.
         lte_subframe_t sf_type = subframe_select( &UE->frame_parms, proc->subframe_rx);
         if ((sf_type == SF_DL) ||
@@ -782,7 +846,7 @@ void *UE_thread(void *arg) {
                 "UHD Threads");
     if (oaisim_flag == 0)
         AssertFatal(0== openair0_device_load(&(UE->rfdevice), &openair0_cfg[0]), "");
-    UE->rfdevice.host_type = BBU_HOST;
+    UE->rfdevice.host_type = BBU_HOST;	//LA: this means that our processing is done in the baseband (Baseband Unit). What does this imply for the code?
     sprintf(threadname, "Main UE %d", UE->Mod_id);
     pthread_setname_np(pthread_self(), threadname);
     init_UE_threads(UE);
@@ -944,6 +1008,8 @@ void *UE_thread(void *arg) {
 
                 if (UE->mode != loop_through_memory) {
                 	//LA: UE->mode is normally normal_txrx=0 and not loop_through_memory=8. So normally this portion of the code is executed.
+                	//LA: rxp points to a memory sector offset of the original UE. UE is the most important variable. At what point should I write it down onto a file?
+                	//LA: since the memory section allocated to UE continuously changes due to updates in the data it contains (e.g. new subframes received)
                     for (i=0; i<UE->frame_parms.nb_antennas_rx; i++)
                         rxp[i] = (void*)&UE->common_vars.rxdata[i][UE->frame_parms.ofdm_symbol_size+
                                  UE->frame_parms.nb_prefix_samples0+
@@ -976,13 +1042,15 @@ void *UE_thread(void *arg) {
                                        UE->rx_offset_diff;
                     }
 
-                    //LA: [Rx] here we read a whole subframe and store it in "rxp"
+                    //LA: [Rx] here we read a whole subframe and store it in "rxp", which is basically a sector mapped to &UE->common_vars.rxdat
+                    //LA: with certain offset depending on the current frame that is being processed.
                     AssertFatal(readBlockSize ==
                                 UE->rfdevice.trx_read_func(&UE->rfdevice,
                                                            &timestamp,
                                                            rxp,
-                                                           readBlockSize,
+                                                           readBlockSize,	//LA: it reads one TTI (one subframe) per operation
                                                            UE->frame_parms.nb_antennas_rx),"");
+                    printf("Timestamp: %"PRIi64"\n",timestamp);
                     AssertFatal( writeBlockSize ==
                                  UE->rfdevice.trx_write_func(&UE->rfdevice,
                                          timestamp+
@@ -1001,7 +1069,7 @@ void *UE_thread(void *arg) {
                                         UE->rfdevice.trx_read_func(&UE->rfdevice,
                                                                    &timestamp1,
                                                                    (void**)UE->common_vars.rxdata,
-                                                                   first_symbols,
+                                                                   first_symbols,	//LA: this is the length
                                                                    UE->frame_parms.nb_antennas_rx),"");
                         if ( first_symbols <0 )
                             LOG_E(PHY,"can't compensate: diff =%d\n", first_symbols);
@@ -1031,13 +1099,14 @@ void *UE_thread(void *arg) {
                     proc->instance_cnt_rxtx++;
                     //LOG_D( PHY, "[SCHED][UE %d] UE RX instance_cnt_rxtx %d subframe %d !!\n", UE->Mod_id, proc->instance_cnt_rxtx,proc->subframe_rx);
                     LOG_I( PHY, "[PID-%d][SCHED][UE %d]  UE RX instance_cnt_rxtx %d subframe %d !!\n",procID_UE_thread, UE->Mod_id,proc->instance_cnt_rxtx,proc->subframe_rx);
-                    if (proc->instance_cnt_rxtx == 0) {
+                    if (proc->instance_cnt_rxtx == 0) {	//LA: this would only be =0 if it was previously =1. How does this is valid in a general case, either for 1 or 0?
                       if (pthread_cond_signal(&proc->cond_rxtx) != 0) {
                         LOG_E( PHY, "[SCHED][UE %d] ERROR pthread_cond_signal for UE RX thread\n", UE->Mod_id);
                         exit_fun("nothing to add");
                       }
                     } else {
-                      LOG_E( PHY, "[PID-%d][SCHED][UE %d] UE RX thread busy (IC %d)!!\n", procID_UE_thread,UE->Mod_id, proc->instance_cnt_rxtx);
+                    	//LA: What does this mean?
+                      LOG_E( PHY, "[PID-%d][SCHED][UE %d] UE RX thread busy (Instance counter: %d)!!\n", procID_UE_thread,UE->Mod_id, proc->instance_cnt_rxtx);
                       if (proc->instance_cnt_rxtx > 2)
                         exit_fun("instance_cnt_rxtx > 2");
                     }

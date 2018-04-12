@@ -38,10 +38,12 @@
 #include <malloc.h>
 #include <string.h>
 #include <math.h>
-#include "common_lib.h"
+//LA: #include "common_lib.h"
+#include "../../targets/ARCH/COMMON/common_lib.h"
 
 //#include <complex.h>
-#include "assertions.h"
+//LA: #include "assertions.h"
+#include "../../common/utils/assertions.h"
 #ifdef MEX
 # define msg mexPrintf
 #else
@@ -121,22 +123,32 @@ static inline void* malloc16_clear( size_t size )
 /// suppress compiler warning for unused arguments
 #define UNUSED(x) (void)x;
 
-
-#include "impl_defs_top.h"
+/*LA #include "../../common/utils/impl_defs_top.h"
 #include "impl_defs_lte.h"
 
 #include "PHY/TOOLS/time_meas.h"
 #include "PHY/CODING/defs.h"
 #include "PHY/TOOLS/defs.h"
-#include "platform_types.h"
+#include "platform_types.h" */
 
+#include "impl_defs_top.h"
+#include "impl_defs_lte.h"
+
+#include "TOOLS/time_meas.h"
+#include "CODING/defs.h"
+#include "TOOLS/defs.h"
+#include "../../openair2/COMMON/platform_types.h"
+
+//LA:#define OPENAIR_LTE 1 //this line originally didn't exist
 
 #ifdef OPENAIR_LTE
 
-#include "PHY/LTE_TRANSPORT/defs.h"
+//LA:#include "PHY/LTE_TRANSPORT/defs.h"
+#include "LTE_TRANSPORT/defs.h"
 #include <pthread.h>
 
-#include "targets/ARCH/COMMON/common_lib.h"
+//LA:#include "targets/ARCH/COMMON/common_lib.h"
+#include "../../targets/ARCH/COMMON/common_lib.h"
 
 #define NUM_DCI_MAX 32
 

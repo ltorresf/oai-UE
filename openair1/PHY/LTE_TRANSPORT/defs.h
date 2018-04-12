@@ -31,11 +31,13 @@
 */
 #ifndef __LTE_TRANSPORT_DEFS__H__
 #define __LTE_TRANSPORT_DEFS__H__
-#include "PHY/defs.h"
+//LA:#include "PHY/defs.h"
+#include "../defs.h"
 #include "dci.h"
 #include "uci.h"
 #ifndef STANDALONE_COMPILE
-#include "UTIL/LISTS/list.h"
+//LA:#include "UTIL/LISTS/list.h"
+#include "../../../openair2/UTIL/LISTS/list.h"
 #endif
 
 #define MOD_TABLE_QPSK_OFFSET 1

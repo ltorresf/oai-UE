@@ -5150,6 +5150,7 @@ int phy_procedures_slot_parallelization_UE_RX(PHY_VARS_UE *ue,UE_rxtx_proc_t *pr
 #endif
 
 //LA: Scheduling for UE RX procedures in a subframe at a time.
+//LA: The most important information passed to this function are the pointers *proc and *ue
 int phy_procedures_UE_RX(PHY_VARS_UE *ue,UE_rxtx_proc_t *proc,uint8_t eNB_id,
 			 uint8_t abstraction_flag,uint8_t do_pdcch_flag,runmode_t mode,
 			 relaying_type_t r_type,PHY_VARS_RN *phy_vars_rn) {
@@ -5189,13 +5190,13 @@ int phy_procedures_UE_RX(PHY_VARS_UE *ue,UE_rxtx_proc_t *proc,uint8_t eNB_id,
 
   if (do_pdcch_flag) {	// deactivate reception until we scan pdcch
 	  //LA: This value is = 1, when called by "UE_thread_rxn_txnp4"
-	  //LA: basically the if-statement conditions check whether the pointer is allocated to a valid memory address, whatever that be
+	  //LA: basically the if-statement conditions check whether the pointer is allocated to a valid memory address, whichever that be
   if (ue->dlsch[ue->current_thread_id[subframe_rx]][eNB_id][0])				//LA: 1st RxTx Thread
     ue->dlsch[ue->current_thread_id[subframe_rx]][eNB_id][0]->active = 0;		//LA: Active flag for DLSCH demodulation
   if (ue->dlsch[ue->current_thread_id[subframe_rx]][eNB_id][1])				//LA: 2nd RxTx Thread
     ue->dlsch[ue->current_thread_id[subframe_rx]][eNB_id][1]->active = 0;		//LA: Active flag for DLSCH demodulation
 
-  //LA: basically the if-statement conditions check whether the pointer is allocated to a valid memory address, whatever that be
+  //LA: basically the if-statement conditions check whether the pointer is allocated to a valid memory address, whichever that be
   if (ue->dlsch_SI[eNB_id])
     ue->dlsch_SI[eNB_id]->active = 0;	//LA: Active flag for DLSCH demodulation
   if (ue->dlsch_p[eNB_id])

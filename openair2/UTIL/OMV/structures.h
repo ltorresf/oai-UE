@@ -31,7 +31,8 @@
 #ifndef STRUCTURES_H
 #define STRUCTURES_H
 
-#include "openairinterface5g_limits.h"
+//LA: #include "openairinterface5g_limits.h"
+#include "../../../targets/COMMON/openairinterface5g_limits.h"
 #ifndef __PHY_IMPLEMENTATION_DEFS_H__
 	#define Maxneighbor NUMBER_OF_UE_MAX
 	#ifndef NB_ANTENNAS_RX

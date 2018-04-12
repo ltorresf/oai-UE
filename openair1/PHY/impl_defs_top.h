@@ -108,7 +108,7 @@
  */
 
 #include "types.h"
-
+//LA: #define NB_ANTENNAS_RX  4
 
 
 /** @addtogroup _PHY_STRUCTURES_
@@ -284,7 +284,8 @@ typedef enum {
 #define NUMBER_OF_HARQ_PID_MAX 8
 
 #define MAX_FRAME_NUMBER 0x400
-#include "openairinterface5g_limits.h"
+//LA:#include "openairinterface5g_limits.h"
+#include "../../targets/COMMON/openairinterface5g_limits.h"
 
 #define NUMBER_OF_RN_MAX 3
 typedef enum {no_relay=1,unicast_relay_type1,unicast_relay_type2, multicast_relay} relaying_type_t;

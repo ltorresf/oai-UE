@@ -15,23 +15,107 @@ PROTOBUF_C__BEGIN_DECLS
 #endif
 
 
-typedef struct _Dump Dump;
+typedef struct _PrachConfigCommon PrachConfigCommon;
+typedef struct _PucchConfigCommon PucchConfigCommon;
+typedef struct _PdschConfigCommon PdschConfigCommon;
+typedef struct _PuschConfigCommon PuschConfigCommon;
+typedef struct _PhichConfigCommon PhichConfigCommon;
+typedef struct _SoundingrsUlConfigCommon SoundingrsUlConfigCommon;
+typedef struct _UlPowerControlConfigCommon UlPowerControlConfigCommon;
+typedef struct _PhichReg PhichReg;
 typedef struct _Frameparms Frameparms;
+typedef struct _PhyVarsUe PhyVarsUe;
+typedef struct _UeRxTxProc UeRxTxProc;
+typedef struct _RxTxThreadData RxTxThreadData;
 
 
 /* --- enums --- */
 
+typedef enum _Frameparms__LtePrefixType {
+  FRAMEPARMS__LTE_PREFIX_TYPE__EXTENDED = 1,
+  FRAMEPARMS__LTE_PREFIX_TYPE__NORMAL = 0
+    PROTOBUF_C__FORCE_ENUM_TO_BE_INT_SIZE(FRAMEPARMS__LTE_PREFIX_TYPE)
+} Frameparms__LtePrefixType;
+typedef enum _Frameparms__LteFrameType {
+  FRAMEPARMS__LTE_FRAME_TYPE__TDD = 1,
+  FRAMEPARMS__LTE_FRAME_TYPE__FDD = 0
+    PROTOBUF_C__FORCE_ENUM_TO_BE_INT_SIZE(FRAMEPARMS__LTE_FRAME_TYPE)
+} Frameparms__LteFrameType;
 
 /* --- messages --- */
 
-struct  _Dump
+struct  _PrachConfigCommon
 {
   ProtobufCMessage base;
-  Frameparms *frame_param;
 };
-#define DUMP__INIT \
- { PROTOBUF_C_MESSAGE_INIT (&dump__descriptor) \
-    , NULL }
+#define PRACH_CONFIG_COMMON__INIT \
+ { PROTOBUF_C_MESSAGE_INIT (&prach_config_common__descriptor) \
+     }
+
+
+struct  _PucchConfigCommon
+{
+  ProtobufCMessage base;
+};
+#define PUCCH_CONFIG_COMMON__INIT \
+ { PROTOBUF_C_MESSAGE_INIT (&pucch_config_common__descriptor) \
+     }
+
+
+struct  _PdschConfigCommon
+{
+  ProtobufCMessage base;
+};
+#define PDSCH_CONFIG_COMMON__INIT \
+ { PROTOBUF_C_MESSAGE_INIT (&pdsch_config_common__descriptor) \
+     }
+
+
+struct  _PuschConfigCommon
+{
+  ProtobufCMessage base;
+};
+#define PUSCH_CONFIG_COMMON__INIT \
+ { PROTOBUF_C_MESSAGE_INIT (&pusch_config_common__descriptor) \
+     }
+
+
+struct  _PhichConfigCommon
+{
+  ProtobufCMessage base;
+};
+#define PHICH_CONFIG_COMMON__INIT \
+ { PROTOBUF_C_MESSAGE_INIT (&phich_config_common__descriptor) \
+     }
+
+
+struct  _SoundingrsUlConfigCommon
+{
+  ProtobufCMessage base;
+};
+#define SOUNDINGRS_UL_CONFIG_COMMON__INIT \
+ { PROTOBUF_C_MESSAGE_INIT (&soundingrs_ul_config_common__descriptor) \
+     }
+
+
+struct  _UlPowerControlConfigCommon
+{
+  ProtobufCMessage base;
+};
+#define UL_POWER_CONTROL_CONFIG_COMMON__INIT \
+ { PROTOBUF_C_MESSAGE_INIT (&ul_power_control_config_common__descriptor) \
+     }
+
+
+struct  _PhichReg
+{
+  ProtobufCMessage base;
+  size_t n_phich_reg_inner;
+  uint32_t *phich_reg_inner;
+};
+#define PHICH_REG__INIT \
+ { PROTOBUF_C_MESSAGE_INIT (&phich_reg__descriptor) \
+    , 0,NULL }
 
 
 struct  _Frameparms
@@ -39,30 +123,490 @@ struct  _Frameparms
   ProtobufCMessage base;
   uint32_t n_rb_dl;
   uint32_t n_rb_ul;
+  uint32_t n_rbg;
+  uint32_t n_rbgs;
+  uint32_t nid_cell;
+  uint32_t nid_cell_mbsfn;
+  Frameparms__LtePrefixType ncp;
+  Frameparms__LtePrefixType ncp_ul;
+  uint32_t nushift;
+  Frameparms__LteFrameType frame_type;
+  uint32_t tdd_config;
+  uint32_t tdd_config_s;
+  uint32_t srsx;
+  uint32_t node_id;
+  uint32_t freq_idx;
+  /*
+   *	required uint32 carrier_freq[4] = 16;
+   *required uint32 carrier_freqtx[4] = 17;
+   *required uint32 rxgain[4] = 18;
+   *required uint32 txgain[4] = 19;
+   *required uint32 rfmode[4] = 20;
+   *required uint32 rxdc[4] = 21;
+   *required uint32 rflocal[4] = 22;
+   *required uint32 rfvcolocal[4] = 23;
+   *required uint32 dual_tx = 24; 
+   */
+  uint32_t mode1_flag;
+  uint32_t threequarter_fs;
+  uint32_t ofdm_symbol_size;
+  uint32_t nb_prefix_samples;
+  uint32_t nb_prefix_samples0;
+  uint32_t first_carrier_offset;
+  uint32_t samples_per_tti;
+  uint32_t symbols_per_tti;
+  uint32_t dl_symbols_in_s_subframe;
+  uint32_t ul_symbols_in_s_subframe;
+  uint32_t nb_antennas_tx;
+  uint32_t nb_antennas_rx;
+  uint32_t nb_antenna_ports_enb;
+  PrachConfigCommon *prach_config_common;
+  PucchConfigCommon *pucch_config_common;
+  PdschConfigCommon *pdsch_config_common;
+  PuschConfigCommon *pusch_config_common;
+  PhichConfigCommon *phich_config_common;
+  SoundingrsUlConfigCommon *soundingrs_ul_config_common;
+  UlPowerControlConfigCommon *ul_power_control_config_common;
+  uint32_t num_mbsfn_config;
+  /*
+   *required MBSFN_config[8] = 46;
+   */
+  uint32_t maxharq_msg3tx;
+  uint32_t siwindowsize;
+  uint32_t siperiod;
+  /*
+   *[4]
+   */
+  size_t n_pcfich_reg;
+  uint32_t *pcfich_reg;
+  uint32_t pcfich_first_reg_idx;
+  /*
+   *[MAX_NUM_PHICH_GROUPS][3]
+   */
+  size_t n_phich_reg_outer;
+  PhichReg **phich_reg_outer;
 };
 #define FRAMEPARMS__INIT \
  { PROTOBUF_C_MESSAGE_INIT (&frameparms__descriptor) \
-    , 0, 0 }
+    , 0, 0, 0, 0, 0, 0, FRAMEPARMS__LTE_PREFIX_TYPE__EXTENDED, FRAMEPARMS__LTE_PREFIX_TYPE__EXTENDED, 0, FRAMEPARMS__LTE_FRAME_TYPE__TDD, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0,NULL, 0, 0,NULL }
 
 
-/* Dump methods */
-void   dump__init
-                     (Dump         *message);
-size_t dump__get_packed_size
-                     (const Dump   *message);
-size_t dump__pack
-                     (const Dump   *message,
+struct  _PhyVarsUe
+{
+  ProtobufCMessage base;
+  /*
+   *required int32 UE_scan = 1;
+   *required Frameparms frame_param=2;
+   */
+  uint32_t mod_id;
+  uint32_t cc_id;
+  /*
+   *required Openair0RfMap rf_map = 3;
+   *required RunMode mode = 4;
+   */
+  int32_t ue_scan;
+  int32_t ue_scan_carrier;
+  int32_t is_synchronized;
+  /*
+   *required UeProc proc = 8;
+   */
+  int32_t no_timing_correction;
+  uint32_t tx_total_gain_db;
+  uint32_t rx_total_gain_db;
+  /*
+   *required uint32 rx_gain_max[4] = 12;
+   *required uint32 rx_gain_med[4] = 13;
+   *required uint32 rx_gain_byp[4] = 14;
+   *required int32 tx_power_dBm[10] = 15;
+   *required int32 tx_total_RE[10] = 16;
+   */
+  int32_t tx_power_max_dbm;
+  uint32_t n_connected_enb;
+  uint32_t ho_initiated;
+  uint32_t ho_triggered;
+  /*
+   *required PhyMeasurements measurements = 21;
+   */
+  /*
+   *	required Frameparms frame_parms_before_ho = 23;
+   *required UeCommon common_vars = 24;
+   *required uint32 current_thread_id[10] = 25;
+   */
+  Frameparms *frame_parms;
+  /*
+   *required UePdsch *pdsch_vars[RX_NB_TH_MAX][NUMBER_OF_CONNECTED_eNB_MAX+1] = 26;
+   *required UePdschFlp *pdsch_vars_flp[NUMBER_OF_CONNECTED_eNB_MAX+1] = 27;
+   *required UePdsch *pdsch_vars_SI[NUMBER_OF_CONNECTED_eNB_MAX+1] = 28;
+   *required UePdsch *pdsch_vars_ra[NUMBER_OF_CONNECTED_eNB_MAX+1] = 29;
+   *required UePdsch *pdsch_vars_p[NUMBER_OF_CONNECTED_eNB_MAX+1] = 30;
+   *required UePdsch *pdsch_vars_MCH[NUMBER_OF_CONNECTED_eNB_MAX] = 31;
+   *required UePbch*pbch_vars[NUMBER_OF_CONNECTED_eNB_MAX] = 32;
+   *required UePdcch *pdcch_vars[RX_NB_TH_MAX][NUMBER_OF_CONNECTED_eNB_MAX] = 33;
+   *required UePrach*prach_vars[NUMBER_OF_CONNECTED_eNB_MAX] = 34;
+   *required UeDlsch *dlsch[RX_NB_TH_MAX][NUMBER_OF_CONNECTED_eNB_MAX][2] = 35;
+   *required UeDlsch *ulsch[NUMBER_OF_CONNECTED_eNB_MAX] = 36;
+   *required UeDlsch *dlsch_SI[NUMBER_OF_CONNECTED_eNB_MAX] = 37;
+   *required UeDlsch *dlsch_ra[NUMBER_OF_CONNECTED_eNB_MAX] = 38;
+   *required UeDlsch *dlsch_p[NUMBER_OF_CONNECTED_eNB_MAX] = 39;
+   *required UeDlsch *dlsch_MCH[NUMBER_OF_CONNECTED_eNB_MAX] = 40;
+   *required EnbDlsch *dlsch_eNB[NUMBER_OF_CONNECTED_eNB_MAX] = 41;
+   */
+  uint32_t imsimod1024;
+  uint32_t pf;
+  uint32_t po;
+  /*
+   *required uint32 sr[10] = 45;
+   *required uint32 pucch_sel[10] = 46;
+   *required uint32 pucch_payload[22] = 47;
+   *required UeMode UE_mode[NUMBER_OF_CONNECTED_eNB_MAX] = 48;
+   *required uint32 lte_gold_table[7][20][2][14] = 49;
+   *required uint32 lte_gold_uespec_port5_table[20][38] = 50;
+   *required uint32 lte_gold_uespec_table[2][20][2][21] = 51;
+   *required uint32 lte_gold_mbsfn_table[10][3][42] = 52;
+   *required uint32 X_u[64][839] = 53;
+   */
+  uint32_t high_speed_flag;
+  uint32_t perfect_ce;
+  uint32_t ch_est_alpha;
+  /*
+   *required int32 generate_ul_signal[NUMBER_OF_CONNECTED_eNB_MAX] = 57;
+   *required UeScanInfo scan_info[NB_BANDS_MAX] = 58;
+   *required uint32 ulsch_no_allocation_counter[NUMBER_OF_CONNECTED_eNB_MAX] = 59;
+   *required string ulsch_Msg3_active[NUMBER_OF_CONNECTED_eNB_MAX]= 60;
+   *required uint32 ulsch_Msg3_frame[NUMBER_OF_CONNECTED_eNB_MAX] = 61;
+   *required uint32 ulsch_Msg3_subframe[NUMBER_OF_CONNECTED_eNB_MAX]= 62;
+   *required PrachResources *prach_resources[NUMBER_OF_CONNECTED_eNB_MAX] = 63;
+   */
+  int32_t turbo_iterations;
+  /*
+   *required uint32 total_TBS[NUMBER_OF_CONNECTED_eNB_MAX] = 65;
+   *required uint32 total_TBS_last[NUMBER_OF_CONNECTED_eNB_MAX] = 66;
+   *required uint32 bitrate[NUMBER_OF_CONNECTED_eNB_MAX] = 67;
+   */
+  int32_t turbo_cntl_iterations;
+  /*
+   *required uint32 total_received_bits[NUMBER_OF_CONNECTED_eNB_MAX] = 68;
+   *required int32 dlsch_errors[NUMBER_OF_CONNECTED_eNB_MAX] = 69;
+   *required int32 dlsch_errors_last[NUMBER_OF_CONNECTED_eNB_MAX] = 70;
+   *required int32 dlsch_received[NUMBER_OF_CONNECTED_eNB_MAX] = 71;
+   *required int32 dlsch_received_last[NUMBER_OF_CONNECTED_eNB_MAX] = 72;
+   *required int32 dlsch_fer[NUMBER_OF_CONNECTED_eNB_MAX] = 73;
+   *required int32 dlsch_SI_received[NUMBER_OF_CONNECTED_eNB_MAX] = 74;
+   *required int32 dlsch_SI_errors[NUMBER_OF_CONNECTED_eNB_MAX] = 75;
+   *required int32 dlsch_ra_received[NUMBER_OF_CONNECTED_eNB_MAX] = 76;
+   *required int32 dlsch_ra_errors[NUMBER_OF_CONNECTED_eNB_MAX] = 77;
+   *required int32 dlsch_p_received[NUMBER_OF_CONNECTED_eNB_MAX] = 78;
+   *required int32 dlsch_p_errors[NUMBER_OF_CONNECTED_eNB_MAX] = 79;
+   *required int32 dlsch_mch_received_sf[MAX_MBSFN_AREA][NUMBER_OF_CONNECTED_eNB_MAX] = 80;
+   *required int32 dlsch_mch_received[NUMBER_OF_CONNECTED_eNB_MAX] = 81;
+   *required int32 dlsch_mcch_received[MAX_MBSFN_AREA][NUMBER_OF_CONNECTED_eNB_MAX] = 82;
+   *required int32 dlsch_mtch_received[MAX_MBSFN_AREA][NUMBER_OF_CONNECTED_eNB_MAX] = 83;
+   *required int32 dlsch_mcch_errors[MAX_MBSFN_AREA][NUMBER_OF_CONNECTED_eNB_MAX] = 84;
+   *required int32 dlsch_mtch_errors[MAX_MBSFN_AREA][NUMBER_OF_CONNECTED_eNB_MAX] = 85;
+   *required int32 dlsch_mcch_trials[MAX_MBSFN_AREA][NUMBER_OF_CONNECTED_eNB_MAX] = 86;
+   *required int32 dlsch_mtch_trials[MAX_MBSFN_AREA][NUMBER_OF_CONNECTED_eNB_MAX] = 87;
+   *required int32 current_dlsch_cqi[NUMBER_OF_CONNECTED_eNB_MAX] = 88;
+   *required uint32 first_run_timing_advance[NUMBER_OF_CONNECTED_eNB_MAX]= 89;
+   */
+  uint32_t generate_prach;
+  uint32_t prach_cnt;
+  uint32_t prach_preambleindex;
+  uint32_t decode_sib;
+  uint32_t decode_mib;
+  int32_t rx_offset;
+  int32_t rx_offset_diff;
+  int32_t time_sync_cell;
+  int32_t timing_advance;
+  int32_t hw_timing_advance;
+  int32_t n_ta_offset;
+  uint32_t is_secondary_ue;
+  uint32_t has_valid_precoder;
+  /*
+   *required int32 **ul_precoder_S_UE = 103;
+   */
+  int32_t log2_maxp;
+  int32_t mac_enabled;
+  int32_t init_averaging;
+  /*
+   *required int64 *sinr_dB = 107;
+   *required int64 *sinr_CQI_dB = 108;
+   */
+  int64_t sinr_eff;
+  /*
+   *required PdschConfigDedicated pdsch_config_dedicated[NUMBER_OF_CONNECTED_eNB_MAX] = 111;
+   *required PuschConfigDedicated pusch_config_dedicated[NUMBER_OF_CONNECTED_eNB_MAX] = 112;
+   *required PuschCaConfigDedicated pusch_ca_config_dedicated[NUMBER_OF_eNB_MAX] = 113;
+   *required PucchConfigDedicated pucch_config_dedicated[NUMBER_OF_CONNECTED_eNB_MAX] = 114;
+   *required uint32 ncs_cell[20][7] = 115;
+   *required UlPowerControlDedicated ul_power_control_dedicated[NUMBER_OF_CONNECTED_eNB_MAX] = 116;
+   *required TpcPdcchConfig tpc_pdcch_config_pucch[NUMBER_OF_CONNECTED_eNB_MAX] = 117;
+   *required TpcPdcchConfig tpc_pdcch_config_pusch[NUMBER_OF_CONNECTED_eNB_MAX] = 118;
+   *required CqiReportConfig cqi_report_config[NUMBER_OF_CONNECTED_eNB_MAX] = 119;
+   *required SoundingrsUlConfigDedicated soundingrs_ul_config_dedicated[NUMBER_OF_CONNECTED_eNB_MAX] = 120;
+   *required SchedulingRequestConfig scheduling_request_config[NUMBER_OF_CONNECTED_eNB_MAX] = 121;
+   *required uint32 transmission_mode[NUMBER_OF_CONNECTED_eNB_MAX] = 122;
+   *required TimeStats phy_proc[RX_NB_TH] = 123;
+   *required TimeStats phy_proc_tx = 124;
+   *required TimeStats phy_proc_rx[RX_NB_TH] = 125;
+   *required uint32 use_ia_receiver = 126;
+   *required TimeStats ofdm_mod_stats = 127;
+   *required TimeStats ulsch_encoding_stats = 128;
+   *required TimeStats ulsch_modulation_stats = 129;
+   *required TimeStats ulsch_segmentation_stats = 130;
+   *required TimeStats ulsch_rate_matching_stats = 131;
+   *required TimeStats ulsch_turbo_encoding_stats = 132;
+   *required TimeStats ulsch_interleaving_stats = 133;
+   *required TimeStats ulsch_multiplexing_stats = 134;
+   *required TimeStats generic_stat = 135;
+   *required TimeStats generic_stat_bis[RX_NB_TH][LTE_SLOTS_PER_SUBFRAME] = 136;
+   *required TimeStats ue_front_end_stat[RX_NB_TH] = 137;
+   *required TimeStats ue_front_end_per_slot_stat[RX_NB_TH][LTE_SLOTS_PER_SUBFRAME] = 138;
+   *required TimeStats pdcch_procedures_stat[RX_NB_TH] = 139;
+   *required TimeStats pdsch_procedures_stat[RX_NB_TH] = 140;
+   *required TimeStats pdsch_procedures_per_slot_stat[RX_NB_TH][LTE_SLOTS_PER_SUBFRAME] = 141;
+   *required TimeStats dlsch_procedures_stat[RX_NB_TH] = 142;
+   *required TimeStats ofdm_demod_stats = 143;
+   *required TimeStats dlsch_rx_pdcch_stats = 144;
+   *required TimeStats rx_dft_stats = 145;
+   *required TimeStats dlsch_channel_estimation_stats = 146;
+   *required TimeStats dlsch_freq_offset_estimation_stats = 147;
+   *required TimeStats dlsch_decoding_stats[2] = 148;
+   *required TimeStats dlsch_demodulation_stats = 149;
+   *required TimeStats dlsch_rate_unmatching_stats = 150;
+   *required TimeStats dlsch_turbo_decoding_stats = 151;
+   *required TimeStats dlsch_deinterleaving_stats = 152;
+   *required TimeStats dlsch_llr_stats = 153;
+   *required TimeStats dlsch_llr_stats_parallelization[RX_NB_TH][LTE_SLOTS_PER_SUBFRAME] = 154;
+   *required TimeStats dlsch_unscrambling_stats = 155;
+   *required TimeStats dlsch_rate_matching_stats = 156;
+   *required TimeStats dlsch_turbo_encoding_stats = 157;
+   *required TimeStats dlsch_interleaving_stats = 158;
+   *required TimeStats dlsch_tc_init_stats = 159;
+   *required TimeStats dlsch_tc_alpha_stats = 160;
+   *required TimeStats dlsch_tc_beta_stats = 161;
+   *required TimeStats dlsch_tc_gamma_stats = 162;
+   *required TimeStats dlsch_tc_ext_stats = 163;
+   *required TimeStats dlsch_tc_intl1_stats = 164;
+   *required TimeStats dlsch_tc_intl2_stats = 165;
+   *required TimeStats tx_prach = 166;
+   *required Openair0Device rfdevice = 167;
+   *required TimeStats dlsch_encoding_SIC_stats = 168;
+   *required TimeStats dlsch_scrambling_SIC_stats = 169;
+   *required TimeStats dlsch_modulation_SIC_stats = 170;
+   *required TimeStats dlsch_llr_stripping_unit_SIC_stats = 171;
+   *required TimeStats dlsch_unscrambling_SIC_stats = 172;
+   */
+  int64_t n0;
+};
+#define PHY_VARS_UE__INIT \
+ { PROTOBUF_C_MESSAGE_INIT (&phy_vars_ue__descriptor) \
+    , 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
+
+
+struct  _UeRxTxProc
+{
+  ProtobufCMessage base;
+  int32_t proc_id;
+  uint32_t cc_id;
+  int64_t timestamp_tx;
+  int32_t subframe_tx;
+  int32_t subframe_rx;
+  int32_t frame_tx;
+  int32_t frame_rx;
+  int32_t instance_cnt_rxtx;
+  uint64_t pthread_rxtx;
+  /*
+   *required int32 attr_rxtx = 10; //These parameters are not relevant offline.
+   *required int32 cond_rxtx = 11;
+   *required int32 mutex_rxtx = 12;
+   *required int32 sched_param_rxtx = 13;
+   */
+  int32_t instance_cnt_slot1_dl_processing;
+  uint64_t pthread_slot1_dl_processing;
+  /*
+   *required int32 attr_slot1_dl_processing = 16;
+   *required int32 cond_slot1_dl_processing = 17;
+   *required int32 mutex_slot1_dl_processing = 18;
+   */
+  uint32_t chan_est_pilot0_slot1_available;
+  uint32_t chan_est_slot1_available;
+  uint32_t llr_slot1_available;
+  uint32_t dci_slot0_available;
+  uint32_t first_symbol_available;
+  /*
+   *required int32 sched_param_fep_slot1 =24;
+   */
+  int32_t sub_frame_start;
+  int32_t sub_frame_step;
+  uint64_t gotiqs;
+};
+#define UE_RX_TX_PROC__INIT \
+ { PROTOBUF_C_MESSAGE_INIT (&ue_rx_tx_proc__descriptor) \
+    , 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
+
+
+struct  _RxTxThreadData
+{
+  ProtobufCMessage base;
+  UeRxTxProc *proc;
+  PhyVarsUe *ue;
+};
+#define RX_TX_THREAD_DATA__INIT \
+ { PROTOBUF_C_MESSAGE_INIT (&rx_tx_thread_data__descriptor) \
+    , NULL, NULL }
+
+
+/* PrachConfigCommon methods */
+void   prach_config_common__init
+                     (PrachConfigCommon         *message);
+size_t prach_config_common__get_packed_size
+                     (const PrachConfigCommon   *message);
+size_t prach_config_common__pack
+                     (const PrachConfigCommon   *message,
                       uint8_t             *out);
-size_t dump__pack_to_buffer
-                     (const Dump   *message,
+size_t prach_config_common__pack_to_buffer
+                     (const PrachConfigCommon   *message,
                       ProtobufCBuffer     *buffer);
-Dump *
-       dump__unpack
+PrachConfigCommon *
+       prach_config_common__unpack
                      (ProtobufCAllocator  *allocator,
                       size_t               len,
                       const uint8_t       *data);
-void   dump__free_unpacked
-                     (Dump *message,
+void   prach_config_common__free_unpacked
+                     (PrachConfigCommon *message,
+                      ProtobufCAllocator *allocator);
+/* PucchConfigCommon methods */
+void   pucch_config_common__init
+                     (PucchConfigCommon         *message);
+size_t pucch_config_common__get_packed_size
+                     (const PucchConfigCommon   *message);
+size_t pucch_config_common__pack
+                     (const PucchConfigCommon   *message,
+                      uint8_t             *out);
+size_t pucch_config_common__pack_to_buffer
+                     (const PucchConfigCommon   *message,
+                      ProtobufCBuffer     *buffer);
+PucchConfigCommon *
+       pucch_config_common__unpack
+                     (ProtobufCAllocator  *allocator,
+                      size_t               len,
+                      const uint8_t       *data);
+void   pucch_config_common__free_unpacked
+                     (PucchConfigCommon *message,
+                      ProtobufCAllocator *allocator);
+/* PdschConfigCommon methods */
+void   pdsch_config_common__init
+                     (PdschConfigCommon         *message);
+size_t pdsch_config_common__get_packed_size
+                     (const PdschConfigCommon   *message);
+size_t pdsch_config_common__pack
+                     (const PdschConfigCommon   *message,
+                      uint8_t             *out);
+size_t pdsch_config_common__pack_to_buffer
+                     (const PdschConfigCommon   *message,
+                      ProtobufCBuffer     *buffer);
+PdschConfigCommon *
+       pdsch_config_common__unpack
+                     (ProtobufCAllocator  *allocator,
+                      size_t               len,
+                      const uint8_t       *data);
+void   pdsch_config_common__free_unpacked
+                     (PdschConfigCommon *message,
+                      ProtobufCAllocator *allocator);
+/* PuschConfigCommon methods */
+void   pusch_config_common__init
+                     (PuschConfigCommon         *message);
+size_t pusch_config_common__get_packed_size
+                     (const PuschConfigCommon   *message);
+size_t pusch_config_common__pack
+                     (const PuschConfigCommon   *message,
+                      uint8_t             *out);
+size_t pusch_config_common__pack_to_buffer
+                     (const PuschConfigCommon   *message,
+                      ProtobufCBuffer     *buffer);
+PuschConfigCommon *
+       pusch_config_common__unpack
+                     (ProtobufCAllocator  *allocator,
+                      size_t               len,
+                      const uint8_t       *data);
+void   pusch_config_common__free_unpacked
+                     (PuschConfigCommon *message,
+                      ProtobufCAllocator *allocator);
+/* PhichConfigCommon methods */
+void   phich_config_common__init
+                     (PhichConfigCommon         *message);
+size_t phich_config_common__get_packed_size
+                     (const PhichConfigCommon   *message);
+size_t phich_config_common__pack
+                     (const PhichConfigCommon   *message,
+                      uint8_t             *out);
+size_t phich_config_common__pack_to_buffer
+                     (const PhichConfigCommon   *message,
+                      ProtobufCBuffer     *buffer);
+PhichConfigCommon *
+       phich_config_common__unpack
+                     (ProtobufCAllocator  *allocator,
+                      size_t               len,
+                      const uint8_t       *data);
+void   phich_config_common__free_unpacked
+                     (PhichConfigCommon *message,
+                      ProtobufCAllocator *allocator);
+/* SoundingrsUlConfigCommon methods */
+void   soundingrs_ul_config_common__init
+                     (SoundingrsUlConfigCommon         *message);
+size_t soundingrs_ul_config_common__get_packed_size
+                     (const SoundingrsUlConfigCommon   *message);
+size_t soundingrs_ul_config_common__pack
+                     (const SoundingrsUlConfigCommon   *message,
+                      uint8_t             *out);
+size_t soundingrs_ul_config_common__pack_to_buffer
+                     (const SoundingrsUlConfigCommon   *message,
+                      ProtobufCBuffer     *buffer);
+SoundingrsUlConfigCommon *
+       soundingrs_ul_config_common__unpack
+                     (ProtobufCAllocator  *allocator,
+                      size_t               len,
+                      const uint8_t       *data);
+void   soundingrs_ul_config_common__free_unpacked
+                     (SoundingrsUlConfigCommon *message,
+                      ProtobufCAllocator *allocator);
+/* UlPowerControlConfigCommon methods */
+void   ul_power_control_config_common__init
+                     (UlPowerControlConfigCommon         *message);
+size_t ul_power_control_config_common__get_packed_size
+                     (const UlPowerControlConfigCommon   *message);
+size_t ul_power_control_config_common__pack
+                     (const UlPowerControlConfigCommon   *message,
+                      uint8_t             *out);
+size_t ul_power_control_config_common__pack_to_buffer
+                     (const UlPowerControlConfigCommon   *message,
+                      ProtobufCBuffer     *buffer);
+UlPowerControlConfigCommon *
+       ul_power_control_config_common__unpack
+                     (ProtobufCAllocator  *allocator,
+                      size_t               len,
+                      const uint8_t       *data);
+void   ul_power_control_config_common__free_unpacked
+                     (UlPowerControlConfigCommon *message,
+                      ProtobufCAllocator *allocator);
+/* PhichReg methods */
+void   phich_reg__init
+                     (PhichReg         *message);
+size_t phich_reg__get_packed_size
+                     (const PhichReg   *message);
+size_t phich_reg__pack
+                     (const PhichReg   *message,
+                      uint8_t             *out);
+size_t phich_reg__pack_to_buffer
+                     (const PhichReg   *message,
+                      ProtobufCBuffer     *buffer);
+PhichReg *
+       phich_reg__unpack
+                     (ProtobufCAllocator  *allocator,
+                      size_t               len,
+                      const uint8_t       *data);
+void   phich_reg__free_unpacked
+                     (PhichReg *message,
                       ProtobufCAllocator *allocator);
 /* Frameparms methods */
 void   frameparms__init
@@ -83,13 +627,100 @@ Frameparms *
 void   frameparms__free_unpacked
                      (Frameparms *message,
                       ProtobufCAllocator *allocator);
+/* PhyVarsUe methods */
+void   phy_vars_ue__init
+                     (PhyVarsUe         *message);
+size_t phy_vars_ue__get_packed_size
+                     (const PhyVarsUe   *message);
+size_t phy_vars_ue__pack
+                     (const PhyVarsUe   *message,
+                      uint8_t             *out);
+size_t phy_vars_ue__pack_to_buffer
+                     (const PhyVarsUe   *message,
+                      ProtobufCBuffer     *buffer);
+PhyVarsUe *
+       phy_vars_ue__unpack
+                     (ProtobufCAllocator  *allocator,
+                      size_t               len,
+                      const uint8_t       *data);
+void   phy_vars_ue__free_unpacked
+                     (PhyVarsUe *message,
+                      ProtobufCAllocator *allocator);
+/* UeRxTxProc methods */
+void   ue_rx_tx_proc__init
+                     (UeRxTxProc         *message);
+size_t ue_rx_tx_proc__get_packed_size
+                     (const UeRxTxProc   *message);
+size_t ue_rx_tx_proc__pack
+                     (const UeRxTxProc   *message,
+                      uint8_t             *out);
+size_t ue_rx_tx_proc__pack_to_buffer
+                     (const UeRxTxProc   *message,
+                      ProtobufCBuffer     *buffer);
+UeRxTxProc *
+       ue_rx_tx_proc__unpack
+                     (ProtobufCAllocator  *allocator,
+                      size_t               len,
+                      const uint8_t       *data);
+void   ue_rx_tx_proc__free_unpacked
+                     (UeRxTxProc *message,
+                      ProtobufCAllocator *allocator);
+/* RxTxThreadData methods */
+void   rx_tx_thread_data__init
+                     (RxTxThreadData         *message);
+size_t rx_tx_thread_data__get_packed_size
+                     (const RxTxThreadData   *message);
+size_t rx_tx_thread_data__pack
+                     (const RxTxThreadData   *message,
+                      uint8_t             *out);
+size_t rx_tx_thread_data__pack_to_buffer
+                     (const RxTxThreadData   *message,
+                      ProtobufCBuffer     *buffer);
+RxTxThreadData *
+       rx_tx_thread_data__unpack
+                     (ProtobufCAllocator  *allocator,
+                      size_t               len,
+                      const uint8_t       *data);
+void   rx_tx_thread_data__free_unpacked
+                     (RxTxThreadData *message,
+                      ProtobufCAllocator *allocator);
 /* --- per-message closures --- */
 
-typedef void (*Dump_Closure)
-                 (const Dump *message,
+typedef void (*PrachConfigCommon_Closure)
+                 (const PrachConfigCommon *message,
+                  void *closure_data);
+typedef void (*PucchConfigCommon_Closure)
+                 (const PucchConfigCommon *message,
+                  void *closure_data);
+typedef void (*PdschConfigCommon_Closure)
+                 (const PdschConfigCommon *message,
+                  void *closure_data);
+typedef void (*PuschConfigCommon_Closure)
+                 (const PuschConfigCommon *message,
+                  void *closure_data);
+typedef void (*PhichConfigCommon_Closure)
+                 (const PhichConfigCommon *message,
+                  void *closure_data);
+typedef void (*SoundingrsUlConfigCommon_Closure)
+                 (const SoundingrsUlConfigCommon *message,
+                  void *closure_data);
+typedef void (*UlPowerControlConfigCommon_Closure)
+                 (const UlPowerControlConfigCommon *message,
+                  void *closure_data);
+typedef void (*PhichReg_Closure)
+                 (const PhichReg *message,
                   void *closure_data);
 typedef void (*Frameparms_Closure)
                  (const Frameparms *message,
+                  void *closure_data);
+typedef void (*PhyVarsUe_Closure)
+                 (const PhyVarsUe *message,
+                  void *closure_data);
+typedef void (*UeRxTxProc_Closure)
+                 (const UeRxTxProc *message,
+                  void *closure_data);
+typedef void (*RxTxThreadData_Closure)
+                 (const RxTxThreadData *message,
                   void *closure_data);
 
 /* --- services --- */
@@ -97,8 +728,20 @@ typedef void (*Frameparms_Closure)
 
 /* --- descriptors --- */
 
-extern const ProtobufCMessageDescriptor dump__descriptor;
+extern const ProtobufCMessageDescriptor prach_config_common__descriptor;
+extern const ProtobufCMessageDescriptor pucch_config_common__descriptor;
+extern const ProtobufCMessageDescriptor pdsch_config_common__descriptor;
+extern const ProtobufCMessageDescriptor pusch_config_common__descriptor;
+extern const ProtobufCMessageDescriptor phich_config_common__descriptor;
+extern const ProtobufCMessageDescriptor soundingrs_ul_config_common__descriptor;
+extern const ProtobufCMessageDescriptor ul_power_control_config_common__descriptor;
+extern const ProtobufCMessageDescriptor phich_reg__descriptor;
 extern const ProtobufCMessageDescriptor frameparms__descriptor;
+extern const ProtobufCEnumDescriptor    frameparms__lte_prefix_type__descriptor;
+extern const ProtobufCEnumDescriptor    frameparms__lte_frame_type__descriptor;
+extern const ProtobufCMessageDescriptor phy_vars_ue__descriptor;
+extern const ProtobufCMessageDescriptor ue_rx_tx_proc__descriptor;
+extern const ProtobufCMessageDescriptor rx_tx_thread_data__descriptor;
 
 PROTOBUF_C__END_DECLS
 

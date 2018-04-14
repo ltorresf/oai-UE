@@ -1,28 +1,62 @@
 syntax = "proto2";
 
-message dump {
-	required Frameparms frame_param=1;
+message PrachConfigCommon{
+
+}
+
+message PucchConfigCommon {
+
+}
+
+message PdschConfigCommon {
+
+}
+
+message PuschConfigCommon {
+
+}
+
+message PhichConfigCommon {
+
+}
+
+message SoundingrsUlConfigCommon {
+
+}
+
+message UlPowerControlConfigCommon {
+
+}
+
+message PhichReg {
+	repeated uint32 phich_reg_inner = 1;
 }
 
 message Frameparms {
-	required uint32 N_RB_DL=1; 
+	required uint32 N_RB_DL=1;
 	required uint32 N_RB_UL=2;
-}
-/*
 	required uint32 N_RBG = 3;
 	required uint32 N_RBGS = 4;
 	required uint32 Nid_cell = 5;
 	required uint32 Nid_cell_mbsfn = 6;
-	//required Ncp = 7;
-	//required Ncp_UL = 8;
+	enum LtePrefixType	{
+		EXTENDED=1;
+		NORMAL=0;
+	}
+	required LtePrefixType Ncp = 7;
+	required LtePrefixType Ncp_UL = 8;
 	required uint32 nushift = 9;
-	//required frame_type = 10;
+	enum LteFrameType {
+		TDD=1;
+		FDD=0;
+	}
+	required LteFrameType frame_type = 10;
 	required uint32 tdd_config = 11;
 	required uint32 tdd_config_S = 12;
 	required uint32 srsX = 13;
 	required uint32 node_id = 14;
 	required uint32 freq_idx = 15;
-	required uint32 carrier_freq[4] = 16;
+	/*	required uint32 carrier_freq[4] = 16;
 	required uint32 carrier_freqtx[4] = 17;
 	required uint32 rxgain[4] = 18;
 	required uint32 txgain[4] = 19;
@@ -30,7 +64,7 @@ message Frameparms {
 	required uint32 rxdc[4] = 21;
 	required uint32 rflocal[4] = 22;
 	required uint32 rfvcolocal[4] = 23;
-	required uint32 dual_tx = 24;
+	required uint32 dual_tx = 24; */
 	required uint32 mode1_flag = 25;
 	required uint32 threequarter_fs = 26;
 	required uint32 ofdm_symbol_size = 27;
@@ -44,20 +78,235 @@ message Frameparms {
 	required uint32 nb_antennas_tx = 35;
 	required uint32 nb_antennas_rx = 36;
 	required uint32 nb_antenna_ports_eNB = 37;
-	required prach_config_common = 38;
-	required pucch_config_common = 39;
-	required pdsch_config_common = 40;
-	required pusch_config_common = 41;
-	required phich_config_common = 42;
-	required soundingrs_ul_config_common = 43;
-	required ul_power_control_config_common = 44;
-	required num_MBSFN_config = 45;
+	optional PrachConfigCommon prach_config_common = 38;
+	optional PucchConfigCommon pucch_config_common = 39;
+	optional PdschConfigCommon pdsch_config_common = 40;
+	optional PuschConfigCommon pusch_config_common = 41;
+	optional PhichConfigCommon phich_config_common = 42;
+	optional SoundingrsUlConfigCommon soundingrs_ul_config_common = 43;
+	optional UlPowerControlConfigCommon ul_power_control_config_common = 44;
+	required uint32	num_MBSFN_config = 45;
 	//required MBSFN_config[8] = 46;
 	required uint32 maxHARQ_Msg3Tx = 47;
 	required uint32 SIwindowsize = 48;
 	required uint32 SIPeriod = 49;
-	//required uint32 pcfich_reg[4] = 50;
+	repeated uint32 pcfich_reg = 50;	//[4]
 	required uint32 pcfich_first_reg_idx = 51;
-	//required phich_reg[MAX_NUM_PHICH_GROUPS][3] = 52;
+	repeated PhichReg phich_reg_outer = 52; //[MAX_NUM_PHICH_GROUPS][3]
 	//required MBSFN_SubframeConfig = 53;
-}*/
+}
+
+message PhyVarsUe {
+	//required int32 UE_scan = 1;
+	//required Frameparms frame_param=2;
+	required uint32 Mod_id = 1 ;
+	required uint32 CC_id = 2;
+	//required Openair0RfMap rf_map = 3;
+	//required RunMode mode = 4;
+	required int32 UE_scan = 5;
+	required int32 UE_scan_carrier = 6;
+	required int32 is_synchronized = 7;
+	//required UeProc proc = 8;
+	required int32 no_timing_correction = 9;
+	required uint32 tx_total_gain_dB = 10;
+	required uint32 rx_total_gain_dB = 11;
+	/*required uint32 rx_gain_max[4] = 12;
+	required uint32 rx_gain_med[4] = 13;
+	required uint32 rx_gain_byp[4] = 14;
+	required int32 tx_power_dBm[10] = 15;
+	required int32 tx_total_RE[10] = 16;*/
+	required int32 tx_power_max_dBm = 17;
+	required uint32 n_connected_eNB = 18;
+	required uint32 ho_initiated = 19;
+	required uint32 ho_triggered = 20;
+	//required PhyMeasurements measurements = 21;
+	required Frameparms frame_parms = 22;
+//	required Frameparms frame_parms_before_ho = 23;
+	//required UeCommon common_vars = 24;
+	//required uint32 current_thread_id[10] = 25;
+	/*required UePdsch *pdsch_vars[RX_NB_TH_MAX][NUMBER_OF_CONNECTED_eNB_MAX+1] = 26;
+	required UePdschFlp *pdsch_vars_flp[NUMBER_OF_CONNECTED_eNB_MAX+1] = 27;
+	required UePdsch *pdsch_vars_SI[NUMBER_OF_CONNECTED_eNB_MAX+1] = 28;
+	required UePdsch *pdsch_vars_ra[NUMBER_OF_CONNECTED_eNB_MAX+1] = 29;
+	required UePdsch *pdsch_vars_p[NUMBER_OF_CONNECTED_eNB_MAX+1] = 30;
+	required UePdsch *pdsch_vars_MCH[NUMBER_OF_CONNECTED_eNB_MAX] = 31;
+	required UePbch*pbch_vars[NUMBER_OF_CONNECTED_eNB_MAX] = 32;
+	required UePdcch *pdcch_vars[RX_NB_TH_MAX][NUMBER_OF_CONNECTED_eNB_MAX] = 33;
+	required UePrach*prach_vars[NUMBER_OF_CONNECTED_eNB_MAX] = 34;
+	required UeDlsch *dlsch[RX_NB_TH_MAX][NUMBER_OF_CONNECTED_eNB_MAX][2] = 35;
+	required UeDlsch *ulsch[NUMBER_OF_CONNECTED_eNB_MAX] = 36;
+	required UeDlsch *dlsch_SI[NUMBER_OF_CONNECTED_eNB_MAX] = 37;
+	required UeDlsch *dlsch_ra[NUMBER_OF_CONNECTED_eNB_MAX] = 38;
+	required UeDlsch *dlsch_p[NUMBER_OF_CONNECTED_eNB_MAX] = 39;
+	required UeDlsch *dlsch_MCH[NUMBER_OF_CONNECTED_eNB_MAX] = 40;
+	required EnbDlsch *dlsch_eNB[NUMBER_OF_CONNECTED_eNB_MAX] = 41;*/
+	required uint32 IMSImod1024 = 42;
+	required uint32 PF = 43;
+	required uint32 PO = 44;
+	//required uint32 sr[10] = 45;
+	//required uint32 pucch_sel[10] = 46;
+	//required uint32 pucch_payload[22] = 47;
+	//required UeMode UE_mode[NUMBER_OF_CONNECTED_eNB_MAX] = 48;
+	//required uint32 lte_gold_table[7][20][2][14] = 49;
+	//required uint32 lte_gold_uespec_port5_table[20][38] = 50;
+	//required uint32 lte_gold_uespec_table[2][20][2][21] = 51;
+	//required uint32 lte_gold_mbsfn_table[10][3][42] = 52;
+	//required uint32 X_u[64][839] = 53;
+	required uint32 high_speed_flag = 54;
+	required uint32 perfect_ce = 55;
+	required uint32 ch_est_alpha = 56;
+	//required int32 generate_ul_signal[NUMBER_OF_CONNECTED_eNB_MAX] = 57;
+	//required UeScanInfo scan_info[NB_BANDS_MAX] = 58;
+	//required uint32 ulsch_no_allocation_counter[NUMBER_OF_CONNECTED_eNB_MAX] = 59;
+	//required string ulsch_Msg3_active[NUMBER_OF_CONNECTED_eNB_MAX]= 60;
+	//required uint32 ulsch_Msg3_frame[NUMBER_OF_CONNECTED_eNB_MAX] = 61;
+	//required uint32 ulsch_Msg3_subframe[NUMBER_OF_CONNECTED_eNB_MAX]= 62;
+	//required PrachResources *prach_resources[NUMBER_OF_CONNECTED_eNB_MAX] = 63;
+	required int32 turbo_iterations= 64;
+	required int32 turbo_cntl_iterations= 173;
+	//required uint32 total_TBS[NUMBER_OF_CONNECTED_eNB_MAX] = 65;
+	//required uint32 total_TBS_last[NUMBER_OF_CONNECTED_eNB_MAX] = 66;
+	//required uint32 bitrate[NUMBER_OF_CONNECTED_eNB_MAX] = 67;
+	/*required uint32 total_received_bits[NUMBER_OF_CONNECTED_eNB_MAX] = 68;
+	required int32 dlsch_errors[NUMBER_OF_CONNECTED_eNB_MAX] = 69;
+	required int32 dlsch_errors_last[NUMBER_OF_CONNECTED_eNB_MAX] = 70;
+	required int32 dlsch_received[NUMBER_OF_CONNECTED_eNB_MAX] = 71;
+	required int32 dlsch_received_last[NUMBER_OF_CONNECTED_eNB_MAX] = 72;
+	required int32 dlsch_fer[NUMBER_OF_CONNECTED_eNB_MAX] = 73;
+	required int32 dlsch_SI_received[NUMBER_OF_CONNECTED_eNB_MAX] = 74;
+	required int32 dlsch_SI_errors[NUMBER_OF_CONNECTED_eNB_MAX] = 75;
+	required int32 dlsch_ra_received[NUMBER_OF_CONNECTED_eNB_MAX] = 76;
+	required int32 dlsch_ra_errors[NUMBER_OF_CONNECTED_eNB_MAX] = 77;
+	required int32 dlsch_p_received[NUMBER_OF_CONNECTED_eNB_MAX] = 78;
+	required int32 dlsch_p_errors[NUMBER_OF_CONNECTED_eNB_MAX] = 79;
+	required int32 dlsch_mch_received_sf[MAX_MBSFN_AREA][NUMBER_OF_CONNECTED_eNB_MAX] = 80;
+	required int32 dlsch_mch_received[NUMBER_OF_CONNECTED_eNB_MAX] = 81;
+	required int32 dlsch_mcch_received[MAX_MBSFN_AREA][NUMBER_OF_CONNECTED_eNB_MAX] = 82;
+	required int32 dlsch_mtch_received[MAX_MBSFN_AREA][NUMBER_OF_CONNECTED_eNB_MAX] = 83;
+	required int32 dlsch_mcch_errors[MAX_MBSFN_AREA][NUMBER_OF_CONNECTED_eNB_MAX] = 84;
+	required int32 dlsch_mtch_errors[MAX_MBSFN_AREA][NUMBER_OF_CONNECTED_eNB_MAX] = 85;
+	required int32 dlsch_mcch_trials[MAX_MBSFN_AREA][NUMBER_OF_CONNECTED_eNB_MAX] = 86;
+	required int32 dlsch_mtch_trials[MAX_MBSFN_AREA][NUMBER_OF_CONNECTED_eNB_MAX] = 87;
+	required int32 current_dlsch_cqi[NUMBER_OF_CONNECTED_eNB_MAX] = 88;
+	required uint32 first_run_timing_advance[NUMBER_OF_CONNECTED_eNB_MAX]= 89;*/
+	required uint32 generate_prach = 90;
+	required uint32 prach_cnt = 91;
+	required uint32 prach_PreambleIndex = 92;
+	required uint32 decode_SIB = 93;
+	required uint32 decode_MIB = 94;
+	required int32 rx_offset = 95;
+	required int32 rx_offset_diff = 96;
+	required int32 time_sync_cell = 97;
+	required int32 timing_advance = 98;
+	required int32 hw_timing_advance = 99;
+	required int32 N_TA_offset = 100;
+	required uint32 is_secondary_ue= 101;
+	required uint32 has_valid_precoder= 102;
+	//required int32 **ul_precoder_S_UE = 103;
+	required int32 log2_maxp = 104;
+	required int32 mac_enabled = 105;
+	required int32 init_averaging = 106;
+	//required int64 *sinr_dB = 107;
+	//required int64 *sinr_CQI_dB = 108;
+	required int64 sinr_eff = 109;
+	required int64 N0 = 110;
+	/*required PdschConfigDedicated pdsch_config_dedicated[NUMBER_OF_CONNECTED_eNB_MAX] = 111;
+	required PuschConfigDedicated pusch_config_dedicated[NUMBER_OF_CONNECTED_eNB_MAX] = 112;
+	required PuschCaConfigDedicated pusch_ca_config_dedicated[NUMBER_OF_eNB_MAX] = 113;
+	required PucchConfigDedicated pucch_config_dedicated[NUMBER_OF_CONNECTED_eNB_MAX] = 114;
+	required uint32 ncs_cell[20][7] = 115;
+	required UlPowerControlDedicated ul_power_control_dedicated[NUMBER_OF_CONNECTED_eNB_MAX] = 116;
+	required TpcPdcchConfig tpc_pdcch_config_pucch[NUMBER_OF_CONNECTED_eNB_MAX] = 117;
+	required TpcPdcchConfig tpc_pdcch_config_pusch[NUMBER_OF_CONNECTED_eNB_MAX] = 118;
+	required CqiReportConfig cqi_report_config[NUMBER_OF_CONNECTED_eNB_MAX] = 119;
+	required SoundingrsUlConfigDedicated soundingrs_ul_config_dedicated[NUMBER_OF_CONNECTED_eNB_MAX] = 120;
+	required SchedulingRequestConfig scheduling_request_config[NUMBER_OF_CONNECTED_eNB_MAX] = 121;
+	required uint32 transmission_mode[NUMBER_OF_CONNECTED_eNB_MAX] = 122;
+	required TimeStats phy_proc[RX_NB_TH] = 123;
+	required TimeStats phy_proc_tx = 124;
+	required TimeStats phy_proc_rx[RX_NB_TH] = 125;
+	required uint32 use_ia_receiver = 126;
+	required TimeStats ofdm_mod_stats = 127;
+	required TimeStats ulsch_encoding_stats = 128;
+	required TimeStats ulsch_modulation_stats = 129;
+	required TimeStats ulsch_segmentation_stats = 130;
+	required TimeStats ulsch_rate_matching_stats = 131;
+	required TimeStats ulsch_turbo_encoding_stats = 132;
+	required TimeStats ulsch_interleaving_stats = 133;
+	required TimeStats ulsch_multiplexing_stats = 134;
+	required TimeStats generic_stat = 135;
+	required TimeStats generic_stat_bis[RX_NB_TH][LTE_SLOTS_PER_SUBFRAME] = 136;
+	required TimeStats ue_front_end_stat[RX_NB_TH] = 137;
+	required TimeStats ue_front_end_per_slot_stat[RX_NB_TH][LTE_SLOTS_PER_SUBFRAME] = 138;
+	required TimeStats pdcch_procedures_stat[RX_NB_TH] = 139;
+	required TimeStats pdsch_procedures_stat[RX_NB_TH] = 140;
+	required TimeStats pdsch_procedures_per_slot_stat[RX_NB_TH][LTE_SLOTS_PER_SUBFRAME] = 141;
+	required TimeStats dlsch_procedures_stat[RX_NB_TH] = 142;
+	required TimeStats ofdm_demod_stats = 143;
+	required TimeStats dlsch_rx_pdcch_stats = 144;
+	required TimeStats rx_dft_stats = 145;
+	required TimeStats dlsch_channel_estimation_stats = 146;
+	required TimeStats dlsch_freq_offset_estimation_stats = 147;
+	required TimeStats dlsch_decoding_stats[2] = 148;
+	required TimeStats dlsch_demodulation_stats = 149;
+	required TimeStats dlsch_rate_unmatching_stats = 150;
+	required TimeStats dlsch_turbo_decoding_stats = 151;
+	required TimeStats dlsch_deinterleaving_stats = 152;
+	required TimeStats dlsch_llr_stats = 153;
+	required TimeStats dlsch_llr_stats_parallelization[RX_NB_TH][LTE_SLOTS_PER_SUBFRAME] = 154;
+	required TimeStats dlsch_unscrambling_stats = 155;
+	required TimeStats dlsch_rate_matching_stats = 156;
+	required TimeStats dlsch_turbo_encoding_stats = 157;
+	required TimeStats dlsch_interleaving_stats = 158;
+	required TimeStats dlsch_tc_init_stats = 159;
+	required TimeStats dlsch_tc_alpha_stats = 160;
+	required TimeStats dlsch_tc_beta_stats = 161;
+	required TimeStats dlsch_tc_gamma_stats = 162;
+	required TimeStats dlsch_tc_ext_stats = 163;
+	required TimeStats dlsch_tc_intl1_stats = 164;
+	required TimeStats dlsch_tc_intl2_stats = 165;
+	required TimeStats tx_prach = 166;
+	required Openair0Device rfdevice = 167;
+	required TimeStats dlsch_encoding_SIC_stats = 168;
+	required TimeStats dlsch_scrambling_SIC_stats = 169;
+	required TimeStats dlsch_modulation_SIC_stats = 170;
+	required TimeStats dlsch_llr_stripping_unit_SIC_stats = 171;
+	required TimeStats dlsch_unscrambling_SIC_stats = 172;*/
+}
+
+message UeRxTxProc {
+	required int32 proc_id = 1;
+	required uint32 cc_id = 2;
+	required int64 timestamp_tx = 3;
+	required int32 subframe_tx = 4;
+	required int32 subframe_rx = 5;
+	required int32 frame_tx = 6;
+	required int32 frame_rx = 7;
+	required int32 instance_cnt_rxtx = 8;
+
+	required uint64 pthread_rxtx = 9;
+	//required int32 attr_rxtx = 10; //These parameters are not relevant offline.
+	//required int32 cond_rxtx = 11;
+	//required int32 mutex_rxtx = 12;
+	//required int32 sched_param_rxtx = 13;
+	required int32 instance_cnt_slot1_dl_processing = 14;
+	required uint64 pthread_slot1_dl_processing = 15;
+
+	//required int32 attr_slot1_dl_processing = 16;
+	//required int32 cond_slot1_dl_processing = 17;
+	//required int32 mutex_slot1_dl_processing = 18;
+	required uint32 chan_est_pilot0_slot1_available = 19;
+	required uint32 chan_est_slot1_available = 20;
+	required uint32 llr_slot1_available = 21;
+	required uint32 dci_slot0_available = 22;
+	required uint32 first_symbol_available = 23;
+	//required int32 sched_param_fep_slot1 =24;
+	required int32 sub_frame_start = 25;
+	required int32 sub_frame_step = 26;
+	required uint64 gotIQs = 27;
+}
+
+message RxTxThreadData {
+	required UeRxTxProc proc = 1;
+	required PhyVarsUe ue = 2;
+}

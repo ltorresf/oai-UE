@@ -7,49 +7,364 @@
 #endif
 
 #include "subframe2file.pb-c.h"
-void   dump__init
-                     (Dump         *message)
+void   prach_config_common__init
+                     (PrachConfigCommon         *message)
 {
-  static const Dump init_value = DUMP__INIT;
+  static const PrachConfigCommon init_value = PRACH_CONFIG_COMMON__INIT;
   *message = init_value;
 }
-size_t dump__get_packed_size
-                     (const Dump *message)
+size_t prach_config_common__get_packed_size
+                     (const PrachConfigCommon *message)
 {
-  assert(message->base.descriptor == &dump__descriptor);
+  assert(message->base.descriptor == &prach_config_common__descriptor);
   return protobuf_c_message_get_packed_size ((const ProtobufCMessage*)(message));
 }
-size_t dump__pack
-                     (const Dump *message,
+size_t prach_config_common__pack
+                     (const PrachConfigCommon *message,
                       uint8_t       *out)
 {
-  assert(message->base.descriptor == &dump__descriptor);
+  assert(message->base.descriptor == &prach_config_common__descriptor);
   return protobuf_c_message_pack ((const ProtobufCMessage*)message, out);
 }
-size_t dump__pack_to_buffer
-                     (const Dump *message,
+size_t prach_config_common__pack_to_buffer
+                     (const PrachConfigCommon *message,
                       ProtobufCBuffer *buffer)
 {
-  assert(message->base.descriptor == &dump__descriptor);
+  assert(message->base.descriptor == &prach_config_common__descriptor);
   return protobuf_c_message_pack_to_buffer ((const ProtobufCMessage*)message, buffer);
 }
-Dump *
-       dump__unpack
+PrachConfigCommon *
+       prach_config_common__unpack
                      (ProtobufCAllocator  *allocator,
                       size_t               len,
                       const uint8_t       *data)
 {
-  return (Dump *)
-     protobuf_c_message_unpack (&dump__descriptor,
+  return (PrachConfigCommon *)
+     protobuf_c_message_unpack (&prach_config_common__descriptor,
                                 allocator, len, data);
 }
-void   dump__free_unpacked
-                     (Dump *message,
+void   prach_config_common__free_unpacked
+                     (PrachConfigCommon *message,
                       ProtobufCAllocator *allocator)
 {
   if(!message)
     return;
-  assert(message->base.descriptor == &dump__descriptor);
+  assert(message->base.descriptor == &prach_config_common__descriptor);
+  protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
+}
+void   pucch_config_common__init
+                     (PucchConfigCommon         *message)
+{
+  static const PucchConfigCommon init_value = PUCCH_CONFIG_COMMON__INIT;
+  *message = init_value;
+}
+size_t pucch_config_common__get_packed_size
+                     (const PucchConfigCommon *message)
+{
+  assert(message->base.descriptor == &pucch_config_common__descriptor);
+  return protobuf_c_message_get_packed_size ((const ProtobufCMessage*)(message));
+}
+size_t pucch_config_common__pack
+                     (const PucchConfigCommon *message,
+                      uint8_t       *out)
+{
+  assert(message->base.descriptor == &pucch_config_common__descriptor);
+  return protobuf_c_message_pack ((const ProtobufCMessage*)message, out);
+}
+size_t pucch_config_common__pack_to_buffer
+                     (const PucchConfigCommon *message,
+                      ProtobufCBuffer *buffer)
+{
+  assert(message->base.descriptor == &pucch_config_common__descriptor);
+  return protobuf_c_message_pack_to_buffer ((const ProtobufCMessage*)message, buffer);
+}
+PucchConfigCommon *
+       pucch_config_common__unpack
+                     (ProtobufCAllocator  *allocator,
+                      size_t               len,
+                      const uint8_t       *data)
+{
+  return (PucchConfigCommon *)
+     protobuf_c_message_unpack (&pucch_config_common__descriptor,
+                                allocator, len, data);
+}
+void   pucch_config_common__free_unpacked
+                     (PucchConfigCommon *message,
+                      ProtobufCAllocator *allocator)
+{
+  if(!message)
+    return;
+  assert(message->base.descriptor == &pucch_config_common__descriptor);
+  protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
+}
+void   pdsch_config_common__init
+                     (PdschConfigCommon         *message)
+{
+  static const PdschConfigCommon init_value = PDSCH_CONFIG_COMMON__INIT;
+  *message = init_value;
+}
+size_t pdsch_config_common__get_packed_size
+                     (const PdschConfigCommon *message)
+{
+  assert(message->base.descriptor == &pdsch_config_common__descriptor);
+  return protobuf_c_message_get_packed_size ((const ProtobufCMessage*)(message));
+}
+size_t pdsch_config_common__pack
+                     (const PdschConfigCommon *message,
+                      uint8_t       *out)
+{
+  assert(message->base.descriptor == &pdsch_config_common__descriptor);
+  return protobuf_c_message_pack ((const ProtobufCMessage*)message, out);
+}
+size_t pdsch_config_common__pack_to_buffer
+                     (const PdschConfigCommon *message,
+                      ProtobufCBuffer *buffer)
+{
+  assert(message->base.descriptor == &pdsch_config_common__descriptor);
+  return protobuf_c_message_pack_to_buffer ((const ProtobufCMessage*)message, buffer);
+}
+PdschConfigCommon *
+       pdsch_config_common__unpack
+                     (ProtobufCAllocator  *allocator,
+                      size_t               len,
+                      const uint8_t       *data)
+{
+  return (PdschConfigCommon *)
+     protobuf_c_message_unpack (&pdsch_config_common__descriptor,
+                                allocator, len, data);
+}
+void   pdsch_config_common__free_unpacked
+                     (PdschConfigCommon *message,
+                      ProtobufCAllocator *allocator)
+{
+  if(!message)
+    return;
+  assert(message->base.descriptor == &pdsch_config_common__descriptor);
+  protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
+}
+void   pusch_config_common__init
+                     (PuschConfigCommon         *message)
+{
+  static const PuschConfigCommon init_value = PUSCH_CONFIG_COMMON__INIT;
+  *message = init_value;
+}
+size_t pusch_config_common__get_packed_size
+                     (const PuschConfigCommon *message)
+{
+  assert(message->base.descriptor == &pusch_config_common__descriptor);
+  return protobuf_c_message_get_packed_size ((const ProtobufCMessage*)(message));
+}
+size_t pusch_config_common__pack
+                     (const PuschConfigCommon *message,
+                      uint8_t       *out)
+{
+  assert(message->base.descriptor == &pusch_config_common__descriptor);
+  return protobuf_c_message_pack ((const ProtobufCMessage*)message, out);
+}
+size_t pusch_config_common__pack_to_buffer
+                     (const PuschConfigCommon *message,
+                      ProtobufCBuffer *buffer)
+{
+  assert(message->base.descriptor == &pusch_config_common__descriptor);
+  return protobuf_c_message_pack_to_buffer ((const ProtobufCMessage*)message, buffer);
+}
+PuschConfigCommon *
+       pusch_config_common__unpack
+                     (ProtobufCAllocator  *allocator,
+                      size_t               len,
+                      const uint8_t       *data)
+{
+  return (PuschConfigCommon *)
+     protobuf_c_message_unpack (&pusch_config_common__descriptor,
+                                allocator, len, data);
+}
+void   pusch_config_common__free_unpacked
+                     (PuschConfigCommon *message,
+                      ProtobufCAllocator *allocator)
+{
+  if(!message)
+    return;
+  assert(message->base.descriptor == &pusch_config_common__descriptor);
+  protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
+}
+void   phich_config_common__init
+                     (PhichConfigCommon         *message)
+{
+  static const PhichConfigCommon init_value = PHICH_CONFIG_COMMON__INIT;
+  *message = init_value;
+}
+size_t phich_config_common__get_packed_size
+                     (const PhichConfigCommon *message)
+{
+  assert(message->base.descriptor == &phich_config_common__descriptor);
+  return protobuf_c_message_get_packed_size ((const ProtobufCMessage*)(message));
+}
+size_t phich_config_common__pack
+                     (const PhichConfigCommon *message,
+                      uint8_t       *out)
+{
+  assert(message->base.descriptor == &phich_config_common__descriptor);
+  return protobuf_c_message_pack ((const ProtobufCMessage*)message, out);
+}
+size_t phich_config_common__pack_to_buffer
+                     (const PhichConfigCommon *message,
+                      ProtobufCBuffer *buffer)
+{
+  assert(message->base.descriptor == &phich_config_common__descriptor);
+  return protobuf_c_message_pack_to_buffer ((const ProtobufCMessage*)message, buffer);
+}
+PhichConfigCommon *
+       phich_config_common__unpack
+                     (ProtobufCAllocator  *allocator,
+                      size_t               len,
+                      const uint8_t       *data)
+{
+  return (PhichConfigCommon *)
+     protobuf_c_message_unpack (&phich_config_common__descriptor,
+                                allocator, len, data);
+}
+void   phich_config_common__free_unpacked
+                     (PhichConfigCommon *message,
+                      ProtobufCAllocator *allocator)
+{
+  if(!message)
+    return;
+  assert(message->base.descriptor == &phich_config_common__descriptor);
+  protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
+}
+void   soundingrs_ul_config_common__init
+                     (SoundingrsUlConfigCommon         *message)
+{
+  static const SoundingrsUlConfigCommon init_value = SOUNDINGRS_UL_CONFIG_COMMON__INIT;
+  *message = init_value;
+}
+size_t soundingrs_ul_config_common__get_packed_size
+                     (const SoundingrsUlConfigCommon *message)
+{
+  assert(message->base.descriptor == &soundingrs_ul_config_common__descriptor);
+  return protobuf_c_message_get_packed_size ((const ProtobufCMessage*)(message));
+}
+size_t soundingrs_ul_config_common__pack
+                     (const SoundingrsUlConfigCommon *message,
+                      uint8_t       *out)
+{
+  assert(message->base.descriptor == &soundingrs_ul_config_common__descriptor);
+  return protobuf_c_message_pack ((const ProtobufCMessage*)message, out);
+}
+size_t soundingrs_ul_config_common__pack_to_buffer
+                     (const SoundingrsUlConfigCommon *message,
+                      ProtobufCBuffer *buffer)
+{
+  assert(message->base.descriptor == &soundingrs_ul_config_common__descriptor);
+  return protobuf_c_message_pack_to_buffer ((const ProtobufCMessage*)message, buffer);
+}
+SoundingrsUlConfigCommon *
+       soundingrs_ul_config_common__unpack
+                     (ProtobufCAllocator  *allocator,
+                      size_t               len,
+                      const uint8_t       *data)
+{
+  return (SoundingrsUlConfigCommon *)
+     protobuf_c_message_unpack (&soundingrs_ul_config_common__descriptor,
+                                allocator, len, data);
+}
+void   soundingrs_ul_config_common__free_unpacked
+                     (SoundingrsUlConfigCommon *message,
+                      ProtobufCAllocator *allocator)
+{
+  if(!message)
+    return;
+  assert(message->base.descriptor == &soundingrs_ul_config_common__descriptor);
+  protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
+}
+void   ul_power_control_config_common__init
+                     (UlPowerControlConfigCommon         *message)
+{
+  static const UlPowerControlConfigCommon init_value = UL_POWER_CONTROL_CONFIG_COMMON__INIT;
+  *message = init_value;
+}
+size_t ul_power_control_config_common__get_packed_size
+                     (const UlPowerControlConfigCommon *message)
+{
+  assert(message->base.descriptor == &ul_power_control_config_common__descriptor);
+  return protobuf_c_message_get_packed_size ((const ProtobufCMessage*)(message));
+}
+size_t ul_power_control_config_common__pack
+                     (const UlPowerControlConfigCommon *message,
+                      uint8_t       *out)
+{
+  assert(message->base.descriptor == &ul_power_control_config_common__descriptor);
+  return protobuf_c_message_pack ((const ProtobufCMessage*)message, out);
+}
+size_t ul_power_control_config_common__pack_to_buffer
+                     (const UlPowerControlConfigCommon *message,
+                      ProtobufCBuffer *buffer)
+{
+  assert(message->base.descriptor == &ul_power_control_config_common__descriptor);
+  return protobuf_c_message_pack_to_buffer ((const ProtobufCMessage*)message, buffer);
+}
+UlPowerControlConfigCommon *
+       ul_power_control_config_common__unpack
+                     (ProtobufCAllocator  *allocator,
+                      size_t               len,
+                      const uint8_t       *data)
+{
+  return (UlPowerControlConfigCommon *)
+     protobuf_c_message_unpack (&ul_power_control_config_common__descriptor,
+                                allocator, len, data);
+}
+void   ul_power_control_config_common__free_unpacked
+                     (UlPowerControlConfigCommon *message,
+                      ProtobufCAllocator *allocator)
+{
+  if(!message)
+    return;
+  assert(message->base.descriptor == &ul_power_control_config_common__descriptor);
+  protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
+}
+void   phich_reg__init
+                     (PhichReg         *message)
+{
+  static const PhichReg init_value = PHICH_REG__INIT;
+  *message = init_value;
+}
+size_t phich_reg__get_packed_size
+                     (const PhichReg *message)
+{
+  assert(message->base.descriptor == &phich_reg__descriptor);
+  return protobuf_c_message_get_packed_size ((const ProtobufCMessage*)(message));
+}
+size_t phich_reg__pack
+                     (const PhichReg *message,
+                      uint8_t       *out)
+{
+  assert(message->base.descriptor == &phich_reg__descriptor);
+  return protobuf_c_message_pack ((const ProtobufCMessage*)message, out);
+}
+size_t phich_reg__pack_to_buffer
+                     (const PhichReg *message,
+                      ProtobufCBuffer *buffer)
+{
+  assert(message->base.descriptor == &phich_reg__descriptor);
+  return protobuf_c_message_pack_to_buffer ((const ProtobufCMessage*)message, buffer);
+}
+PhichReg *
+       phich_reg__unpack
+                     (ProtobufCAllocator  *allocator,
+                      size_t               len,
+                      const uint8_t       *data)
+{
+  return (PhichReg *)
+     protobuf_c_message_unpack (&phich_reg__descriptor,
+                                allocator, len, data);
+}
+void   phich_reg__free_unpacked
+                     (PhichReg *message,
+                      ProtobufCAllocator *allocator)
+{
+  if(!message)
+    return;
+  assert(message->base.descriptor == &phich_reg__descriptor);
   protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
 }
 void   frameparms__init
@@ -97,45 +412,362 @@ void   frameparms__free_unpacked
   assert(message->base.descriptor == &frameparms__descriptor);
   protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
 }
-static const ProtobufCFieldDescriptor dump__field_descriptors[1] =
+void   phy_vars_ue__init
+                     (PhyVarsUe         *message)
+{
+  static const PhyVarsUe init_value = PHY_VARS_UE__INIT;
+  *message = init_value;
+}
+size_t phy_vars_ue__get_packed_size
+                     (const PhyVarsUe *message)
+{
+  assert(message->base.descriptor == &phy_vars_ue__descriptor);
+  return protobuf_c_message_get_packed_size ((const ProtobufCMessage*)(message));
+}
+size_t phy_vars_ue__pack
+                     (const PhyVarsUe *message,
+                      uint8_t       *out)
+{
+  assert(message->base.descriptor == &phy_vars_ue__descriptor);
+  return protobuf_c_message_pack ((const ProtobufCMessage*)message, out);
+}
+size_t phy_vars_ue__pack_to_buffer
+                     (const PhyVarsUe *message,
+                      ProtobufCBuffer *buffer)
+{
+  assert(message->base.descriptor == &phy_vars_ue__descriptor);
+  return protobuf_c_message_pack_to_buffer ((const ProtobufCMessage*)message, buffer);
+}
+PhyVarsUe *
+       phy_vars_ue__unpack
+                     (ProtobufCAllocator  *allocator,
+                      size_t               len,
+                      const uint8_t       *data)
+{
+  return (PhyVarsUe *)
+     protobuf_c_message_unpack (&phy_vars_ue__descriptor,
+                                allocator, len, data);
+}
+void   phy_vars_ue__free_unpacked
+                     (PhyVarsUe *message,
+                      ProtobufCAllocator *allocator)
+{
+  if(!message)
+    return;
+  assert(message->base.descriptor == &phy_vars_ue__descriptor);
+  protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
+}
+void   ue_rx_tx_proc__init
+                     (UeRxTxProc         *message)
+{
+  static const UeRxTxProc init_value = UE_RX_TX_PROC__INIT;
+  *message = init_value;
+}
+size_t ue_rx_tx_proc__get_packed_size
+                     (const UeRxTxProc *message)
+{
+  assert(message->base.descriptor == &ue_rx_tx_proc__descriptor);
+  return protobuf_c_message_get_packed_size ((const ProtobufCMessage*)(message));
+}
+size_t ue_rx_tx_proc__pack
+                     (const UeRxTxProc *message,
+                      uint8_t       *out)
+{
+  assert(message->base.descriptor == &ue_rx_tx_proc__descriptor);
+  return protobuf_c_message_pack ((const ProtobufCMessage*)message, out);
+}
+size_t ue_rx_tx_proc__pack_to_buffer
+                     (const UeRxTxProc *message,
+                      ProtobufCBuffer *buffer)
+{
+  assert(message->base.descriptor == &ue_rx_tx_proc__descriptor);
+  return protobuf_c_message_pack_to_buffer ((const ProtobufCMessage*)message, buffer);
+}
+UeRxTxProc *
+       ue_rx_tx_proc__unpack
+                     (ProtobufCAllocator  *allocator,
+                      size_t               len,
+                      const uint8_t       *data)
+{
+  return (UeRxTxProc *)
+     protobuf_c_message_unpack (&ue_rx_tx_proc__descriptor,
+                                allocator, len, data);
+}
+void   ue_rx_tx_proc__free_unpacked
+                     (UeRxTxProc *message,
+                      ProtobufCAllocator *allocator)
+{
+  if(!message)
+    return;
+  assert(message->base.descriptor == &ue_rx_tx_proc__descriptor);
+  protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
+}
+void   rx_tx_thread_data__init
+                     (RxTxThreadData         *message)
+{
+  static const RxTxThreadData init_value = RX_TX_THREAD_DATA__INIT;
+  *message = init_value;
+}
+size_t rx_tx_thread_data__get_packed_size
+                     (const RxTxThreadData *message)
+{
+  assert(message->base.descriptor == &rx_tx_thread_data__descriptor);
+  return protobuf_c_message_get_packed_size ((const ProtobufCMessage*)(message));
+}
+size_t rx_tx_thread_data__pack
+                     (const RxTxThreadData *message,
+                      uint8_t       *out)
+{
+  assert(message->base.descriptor == &rx_tx_thread_data__descriptor);
+  return protobuf_c_message_pack ((const ProtobufCMessage*)message, out);
+}
+size_t rx_tx_thread_data__pack_to_buffer
+                     (const RxTxThreadData *message,
+                      ProtobufCBuffer *buffer)
+{
+  assert(message->base.descriptor == &rx_tx_thread_data__descriptor);
+  return protobuf_c_message_pack_to_buffer ((const ProtobufCMessage*)message, buffer);
+}
+RxTxThreadData *
+       rx_tx_thread_data__unpack
+                     (ProtobufCAllocator  *allocator,
+                      size_t               len,
+                      const uint8_t       *data)
+{
+  return (RxTxThreadData *)
+     protobuf_c_message_unpack (&rx_tx_thread_data__descriptor,
+                                allocator, len, data);
+}
+void   rx_tx_thread_data__free_unpacked
+                     (RxTxThreadData *message,
+                      ProtobufCAllocator *allocator)
+{
+  if(!message)
+    return;
+  assert(message->base.descriptor == &rx_tx_thread_data__descriptor);
+  protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
+}
+#define prach_config_common__field_descriptors NULL
+#define prach_config_common__field_indices_by_name NULL
+#define prach_config_common__number_ranges NULL
+const ProtobufCMessageDescriptor prach_config_common__descriptor =
+{
+  PROTOBUF_C__MESSAGE_DESCRIPTOR_MAGIC,
+  "PrachConfigCommon",
+  "PrachConfigCommon",
+  "PrachConfigCommon",
+  "",
+  sizeof(PrachConfigCommon),
+  0,
+  prach_config_common__field_descriptors,
+  prach_config_common__field_indices_by_name,
+  0,  prach_config_common__number_ranges,
+  (ProtobufCMessageInit) prach_config_common__init,
+  NULL,NULL,NULL    /* reserved[123] */
+};
+#define pucch_config_common__field_descriptors NULL
+#define pucch_config_common__field_indices_by_name NULL
+#define pucch_config_common__number_ranges NULL
+const ProtobufCMessageDescriptor pucch_config_common__descriptor =
+{
+  PROTOBUF_C__MESSAGE_DESCRIPTOR_MAGIC,
+  "PucchConfigCommon",
+  "PucchConfigCommon",
+  "PucchConfigCommon",
+  "",
+  sizeof(PucchConfigCommon),
+  0,
+  pucch_config_common__field_descriptors,
+  pucch_config_common__field_indices_by_name,
+  0,  pucch_config_common__number_ranges,
+  (ProtobufCMessageInit) pucch_config_common__init,
+  NULL,NULL,NULL    /* reserved[123] */
+};
+#define pdsch_config_common__field_descriptors NULL
+#define pdsch_config_common__field_indices_by_name NULL
+#define pdsch_config_common__number_ranges NULL
+const ProtobufCMessageDescriptor pdsch_config_common__descriptor =
+{
+  PROTOBUF_C__MESSAGE_DESCRIPTOR_MAGIC,
+  "PdschConfigCommon",
+  "PdschConfigCommon",
+  "PdschConfigCommon",
+  "",
+  sizeof(PdschConfigCommon),
+  0,
+  pdsch_config_common__field_descriptors,
+  pdsch_config_common__field_indices_by_name,
+  0,  pdsch_config_common__number_ranges,
+  (ProtobufCMessageInit) pdsch_config_common__init,
+  NULL,NULL,NULL    /* reserved[123] */
+};
+#define pusch_config_common__field_descriptors NULL
+#define pusch_config_common__field_indices_by_name NULL
+#define pusch_config_common__number_ranges NULL
+const ProtobufCMessageDescriptor pusch_config_common__descriptor =
+{
+  PROTOBUF_C__MESSAGE_DESCRIPTOR_MAGIC,
+  "PuschConfigCommon",
+  "PuschConfigCommon",
+  "PuschConfigCommon",
+  "",
+  sizeof(PuschConfigCommon),
+  0,
+  pusch_config_common__field_descriptors,
+  pusch_config_common__field_indices_by_name,
+  0,  pusch_config_common__number_ranges,
+  (ProtobufCMessageInit) pusch_config_common__init,
+  NULL,NULL,NULL    /* reserved[123] */
+};
+#define phich_config_common__field_descriptors NULL
+#define phich_config_common__field_indices_by_name NULL
+#define phich_config_common__number_ranges NULL
+const ProtobufCMessageDescriptor phich_config_common__descriptor =
+{
+  PROTOBUF_C__MESSAGE_DESCRIPTOR_MAGIC,
+  "PhichConfigCommon",
+  "PhichConfigCommon",
+  "PhichConfigCommon",
+  "",
+  sizeof(PhichConfigCommon),
+  0,
+  phich_config_common__field_descriptors,
+  phich_config_common__field_indices_by_name,
+  0,  phich_config_common__number_ranges,
+  (ProtobufCMessageInit) phich_config_common__init,
+  NULL,NULL,NULL    /* reserved[123] */
+};
+#define soundingrs_ul_config_common__field_descriptors NULL
+#define soundingrs_ul_config_common__field_indices_by_name NULL
+#define soundingrs_ul_config_common__number_ranges NULL
+const ProtobufCMessageDescriptor soundingrs_ul_config_common__descriptor =
+{
+  PROTOBUF_C__MESSAGE_DESCRIPTOR_MAGIC,
+  "SoundingrsUlConfigCommon",
+  "SoundingrsUlConfigCommon",
+  "SoundingrsUlConfigCommon",
+  "",
+  sizeof(SoundingrsUlConfigCommon),
+  0,
+  soundingrs_ul_config_common__field_descriptors,
+  soundingrs_ul_config_common__field_indices_by_name,
+  0,  soundingrs_ul_config_common__number_ranges,
+  (ProtobufCMessageInit) soundingrs_ul_config_common__init,
+  NULL,NULL,NULL    /* reserved[123] */
+};
+#define ul_power_control_config_common__field_descriptors NULL
+#define ul_power_control_config_common__field_indices_by_name NULL
+#define ul_power_control_config_common__number_ranges NULL
+const ProtobufCMessageDescriptor ul_power_control_config_common__descriptor =
+{
+  PROTOBUF_C__MESSAGE_DESCRIPTOR_MAGIC,
+  "UlPowerControlConfigCommon",
+  "UlPowerControlConfigCommon",
+  "UlPowerControlConfigCommon",
+  "",
+  sizeof(UlPowerControlConfigCommon),
+  0,
+  ul_power_control_config_common__field_descriptors,
+  ul_power_control_config_common__field_indices_by_name,
+  0,  ul_power_control_config_common__number_ranges,
+  (ProtobufCMessageInit) ul_power_control_config_common__init,
+  NULL,NULL,NULL    /* reserved[123] */
+};
+static const ProtobufCFieldDescriptor phich_reg__field_descriptors[1] =
 {
   {
-    "frame_param",
+    "phich_reg_inner",
     1,
-    PROTOBUF_C_LABEL_REQUIRED,
-    PROTOBUF_C_TYPE_MESSAGE,
-    0,   /* quantifier_offset */
-    offsetof(Dump, frame_param),
-    &frameparms__descriptor,
+    PROTOBUF_C_LABEL_REPEATED,
+    PROTOBUF_C_TYPE_UINT32,
+    offsetof(PhichReg, n_phich_reg_inner),
+    offsetof(PhichReg, phich_reg_inner),
+    NULL,
     NULL,
     0,             /* flags */
     0,NULL,NULL    /* reserved1,reserved2, etc */
   },
 };
-static const unsigned dump__field_indices_by_name[] = {
-  0,   /* field[0] = frame_param */
+static const unsigned phich_reg__field_indices_by_name[] = {
+  0,   /* field[0] = phich_reg_inner */
 };
-static const ProtobufCIntRange dump__number_ranges[1 + 1] =
+static const ProtobufCIntRange phich_reg__number_ranges[1 + 1] =
 {
   { 1, 0 },
   { 0, 1 }
 };
-const ProtobufCMessageDescriptor dump__descriptor =
+const ProtobufCMessageDescriptor phich_reg__descriptor =
 {
   PROTOBUF_C__MESSAGE_DESCRIPTOR_MAGIC,
-  "dump",
-  "Dump",
-  "Dump",
+  "PhichReg",
+  "PhichReg",
+  "PhichReg",
   "",
-  sizeof(Dump),
+  sizeof(PhichReg),
   1,
-  dump__field_descriptors,
-  dump__field_indices_by_name,
-  1,  dump__number_ranges,
-  (ProtobufCMessageInit) dump__init,
+  phich_reg__field_descriptors,
+  phich_reg__field_indices_by_name,
+  1,  phich_reg__number_ranges,
+  (ProtobufCMessageInit) phich_reg__init,
   NULL,NULL,NULL    /* reserved[123] */
 };
-static const ProtobufCFieldDescriptor frameparms__field_descriptors[2] =
+static const ProtobufCEnumValue frameparms__lte_prefix_type__enum_values_by_number[2] =
+{
+  { "NORMAL", "FRAMEPARMS__LTE_PREFIX_TYPE__NORMAL", 0 },
+  { "EXTENDED", "FRAMEPARMS__LTE_PREFIX_TYPE__EXTENDED", 1 },
+};
+static const ProtobufCIntRange frameparms__lte_prefix_type__value_ranges[] = {
+{0, 0},{0, 2}
+};
+static const ProtobufCEnumValueIndex frameparms__lte_prefix_type__enum_values_by_name[2] =
+{
+  { "EXTENDED", 1 },
+  { "NORMAL", 0 },
+};
+const ProtobufCEnumDescriptor frameparms__lte_prefix_type__descriptor =
+{
+  PROTOBUF_C__ENUM_DESCRIPTOR_MAGIC,
+  "Frameparms.LtePrefixType",
+  "LtePrefixType",
+  "Frameparms__LtePrefixType",
+  "",
+  2,
+  frameparms__lte_prefix_type__enum_values_by_number,
+  2,
+  frameparms__lte_prefix_type__enum_values_by_name,
+  1,
+  frameparms__lte_prefix_type__value_ranges,
+  NULL,NULL,NULL,NULL   /* reserved[1234] */
+};
+static const ProtobufCEnumValue frameparms__lte_frame_type__enum_values_by_number[2] =
+{
+  { "FDD", "FRAMEPARMS__LTE_FRAME_TYPE__FDD", 0 },
+  { "TDD", "FRAMEPARMS__LTE_FRAME_TYPE__TDD", 1 },
+};
+static const ProtobufCIntRange frameparms__lte_frame_type__value_ranges[] = {
+{0, 0},{0, 2}
+};
+static const ProtobufCEnumValueIndex frameparms__lte_frame_type__enum_values_by_name[2] =
+{
+  { "FDD", 0 },
+  { "TDD", 1 },
+};
+const ProtobufCEnumDescriptor frameparms__lte_frame_type__descriptor =
+{
+  PROTOBUF_C__ENUM_DESCRIPTOR_MAGIC,
+  "Frameparms.LteFrameType",
+  "LteFrameType",
+  "Frameparms__LteFrameType",
+  "",
+  2,
+  frameparms__lte_frame_type__enum_values_by_number,
+  2,
+  frameparms__lte_frame_type__enum_values_by_name,
+  1,
+  frameparms__lte_frame_type__value_ranges,
+  NULL,NULL,NULL,NULL   /* reserved[1234] */
+};
+static const ProtobufCFieldDescriptor frameparms__field_descriptors[42] =
 {
   {
     "N_RB_DL",
@@ -161,15 +793,537 @@ static const ProtobufCFieldDescriptor frameparms__field_descriptors[2] =
     0,             /* flags */
     0,NULL,NULL    /* reserved1,reserved2, etc */
   },
+  {
+    "N_RBG",
+    3,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_UINT32,
+    0,   /* quantifier_offset */
+    offsetof(Frameparms, n_rbg),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "N_RBGS",
+    4,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_UINT32,
+    0,   /* quantifier_offset */
+    offsetof(Frameparms, n_rbgs),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "Nid_cell",
+    5,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_UINT32,
+    0,   /* quantifier_offset */
+    offsetof(Frameparms, nid_cell),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "Nid_cell_mbsfn",
+    6,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_UINT32,
+    0,   /* quantifier_offset */
+    offsetof(Frameparms, nid_cell_mbsfn),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "Ncp",
+    7,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_ENUM,
+    0,   /* quantifier_offset */
+    offsetof(Frameparms, ncp),
+    &frameparms__lte_prefix_type__descriptor,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "Ncp_UL",
+    8,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_ENUM,
+    0,   /* quantifier_offset */
+    offsetof(Frameparms, ncp_ul),
+    &frameparms__lte_prefix_type__descriptor,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "nushift",
+    9,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_UINT32,
+    0,   /* quantifier_offset */
+    offsetof(Frameparms, nushift),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "frame_type",
+    10,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_ENUM,
+    0,   /* quantifier_offset */
+    offsetof(Frameparms, frame_type),
+    &frameparms__lte_frame_type__descriptor,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "tdd_config",
+    11,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_UINT32,
+    0,   /* quantifier_offset */
+    offsetof(Frameparms, tdd_config),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "tdd_config_S",
+    12,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_UINT32,
+    0,   /* quantifier_offset */
+    offsetof(Frameparms, tdd_config_s),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "srsX",
+    13,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_UINT32,
+    0,   /* quantifier_offset */
+    offsetof(Frameparms, srsx),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "node_id",
+    14,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_UINT32,
+    0,   /* quantifier_offset */
+    offsetof(Frameparms, node_id),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "freq_idx",
+    15,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_UINT32,
+    0,   /* quantifier_offset */
+    offsetof(Frameparms, freq_idx),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "mode1_flag",
+    25,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_UINT32,
+    0,   /* quantifier_offset */
+    offsetof(Frameparms, mode1_flag),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "threequarter_fs",
+    26,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_UINT32,
+    0,   /* quantifier_offset */
+    offsetof(Frameparms, threequarter_fs),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "ofdm_symbol_size",
+    27,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_UINT32,
+    0,   /* quantifier_offset */
+    offsetof(Frameparms, ofdm_symbol_size),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "nb_prefix_samples",
+    28,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_UINT32,
+    0,   /* quantifier_offset */
+    offsetof(Frameparms, nb_prefix_samples),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "nb_prefix_samples0",
+    29,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_UINT32,
+    0,   /* quantifier_offset */
+    offsetof(Frameparms, nb_prefix_samples0),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "first_carrier_offset",
+    30,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_UINT32,
+    0,   /* quantifier_offset */
+    offsetof(Frameparms, first_carrier_offset),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "samples_per_tti",
+    31,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_UINT32,
+    0,   /* quantifier_offset */
+    offsetof(Frameparms, samples_per_tti),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "symbols_per_tti",
+    32,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_UINT32,
+    0,   /* quantifier_offset */
+    offsetof(Frameparms, symbols_per_tti),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "dl_symbols_in_S_subframe",
+    33,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_UINT32,
+    0,   /* quantifier_offset */
+    offsetof(Frameparms, dl_symbols_in_s_subframe),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "ul_symbols_in_S_subframe",
+    34,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_UINT32,
+    0,   /* quantifier_offset */
+    offsetof(Frameparms, ul_symbols_in_s_subframe),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "nb_antennas_tx",
+    35,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_UINT32,
+    0,   /* quantifier_offset */
+    offsetof(Frameparms, nb_antennas_tx),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "nb_antennas_rx",
+    36,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_UINT32,
+    0,   /* quantifier_offset */
+    offsetof(Frameparms, nb_antennas_rx),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "nb_antenna_ports_eNB",
+    37,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_UINT32,
+    0,   /* quantifier_offset */
+    offsetof(Frameparms, nb_antenna_ports_enb),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "prach_config_common",
+    38,
+    PROTOBUF_C_LABEL_OPTIONAL,
+    PROTOBUF_C_TYPE_MESSAGE,
+    0,   /* quantifier_offset */
+    offsetof(Frameparms, prach_config_common),
+    &prach_config_common__descriptor,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "pucch_config_common",
+    39,
+    PROTOBUF_C_LABEL_OPTIONAL,
+    PROTOBUF_C_TYPE_MESSAGE,
+    0,   /* quantifier_offset */
+    offsetof(Frameparms, pucch_config_common),
+    &pucch_config_common__descriptor,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "pdsch_config_common",
+    40,
+    PROTOBUF_C_LABEL_OPTIONAL,
+    PROTOBUF_C_TYPE_MESSAGE,
+    0,   /* quantifier_offset */
+    offsetof(Frameparms, pdsch_config_common),
+    &pdsch_config_common__descriptor,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "pusch_config_common",
+    41,
+    PROTOBUF_C_LABEL_OPTIONAL,
+    PROTOBUF_C_TYPE_MESSAGE,
+    0,   /* quantifier_offset */
+    offsetof(Frameparms, pusch_config_common),
+    &pusch_config_common__descriptor,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "phich_config_common",
+    42,
+    PROTOBUF_C_LABEL_OPTIONAL,
+    PROTOBUF_C_TYPE_MESSAGE,
+    0,   /* quantifier_offset */
+    offsetof(Frameparms, phich_config_common),
+    &phich_config_common__descriptor,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "soundingrs_ul_config_common",
+    43,
+    PROTOBUF_C_LABEL_OPTIONAL,
+    PROTOBUF_C_TYPE_MESSAGE,
+    0,   /* quantifier_offset */
+    offsetof(Frameparms, soundingrs_ul_config_common),
+    &soundingrs_ul_config_common__descriptor,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "ul_power_control_config_common",
+    44,
+    PROTOBUF_C_LABEL_OPTIONAL,
+    PROTOBUF_C_TYPE_MESSAGE,
+    0,   /* quantifier_offset */
+    offsetof(Frameparms, ul_power_control_config_common),
+    &ul_power_control_config_common__descriptor,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "num_MBSFN_config",
+    45,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_UINT32,
+    0,   /* quantifier_offset */
+    offsetof(Frameparms, num_mbsfn_config),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "maxHARQ_Msg3Tx",
+    47,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_UINT32,
+    0,   /* quantifier_offset */
+    offsetof(Frameparms, maxharq_msg3tx),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "SIwindowsize",
+    48,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_UINT32,
+    0,   /* quantifier_offset */
+    offsetof(Frameparms, siwindowsize),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "SIPeriod",
+    49,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_UINT32,
+    0,   /* quantifier_offset */
+    offsetof(Frameparms, siperiod),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "pcfich_reg",
+    50,
+    PROTOBUF_C_LABEL_REPEATED,
+    PROTOBUF_C_TYPE_UINT32,
+    offsetof(Frameparms, n_pcfich_reg),
+    offsetof(Frameparms, pcfich_reg),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "pcfich_first_reg_idx",
+    51,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_UINT32,
+    0,   /* quantifier_offset */
+    offsetof(Frameparms, pcfich_first_reg_idx),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "phich_reg_outer",
+    52,
+    PROTOBUF_C_LABEL_REPEATED,
+    PROTOBUF_C_TYPE_MESSAGE,
+    offsetof(Frameparms, n_phich_reg_outer),
+    offsetof(Frameparms, phich_reg_outer),
+    &phich_reg__descriptor,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
 };
 static const unsigned frameparms__field_indices_by_name[] = {
+  2,   /* field[2] = N_RBG */
+  3,   /* field[3] = N_RBGS */
   0,   /* field[0] = N_RB_DL */
   1,   /* field[1] = N_RB_UL */
+  6,   /* field[6] = Ncp */
+  7,   /* field[7] = Ncp_UL */
+  4,   /* field[4] = Nid_cell */
+  5,   /* field[5] = Nid_cell_mbsfn */
+  38,   /* field[38] = SIPeriod */
+  37,   /* field[37] = SIwindowsize */
+  23,   /* field[23] = dl_symbols_in_S_subframe */
+  20,   /* field[20] = first_carrier_offset */
+  9,   /* field[9] = frame_type */
+  14,   /* field[14] = freq_idx */
+  36,   /* field[36] = maxHARQ_Msg3Tx */
+  15,   /* field[15] = mode1_flag */
+  27,   /* field[27] = nb_antenna_ports_eNB */
+  26,   /* field[26] = nb_antennas_rx */
+  25,   /* field[25] = nb_antennas_tx */
+  18,   /* field[18] = nb_prefix_samples */
+  19,   /* field[19] = nb_prefix_samples0 */
+  13,   /* field[13] = node_id */
+  35,   /* field[35] = num_MBSFN_config */
+  8,   /* field[8] = nushift */
+  17,   /* field[17] = ofdm_symbol_size */
+  40,   /* field[40] = pcfich_first_reg_idx */
+  39,   /* field[39] = pcfich_reg */
+  30,   /* field[30] = pdsch_config_common */
+  32,   /* field[32] = phich_config_common */
+  41,   /* field[41] = phich_reg_outer */
+  28,   /* field[28] = prach_config_common */
+  29,   /* field[29] = pucch_config_common */
+  31,   /* field[31] = pusch_config_common */
+  21,   /* field[21] = samples_per_tti */
+  33,   /* field[33] = soundingrs_ul_config_common */
+  12,   /* field[12] = srsX */
+  22,   /* field[22] = symbols_per_tti */
+  10,   /* field[10] = tdd_config */
+  11,   /* field[11] = tdd_config_S */
+  16,   /* field[16] = threequarter_fs */
+  34,   /* field[34] = ul_power_control_config_common */
+  24,   /* field[24] = ul_symbols_in_S_subframe */
 };
-static const ProtobufCIntRange frameparms__number_ranges[1 + 1] =
+static const ProtobufCIntRange frameparms__number_ranges[3 + 1] =
 {
   { 1, 0 },
-  { 0, 2 }
+  { 25, 15 },
+  { 47, 36 },
+  { 0, 42 }
 };
 const ProtobufCMessageDescriptor frameparms__descriptor =
 {
@@ -179,10 +1333,879 @@ const ProtobufCMessageDescriptor frameparms__descriptor =
   "Frameparms",
   "",
   sizeof(Frameparms),
-  2,
+  42,
   frameparms__field_descriptors,
   frameparms__field_indices_by_name,
-  1,  frameparms__number_ranges,
+  3,  frameparms__number_ranges,
   (ProtobufCMessageInit) frameparms__init,
+  NULL,NULL,NULL    /* reserved[123] */
+};
+static const ProtobufCFieldDescriptor phy_vars_ue__field_descriptors[39] =
+{
+  {
+    "Mod_id",
+    1,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_UINT32,
+    0,   /* quantifier_offset */
+    offsetof(PhyVarsUe, mod_id),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "CC_id",
+    2,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_UINT32,
+    0,   /* quantifier_offset */
+    offsetof(PhyVarsUe, cc_id),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "UE_scan",
+    5,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_INT32,
+    0,   /* quantifier_offset */
+    offsetof(PhyVarsUe, ue_scan),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "UE_scan_carrier",
+    6,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_INT32,
+    0,   /* quantifier_offset */
+    offsetof(PhyVarsUe, ue_scan_carrier),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "is_synchronized",
+    7,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_INT32,
+    0,   /* quantifier_offset */
+    offsetof(PhyVarsUe, is_synchronized),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "no_timing_correction",
+    9,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_INT32,
+    0,   /* quantifier_offset */
+    offsetof(PhyVarsUe, no_timing_correction),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "tx_total_gain_dB",
+    10,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_UINT32,
+    0,   /* quantifier_offset */
+    offsetof(PhyVarsUe, tx_total_gain_db),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "rx_total_gain_dB",
+    11,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_UINT32,
+    0,   /* quantifier_offset */
+    offsetof(PhyVarsUe, rx_total_gain_db),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "tx_power_max_dBm",
+    17,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_INT32,
+    0,   /* quantifier_offset */
+    offsetof(PhyVarsUe, tx_power_max_dbm),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "n_connected_eNB",
+    18,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_UINT32,
+    0,   /* quantifier_offset */
+    offsetof(PhyVarsUe, n_connected_enb),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "ho_initiated",
+    19,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_UINT32,
+    0,   /* quantifier_offset */
+    offsetof(PhyVarsUe, ho_initiated),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "ho_triggered",
+    20,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_UINT32,
+    0,   /* quantifier_offset */
+    offsetof(PhyVarsUe, ho_triggered),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "frame_parms",
+    22,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_MESSAGE,
+    0,   /* quantifier_offset */
+    offsetof(PhyVarsUe, frame_parms),
+    &frameparms__descriptor,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "IMSImod1024",
+    42,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_UINT32,
+    0,   /* quantifier_offset */
+    offsetof(PhyVarsUe, imsimod1024),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "PF",
+    43,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_UINT32,
+    0,   /* quantifier_offset */
+    offsetof(PhyVarsUe, pf),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "PO",
+    44,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_UINT32,
+    0,   /* quantifier_offset */
+    offsetof(PhyVarsUe, po),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "high_speed_flag",
+    54,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_UINT32,
+    0,   /* quantifier_offset */
+    offsetof(PhyVarsUe, high_speed_flag),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "perfect_ce",
+    55,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_UINT32,
+    0,   /* quantifier_offset */
+    offsetof(PhyVarsUe, perfect_ce),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "ch_est_alpha",
+    56,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_UINT32,
+    0,   /* quantifier_offset */
+    offsetof(PhyVarsUe, ch_est_alpha),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "turbo_iterations",
+    64,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_INT32,
+    0,   /* quantifier_offset */
+    offsetof(PhyVarsUe, turbo_iterations),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "generate_prach",
+    90,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_UINT32,
+    0,   /* quantifier_offset */
+    offsetof(PhyVarsUe, generate_prach),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "prach_cnt",
+    91,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_UINT32,
+    0,   /* quantifier_offset */
+    offsetof(PhyVarsUe, prach_cnt),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "prach_PreambleIndex",
+    92,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_UINT32,
+    0,   /* quantifier_offset */
+    offsetof(PhyVarsUe, prach_preambleindex),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "decode_SIB",
+    93,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_UINT32,
+    0,   /* quantifier_offset */
+    offsetof(PhyVarsUe, decode_sib),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "decode_MIB",
+    94,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_UINT32,
+    0,   /* quantifier_offset */
+    offsetof(PhyVarsUe, decode_mib),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "rx_offset",
+    95,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_INT32,
+    0,   /* quantifier_offset */
+    offsetof(PhyVarsUe, rx_offset),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "rx_offset_diff",
+    96,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_INT32,
+    0,   /* quantifier_offset */
+    offsetof(PhyVarsUe, rx_offset_diff),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "time_sync_cell",
+    97,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_INT32,
+    0,   /* quantifier_offset */
+    offsetof(PhyVarsUe, time_sync_cell),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "timing_advance",
+    98,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_INT32,
+    0,   /* quantifier_offset */
+    offsetof(PhyVarsUe, timing_advance),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "hw_timing_advance",
+    99,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_INT32,
+    0,   /* quantifier_offset */
+    offsetof(PhyVarsUe, hw_timing_advance),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "N_TA_offset",
+    100,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_INT32,
+    0,   /* quantifier_offset */
+    offsetof(PhyVarsUe, n_ta_offset),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "is_secondary_ue",
+    101,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_UINT32,
+    0,   /* quantifier_offset */
+    offsetof(PhyVarsUe, is_secondary_ue),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "has_valid_precoder",
+    102,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_UINT32,
+    0,   /* quantifier_offset */
+    offsetof(PhyVarsUe, has_valid_precoder),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "log2_maxp",
+    104,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_INT32,
+    0,   /* quantifier_offset */
+    offsetof(PhyVarsUe, log2_maxp),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "mac_enabled",
+    105,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_INT32,
+    0,   /* quantifier_offset */
+    offsetof(PhyVarsUe, mac_enabled),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "init_averaging",
+    106,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_INT32,
+    0,   /* quantifier_offset */
+    offsetof(PhyVarsUe, init_averaging),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "sinr_eff",
+    109,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_INT64,
+    0,   /* quantifier_offset */
+    offsetof(PhyVarsUe, sinr_eff),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "N0",
+    110,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_INT64,
+    0,   /* quantifier_offset */
+    offsetof(PhyVarsUe, n0),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "turbo_cntl_iterations",
+    173,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_INT32,
+    0,   /* quantifier_offset */
+    offsetof(PhyVarsUe, turbo_cntl_iterations),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+};
+static const unsigned phy_vars_ue__field_indices_by_name[] = {
+  1,   /* field[1] = CC_id */
+  13,   /* field[13] = IMSImod1024 */
+  0,   /* field[0] = Mod_id */
+  37,   /* field[37] = N0 */
+  30,   /* field[30] = N_TA_offset */
+  14,   /* field[14] = PF */
+  15,   /* field[15] = PO */
+  2,   /* field[2] = UE_scan */
+  3,   /* field[3] = UE_scan_carrier */
+  18,   /* field[18] = ch_est_alpha */
+  24,   /* field[24] = decode_MIB */
+  23,   /* field[23] = decode_SIB */
+  12,   /* field[12] = frame_parms */
+  20,   /* field[20] = generate_prach */
+  32,   /* field[32] = has_valid_precoder */
+  16,   /* field[16] = high_speed_flag */
+  10,   /* field[10] = ho_initiated */
+  11,   /* field[11] = ho_triggered */
+  29,   /* field[29] = hw_timing_advance */
+  35,   /* field[35] = init_averaging */
+  31,   /* field[31] = is_secondary_ue */
+  4,   /* field[4] = is_synchronized */
+  33,   /* field[33] = log2_maxp */
+  34,   /* field[34] = mac_enabled */
+  9,   /* field[9] = n_connected_eNB */
+  5,   /* field[5] = no_timing_correction */
+  17,   /* field[17] = perfect_ce */
+  22,   /* field[22] = prach_PreambleIndex */
+  21,   /* field[21] = prach_cnt */
+  25,   /* field[25] = rx_offset */
+  26,   /* field[26] = rx_offset_diff */
+  7,   /* field[7] = rx_total_gain_dB */
+  36,   /* field[36] = sinr_eff */
+  27,   /* field[27] = time_sync_cell */
+  28,   /* field[28] = timing_advance */
+  38,   /* field[38] = turbo_cntl_iterations */
+  19,   /* field[19] = turbo_iterations */
+  8,   /* field[8] = tx_power_max_dBm */
+  6,   /* field[6] = tx_total_gain_dB */
+};
+static const ProtobufCIntRange phy_vars_ue__number_ranges[12 + 1] =
+{
+  { 1, 0 },
+  { 5, 2 },
+  { 9, 5 },
+  { 17, 8 },
+  { 22, 12 },
+  { 42, 13 },
+  { 54, 16 },
+  { 64, 19 },
+  { 90, 20 },
+  { 104, 33 },
+  { 109, 36 },
+  { 173, 38 },
+  { 0, 39 }
+};
+const ProtobufCMessageDescriptor phy_vars_ue__descriptor =
+{
+  PROTOBUF_C__MESSAGE_DESCRIPTOR_MAGIC,
+  "PhyVarsUe",
+  "PhyVarsUe",
+  "PhyVarsUe",
+  "",
+  sizeof(PhyVarsUe),
+  39,
+  phy_vars_ue__field_descriptors,
+  phy_vars_ue__field_indices_by_name,
+  12,  phy_vars_ue__number_ranges,
+  (ProtobufCMessageInit) phy_vars_ue__init,
+  NULL,NULL,NULL    /* reserved[123] */
+};
+static const ProtobufCFieldDescriptor ue_rx_tx_proc__field_descriptors[19] =
+{
+  {
+    "proc_id",
+    1,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_INT32,
+    0,   /* quantifier_offset */
+    offsetof(UeRxTxProc, proc_id),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "cc_id",
+    2,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_UINT32,
+    0,   /* quantifier_offset */
+    offsetof(UeRxTxProc, cc_id),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "timestamp_tx",
+    3,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_INT64,
+    0,   /* quantifier_offset */
+    offsetof(UeRxTxProc, timestamp_tx),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "subframe_tx",
+    4,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_INT32,
+    0,   /* quantifier_offset */
+    offsetof(UeRxTxProc, subframe_tx),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "subframe_rx",
+    5,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_INT32,
+    0,   /* quantifier_offset */
+    offsetof(UeRxTxProc, subframe_rx),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "frame_tx",
+    6,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_INT32,
+    0,   /* quantifier_offset */
+    offsetof(UeRxTxProc, frame_tx),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "frame_rx",
+    7,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_INT32,
+    0,   /* quantifier_offset */
+    offsetof(UeRxTxProc, frame_rx),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "instance_cnt_rxtx",
+    8,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_INT32,
+    0,   /* quantifier_offset */
+    offsetof(UeRxTxProc, instance_cnt_rxtx),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "pthread_rxtx",
+    9,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_UINT64,
+    0,   /* quantifier_offset */
+    offsetof(UeRxTxProc, pthread_rxtx),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "instance_cnt_slot1_dl_processing",
+    14,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_INT32,
+    0,   /* quantifier_offset */
+    offsetof(UeRxTxProc, instance_cnt_slot1_dl_processing),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "pthread_slot1_dl_processing",
+    15,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_UINT64,
+    0,   /* quantifier_offset */
+    offsetof(UeRxTxProc, pthread_slot1_dl_processing),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "chan_est_pilot0_slot1_available",
+    19,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_UINT32,
+    0,   /* quantifier_offset */
+    offsetof(UeRxTxProc, chan_est_pilot0_slot1_available),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "chan_est_slot1_available",
+    20,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_UINT32,
+    0,   /* quantifier_offset */
+    offsetof(UeRxTxProc, chan_est_slot1_available),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "llr_slot1_available",
+    21,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_UINT32,
+    0,   /* quantifier_offset */
+    offsetof(UeRxTxProc, llr_slot1_available),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "dci_slot0_available",
+    22,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_UINT32,
+    0,   /* quantifier_offset */
+    offsetof(UeRxTxProc, dci_slot0_available),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "first_symbol_available",
+    23,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_UINT32,
+    0,   /* quantifier_offset */
+    offsetof(UeRxTxProc, first_symbol_available),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "sub_frame_start",
+    25,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_INT32,
+    0,   /* quantifier_offset */
+    offsetof(UeRxTxProc, sub_frame_start),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "sub_frame_step",
+    26,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_INT32,
+    0,   /* quantifier_offset */
+    offsetof(UeRxTxProc, sub_frame_step),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "gotIQs",
+    27,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_UINT64,
+    0,   /* quantifier_offset */
+    offsetof(UeRxTxProc, gotiqs),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+};
+static const unsigned ue_rx_tx_proc__field_indices_by_name[] = {
+  1,   /* field[1] = cc_id */
+  11,   /* field[11] = chan_est_pilot0_slot1_available */
+  12,   /* field[12] = chan_est_slot1_available */
+  14,   /* field[14] = dci_slot0_available */
+  15,   /* field[15] = first_symbol_available */
+  6,   /* field[6] = frame_rx */
+  5,   /* field[5] = frame_tx */
+  18,   /* field[18] = gotIQs */
+  7,   /* field[7] = instance_cnt_rxtx */
+  9,   /* field[9] = instance_cnt_slot1_dl_processing */
+  13,   /* field[13] = llr_slot1_available */
+  0,   /* field[0] = proc_id */
+  8,   /* field[8] = pthread_rxtx */
+  10,   /* field[10] = pthread_slot1_dl_processing */
+  16,   /* field[16] = sub_frame_start */
+  17,   /* field[17] = sub_frame_step */
+  4,   /* field[4] = subframe_rx */
+  3,   /* field[3] = subframe_tx */
+  2,   /* field[2] = timestamp_tx */
+};
+static const ProtobufCIntRange ue_rx_tx_proc__number_ranges[4 + 1] =
+{
+  { 1, 0 },
+  { 14, 9 },
+  { 19, 11 },
+  { 25, 16 },
+  { 0, 19 }
+};
+const ProtobufCMessageDescriptor ue_rx_tx_proc__descriptor =
+{
+  PROTOBUF_C__MESSAGE_DESCRIPTOR_MAGIC,
+  "UeRxTxProc",
+  "UeRxTxProc",
+  "UeRxTxProc",
+  "",
+  sizeof(UeRxTxProc),
+  19,
+  ue_rx_tx_proc__field_descriptors,
+  ue_rx_tx_proc__field_indices_by_name,
+  4,  ue_rx_tx_proc__number_ranges,
+  (ProtobufCMessageInit) ue_rx_tx_proc__init,
+  NULL,NULL,NULL    /* reserved[123] */
+};
+static const ProtobufCFieldDescriptor rx_tx_thread_data__field_descriptors[2] =
+{
+  {
+    "proc",
+    1,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_MESSAGE,
+    0,   /* quantifier_offset */
+    offsetof(RxTxThreadData, proc),
+    &ue_rx_tx_proc__descriptor,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "ue",
+    2,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_MESSAGE,
+    0,   /* quantifier_offset */
+    offsetof(RxTxThreadData, ue),
+    &phy_vars_ue__descriptor,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+};
+static const unsigned rx_tx_thread_data__field_indices_by_name[] = {
+  0,   /* field[0] = proc */
+  1,   /* field[1] = ue */
+};
+static const ProtobufCIntRange rx_tx_thread_data__number_ranges[1 + 1] =
+{
+  { 1, 0 },
+  { 0, 2 }
+};
+const ProtobufCMessageDescriptor rx_tx_thread_data__descriptor =
+{
+  PROTOBUF_C__MESSAGE_DESCRIPTOR_MAGIC,
+  "RxTxThreadData",
+  "RxTxThreadData",
+  "RxTxThreadData",
+  "",
+  sizeof(RxTxThreadData),
+  2,
+  rx_tx_thread_data__field_descriptors,
+  rx_tx_thread_data__field_indices_by_name,
+  1,  rx_tx_thread_data__number_ranges,
+  (ProtobufCMessageInit) rx_tx_thread_data__init,
   NULL,NULL,NULL    /* reserved[123] */
 };

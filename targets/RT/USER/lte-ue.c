@@ -591,12 +591,63 @@ int tttime = 0;
 #include "subframe2file.pb-c.h"
 #include <time.h>
 
+void populate_protobufc_proc(UeRxTxProc *proc,UE_rxtx_proc_t *proc_data) {
+	proc->subframe_rx=proc_data->subframe_rx;
 
+	return;
+}
+
+void populate_protobufc_ue(PhyVarsUe *ue_raw, PHY_VARS_UE *UE_data) {
+	Frameparms frame_p = FRAMEPARMS__INIT;
+
+	frame_p.n_rb_dl = UE_data->frame_parms.N_RB_DL;
+	frame_p.n_rb_ul = UE_data->frame_parms.N_RB_UL;
+	ue_raw->ue_scan = UE_data->UE_scan;
+	ue_raw->frame_parms=&frame_p;
+	return;
+}
+
+
+void dump_phy_vars_ue(PHY_VARS_UE *UE_data) {
+	//printf("frame_parms->N_RB_DL=%u\n",frame_parms->N_RB_DL);
+}
+
+void dump_ue_rxtx_proc(UE_rxtx_proc_t *proc_data) {
+	printf("proc_data->proc_id=%d\n",proc_data->proc_id);
+	printf("proc_data->CC_id=%u\n",proc_data->CC_id);
+	printf("proc_data->timestamp_tx=%ld\n",proc_data->timestamp_tx);
+	printf("proc_data->subframe_tx=%d\n",proc_data->subframe_tx);
+	printf("proc_data->subframe_rx=%d\n",proc_data->subframe_rx);
+	printf("proc_data->frame_tx=%d\n",proc_data->frame_tx);
+	printf("proc_data->frame_rx=%d\n",proc_data->frame_rx);
+	printf("proc_data->instance_cnt_rxtx=%d\n",proc_data->instance_cnt_rxtx);
+	printf("proc_data->pthread_rxtx=%lu\n",proc_data->pthread_rxtx);
+	//excluded: attr_rxtx
+	//excluded: cond_rxtx
+	//excluded: mutex_rxtx
+	//excluded: sched_param_rxtx
+	printf("proc_data->instance_cnt_slot1_dl_processing=%d\n",proc_data->instance_cnt_slot1_dl_processing);
+	printf("proc_data->pthread_slot1_dl_processing=%lu\n",proc_data->pthread_slot1_dl_processing);
+	//excluded: attr_slot1_dl_processing
+	//excluded: cond_slot1_dl_processing
+	//excluded: mutex_slot1_dl_processing
+	printf("proc_data->chan_est_pilot0_slot1_available=%u\n",proc_data->chan_est_pilot0_slot1_available);
+	printf("proc_data->chan_est_slot1_available=%u\n",proc_data->chan_est_slot1_available);
+	printf("proc_data->llr_slot1_available=%u\n",proc_data->llr_slot1_available);
+	printf("proc_data->dci_slot0_available=%u\n",proc_data->dci_slot0_available);
+	printf("proc_data->first_symbol_available=%u\n",proc_data->first_symbol_available);
+	//excluded: sched_param_fep_slot1
+	printf("proc_data->sub_frame_start=%d\n",proc_data->sub_frame_start);
+	printf("proc_data->sub_frame_step=%d\n",proc_data->sub_frame_step);
+	printf("proc_data->gotIQs=%llu\n",proc_data->gotIQs);
+
+}
 
 void dump_subframe_to_file(void *argum){
     struct rx_tx_thread_data *rx_data = argum;
     UE_rxtx_proc_t *proc_data = rx_data->proc;
     PHY_VARS_UE    *UE_data   = rx_data->UE;
+
     //String that contains current time to be used in filename
     time_t	rawtime=time(NULL);
     struct tm *tm = localtime(&rawtime);
@@ -605,20 +656,238 @@ void dump_subframe_to_file(void *argum){
     strftime(s, sizeof(s), "%Y%m%d.%H%M%S_", tm);	//s contains 16 char
     //printf("now: %s\n", s);
 
-	Dump msg = DUMP__INIT;
-	Frameparms frame_p = FRAMEPARMS__INIT;
+    RxTxThreadData rxd = RX_TX_THREAD_DATA__INIT;
+
+    //Populating context data structure for RX/TX portion of subframe processing
+    UeRxTxProc	procd = UE_RX_TX_PROC__INIT;
+
+    procd.proc_id=proc_data->proc_id;
+    procd.cc_id=proc_data->CC_id;
+    procd.timestamp_tx=proc_data->timestamp_tx;
+    procd.subframe_tx=proc_data->subframe_tx;
+    procd.subframe_rx=proc_data->subframe_rx;
+    procd.frame_tx=proc_data->frame_tx;
+    procd.frame_rx=proc_data->frame_rx;
+    procd.instance_cnt_rxtx=proc_data->instance_cnt_rxtx;
+    procd.pthread_rxtx=proc_data->pthread_rxtx;
+    //excluded: attr_rxtx
+    //excluded: cond_rxtx
+    //excluded: mutex_rxtx
+    //excluded: sched_param_rxtx
+    procd.instance_cnt_slot1_dl_processing=proc_data->instance_cnt_slot1_dl_processing;
+    procd.pthread_slot1_dl_processing=proc_data->pthread_slot1_dl_processing;
+    //excluded: attr_slot1_dl_processing
+    //excluded: cond_slot1_dl_processing
+    //excluded: mutex_slot1_dl_processing
+	procd.chan_est_pilot0_slot1_available=proc_data->chan_est_pilot0_slot1_available;
+	procd.chan_est_slot1_available=proc_data->chan_est_slot1_available;
+	procd.llr_slot1_available=proc_data->llr_slot1_available;
+	procd.dci_slot0_available=proc_data->dci_slot0_available;
+	procd.first_symbol_available=proc_data->first_symbol_available;
+	//excluded: sched_param_fep_slot1
+	procd.sub_frame_start=proc_data->sub_frame_start;
+	procd.sub_frame_step=proc_data->sub_frame_step;
+	procd.gotiqs=proc_data->gotIQs;
+
+	dump_ue_rxtx_proc(proc_data);
+
+    //Populating top-level PHY Data Structure for UE
+    PhyVarsUe	ued	= PHY_VARS_UE__INIT;
+    ued.mod_id = UE_data->Mod_id;
+    ued.cc_id = UE_data->CC_id;
+    //Openair0RfMap rf_map
+    //RunMode mode
+    ued.ue_scan = UE_data->UE_scan;
+    ued.ue_scan_carrier = UE_data->UE_scan_carrier;
+	ued.is_synchronized = UE_data->is_synchronized;
+	//UeProc proc
+	ued.no_timing_correction = UE_data->no_timing_correction;
+    ued.tx_total_gain_db = UE_data->tx_total_gain_dB;
+    ued.rx_total_gain_db = UE_data->rx_total_gain_dB;
+    //rx_gain_max
+    //rx_gain_med
+    //rx_gain_byp
+    //tx_power_dBm
+    //tx_total_RE
+    ued.tx_power_max_dbm = UE_data->tx_power_max_dBm;
+    ued.n_connected_enb = UE_data->n_connected_eNB;
+	ued.ho_initiated = UE_data->ho_initiated;
+	ued.ho_triggered = UE_data->ho_triggered;
+	//PhyMeasurements measurements
+	//frame_parms -> DONE
+	//Frameparms frame_parms_before_ho
+	//UeCommon common_vars
+	//current_thread_id
+	//UePdsch *pdsch_vars[RX_NB_TH_MAX][NUMBER_OF_CONNECTED_eNB_MAX+1]
+	//UePdschFlp *pdsch_vars_flp[NUMBER_OF_CONNECTED_eNB_MAX+1]
+	//UePdsch *pdsch_vars_SI[NUMBER_OF_CONNECTED_eNB_MAX+1]
+	//UePdsch *pdsch_vars_ra[NUMBER_OF_CONNECTED_eNB_MAX+1]
+	//UePdsch *pdsch_vars_p[NUMBER_OF_CONNECTED_eNB_MAX+1]
+	//UePdsch *pdsch_vars_MCH[NUMBER_OF_CONNECTED_eNB_MAX]
+	//UePbch*pbch_vars[NUMBER_OF_CONNECTED_eNB_MAX]
+	//UePdcch *pdcch_vars[RX_NB_TH_MAX][NUMBER_OF_CONNECTED_eNB_MAX]
+	//UePrach*prach_vars[NUMBER_OF_CONNECTED_eNB_MAX]
+	//UeDlsch *dlsch[RX_NB_TH_MAX][NUMBER_OF_CONNECTED_eNB_MAX][2]
+	//UeDlsch *ulsch[NUMBER_OF_CONNECTED_eNB_MAX]
+	//UeDlsch *dlsch_SI[NUMBER_OF_CONNECTED_eNB_MAX
+	//UeDlsch *dlsch_ra[NUMBER_OF_CONNECTED_eNB_MAX]
+	//UeDlsch *dlsch_p[NUMBER_OF_CONNECTED_eNB_MAX]
+	//UeDlsch *dlsch_MCH[NUMBER_OF_CONNECTED_eNB_MAX]
+	//EnbDlsch *dlsch_eNB[NUMBER_OF_CONNECTED_eNB_MAX]
+	ued.imsimod1024 = UE_data->IMSImod1024;
+	ued.pf = UE_data->PF;
+	ued.po = UE_data->PO;
+	//sr[10]
+	//pucch_sel[10]
+	//pucch_payload[22]
+	//UE_mode[NUMBER_OF_CONNECTED_eNB_MAX]
+	//lte_gold_table[7][20][2][14]
+	//lte_gold_uespec_port5_table[20][38]
+	//lte_gold_uespec_table[2][20][2][21]
+	//lte_gold_mbsfn_table[10][3][42]
+	//X_u[64][839]
+	ued.high_speed_flag = UE_data->high_speed_flag;
+	ued.perfect_ce = UE_data->perfect_ce;
+	ued.ch_est_alpha = UE_data->ch_est_alpha;
+	//generate_ul_signal[NUMBER_OF_CONNECTED_eNB_MAX]
+	//UeScanInfo scan_info[NB_BANDS_MAX]
+	//ulsch_no_allocation_counter[NUMBER_OF_CONNECTED_eNB_MAX]
+	//ulsch_Msg3_active[NUMBER_OF_CONNECTED_eNB_MAX]
+	//ulsch_Msg3_frame[NUMBER_OF_CONNECTED_eNB_MAX]
+	//ulsch_Msg3_subframe[NUMBER_OF_CONNECTED_eNB_MAX]
+	//PrachResources *prach_resources[NUMBER_OF_CONNECTED_eNB_MAX]
+	ued.turbo_iterations = UE_data->turbo_iterations;
+	ued.turbo_cntl_iterations = UE_data->turbo_cntl_iterations;
+	// total_TBS[NUMBER_OF_CONNECTED_eNB_MAX] 
+	// total_TBS_last[NUMBER_OF_CONNECTED_eNB_MAX] 
+	// bitrate[NUMBER_OF_CONNECTED_eNB_MAX] 
+	// total_received_bits[NUMBER_OF_CONNECTED_eNB_MAX] 
+	// dlsch_errors[NUMBER_OF_CONNECTED_eNB_MAX] 
+	// dlsch_errors_last[NUMBER_OF_CONNECTED_eNB_MAX] 
+	// dlsch_received[NUMBER_OF_CONNECTED_eNB_MAX] 
+	// dlsch_received_last[NUMBER_OF_CONNECTED_eNB_MAX] 
+	// dlsch_fer[NUMBER_OF_CONNECTED_eNB_MAX] 
+	// dlsch_SI_received[NUMBER_OF_CONNECTED_eNB_MAX] 
+	// dlsch_SI_errors[NUMBER_OF_CONNECTED_eNB_MAX] 
+	// dlsch_ra_received[NUMBER_OF_CONNECTED_eNB_MAX] 
+	// dlsch_ra_errors[NUMBER_OF_CONNECTED_eNB_MAX] 
+	// dlsch_p_received[NUMBER_OF_CONNECTED_eNB_MAX] 
+	// dlsch_p_errors[NUMBER_OF_CONNECTED_eNB_MAX] 
+	// dlsch_mch_received_sf[MAX_MBSFN_AREA][NUMBER_OF_CONNECTED_eNB_MAX] 
+	// dlsch_mch_received[NUMBER_OF_CONNECTED_eNB_MAX] 
+	// dlsch_mcch_received[MAX_MBSFN_AREA][NUMBER_OF_CONNECTED_eNB_MAX] 
+	// dlsch_mtch_received[MAX_MBSFN_AREA][NUMBER_OF_CONNECTED_eNB_MAX] 
+	// dlsch_mcch_errors[MAX_MBSFN_AREA][NUMBER_OF_CONNECTED_eNB_MAX] 
+	// dlsch_mtch_errors[MAX_MBSFN_AREA][NUMBER_OF_CONNECTED_eNB_MAX] 
+	// dlsch_mcch_trials[MAX_MBSFN_AREA][NUMBER_OF_CONNECTED_eNB_MAX] 
+	// dlsch_mtch_trials[MAX_MBSFN_AREA][NUMBER_OF_CONNECTED_eNB_MAX] 
+	// current_dlsch_cqi[NUMBER_OF_CONNECTED_eNB_MAX] 
+	// first_run_timing_advance[NUMBER_OF_CONNECTED_eNB_MAX]
+	ued.generate_prach =UE_data->generate_prach;
+	ued.prach_cnt =UE_data->prach_cnt;
+	ued.prach_preambleindex =UE_data->prach_PreambleIndex;
+	ued.decode_sib =UE_data->decode_SIB;
+	ued.decode_mib =UE_data->decode_MIB;
+	ued.rx_offset =UE_data->rx_offset;
+	ued.rx_offset_diff =UE_data->rx_offset_diff;
+	ued.time_sync_cell =UE_data->time_sync_cell;
+	ued.timing_advance =UE_data->timing_advance;
+	ued.hw_timing_advance =UE_data->hw_timing_advance;
+	ued.n_ta_offset =UE_data->N_TA_offset;
+	ued.is_secondary_ue=UE_data->is_secondary_ue;
+	ued.has_valid_precoder=UE_data->has_valid_precoder;
+	//**ul_precoder_S_UE
+	ued.log2_maxp =UE_data->log2_maxp;
+	ued.mac_enabled =UE_data->mac_enabled;
+	ued.init_averaging =UE_data->init_averaging;
+	//*sinr_dB
+	//*sinr_CQI_dB
+	ued.sinr_eff =UE_data->sinr_eff;
+	ued.n0 =UE_data->N0;
+
+
+
+    Frameparms frame_p = FRAMEPARMS__INIT;
+    frame_p.n_rb_dl = UE_data->frame_parms.N_RB_DL;
+    frame_p.n_rb_ul = UE_data->frame_parms.N_RB_UL;
+    frame_p.n_rbg = UE_data->frame_parms.N_RBG;
+    frame_p.n_rbgs = UE_data->frame_parms.N_RBGS;
+    frame_p.nid_cell = UE_data->frame_parms.Nid_cell;
+    frame_p.nid_cell_mbsfn = UE_data->frame_parms.Nid_cell_mbsfn;
+    frame_p.ncp = UE_data->frame_parms.Ncp;
+    frame_p.ncp_ul = UE_data->frame_parms.Ncp_UL;
+    frame_p.nushift = UE_data->frame_parms.nushift;
+    frame_p.frame_type = UE_data->frame_parms.frame_type;
+    frame_p.tdd_config = UE_data->frame_parms.tdd_config;
+    frame_p.tdd_config_s = UE_data->frame_parms.tdd_config_S;
+    frame_p.srsx = UE_data->frame_parms.srsX;
+    frame_p.node_id = UE_data->frame_parms.node_id;
+    frame_p.freq_idx = UE_data->frame_parms.freq_idx;
+    frame_p.mode1_flag = UE_data->frame_parms.mode1_flag;
+    frame_p.threequarter_fs = UE_data->frame_parms.threequarter_fs;
+    frame_p.ofdm_symbol_size = UE_data->frame_parms.ofdm_symbol_size;
+    frame_p.nb_prefix_samples = UE_data->frame_parms.nb_prefix_samples;
+    frame_p.nb_prefix_samples0 = UE_data->frame_parms.nb_prefix_samples0;
+    frame_p.first_carrier_offset = UE_data->frame_parms.first_carrier_offset;
+	frame_p.samples_per_tti = UE_data->frame_parms.samples_per_tti;
+	frame_p.symbols_per_tti = UE_data->frame_parms.symbols_per_tti;
+	frame_p.dl_symbols_in_s_subframe = UE_data->frame_parms.dl_symbols_in_S_subframe;
+	frame_p.ul_symbols_in_s_subframe = UE_data->frame_parms.ul_symbols_in_S_subframe;
+	frame_p.nb_antennas_tx = UE_data->frame_parms.nb_antennas_tx;
+	frame_p.nb_antennas_rx = UE_data->frame_parms.nb_antennas_rx;
+	frame_p.nb_antenna_ports_enb = UE_data->frame_parms.nb_antenna_ports_eNB;
+	//Pending: prach_config_common
+	//Pending: pucch_config_common
+	//Pending: pdsch_config_common
+	//Pending: pusch_config_common
+	//Pending: phich_config_common
+	//Pending: soundingrs_ul_config_common
+	//Pending: ul_power_control_config_common
+	frame_p.num_mbsfn_config = UE_data->frame_parms.num_MBSFN_config;
+	//Excluded: MBSFN_config
+	frame_p.maxharq_msg3tx = UE_data->frame_parms.maxHARQ_Msg3Tx;
+	frame_p.siwindowsize = UE_data->frame_parms.SIwindowsize;
+	frame_p.siperiod = UE_data->frame_parms.SIPeriod;
+
+	frame_p.n_pcfich_reg = 4;
+	frame_p.pcfich_reg = malloc (sizeof (uint32_t) * frame_p.n_pcfich_reg);
+	for (int i = 0; i < frame_p.n_pcfich_reg; i++)
+		frame_p.pcfich_reg[i] = UE_data->frame_parms.pcfich_reg[i];
+	frame_p.pcfich_first_reg_idx = UE_data->frame_parms.pcfich_first_reg_idx;
+
+	frame_p.n_phich_reg_outer=	MAX_NUM_PHICH_GROUPS;
+	PhichReg **phichreg;
+	phichreg = malloc(sizeof(PhichReg*)*frame_p.n_phich_reg_outer);
+	for (int j = 0; j < frame_p.n_phich_reg_outer; j++) {
+		//printf("j=%d ",j);
+		phichreg[j]=malloc (sizeof(PhichReg));
+		phich_reg__init(phichreg[j]);
+		phichreg[j]->n_phich_reg_inner=3;
+		phichreg[j]->phich_reg_inner=malloc (sizeof(uint32_t)*phichreg[j]->n_phich_reg_inner);
+		//printf("phichreg[%d]->n_phich_reg_inner : %lu\n",j,phichreg[j]->n_phich_reg_inner);
+		for (int k = 0; k < phichreg[j]->n_phich_reg_inner; k++) {
+			phichreg[j]->phich_reg_inner[k] = UE_data->frame_parms.phich_reg[j][k];
+			//printf("val[%d][%d] : %d\n",j,k,phichreg[j]->phich_reg_inner[k]);
+		}
+	}
+	frame_p.phich_reg_outer = phichreg;
+
+	//Pending: MBSFN_SubframeConfig
+    ued.frame_parms=&frame_p;
+
+    //populate_protobufc_proc(&procd,proc_data);
+    //populate_protobufc_ue(&ued,UE_data);
+
+    rxd.proc=&procd;
+    rxd.ue=&ued;
 
 	void *buf;
 	unsigned len;
-	frame_p.n_rb_dl = UE_data->frame_parms.N_RB_DL;
-	frame_p.n_rb_ul = UE_data->frame_parms.N_RB_UL;
 
-	msg.frame_param=&frame_p;
-
-
-	len = dump__get_packed_size(&msg);
+	len = rx_tx_thread_data__get_packed_size(&rxd);
+	printf("len = %d\n",len);
 	buf = malloc(len);
-	dump__pack(&msg,buf);		//serializes the message.
+	rx_tx_thread_data__pack(&rxd,buf);		//serializes the message.
 
 
     snprintf(filename,50,"%s%s%d-%d.%d_%d%s",s,"UE_",UE_data->frame_parms.Nid_cell,proc_data->frame_rx,proc_data->subframe_rx,tttime,".dat");
@@ -626,16 +895,13 @@ void dump_subframe_to_file(void *argum){
     FILE *fd;
     if ((fd = fopen(filename,"w"))!=NULL ) {
     	fprintf(stderr,"Writing %d serialized bytes\n",len);
-    	fwrite(buf,len,1,fd);/*
-		fwrite((void*)&UE->frame_parms,
-		sizeof(LTE_DL_FRAME_PARMS),
-		1,
-		fd);*/
-		fclose(fd);
+    	fwrite(buf,len,1,fd);
+    	fclose(fd);
     }
     free(buf);
-    //free(argum);
+    return;
 }
+
 /*!
  * \brief This is the UE thread for RX subframe n and TX subframe n+4.
  * This thread performs the phy_procedures_UE_RX() on every received slot.
@@ -698,7 +964,7 @@ static void *UE_thread_rxn_txnp4(void *arg) {
         updateTimes(proc->gotIQs, &t2, 10000, "Delay to wake up UE_Thread_Rx (case 2)");
 
         //LA: Saving a subframe in the time domain.
-        if (tttime >= 105 && tttime <= 105){
+        if (tttime >= 100 && tttime <= 115){
         	dump_subframe_to_file(rtd);
         }
         tttime++;

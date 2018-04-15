@@ -49,7 +49,8 @@
 
 #include "COMMON/platform_constants.h"
 #include "COMMON/mac_rrc_primitives.h"
-#include "PHY/defs.h"
+#include "../../../openair1/PHY/defs.h"
+//LA: #include "PHY/defs.h"
 #include "RadioResourceConfigCommon.h"
 #include "RadioResourceConfigDedicated.h"
 #include "MeasGapConfig.h"

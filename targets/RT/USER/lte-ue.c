@@ -29,12 +29,19 @@
  * \note
  * \warning
  */
+
+//#define OPENAIR2 1 //LA
+//#define OPENAIR_LTE 1 //LA
+
+//#include "../../../openair1/PHY/defs.h" //LA
+
 #include "lte-softmodem.h"
 
 #include "rt_wrapper.h"
 
 #ifdef OPENAIR2
-#include "LAYER2/MAC/defs.h"
+#include "../../../openair2/LAYER2/MAC/defs.h"
+//LA:#include "LAYER2/MAC/defs.h"
 #include "RRC/LITE/extern.h"
 #endif
 #include "PHY_INTERFACE/extern.h"
@@ -608,9 +615,9 @@ void populate_protobufc_ue(PhyVarsUe *ue_raw, PHY_VARS_UE *UE_data) {
 }
 
 
-void dump_phy_vars_ue(PHY_VARS_UE *UE_data) {
+//void dump_phy_vars_ue(PHY_VARS_UE *UE_data) {
 	//printf("frame_parms->N_RB_DL=%u\n",frame_parms->N_RB_DL);
-}
+//}
 
 void dump_ue_rxtx_proc(UE_rxtx_proc_t *proc_data) {
 	printf("proc_data->proc_id=%d\n",proc_data->proc_id);
@@ -641,6 +648,54 @@ void dump_ue_rxtx_proc(UE_rxtx_proc_t *proc_data) {
 	printf("proc_data->sub_frame_step=%d\n",proc_data->sub_frame_step);
 	printf("proc_data->gotIQs=%llu\n",proc_data->gotIQs);
 
+}
+
+void dump_phy_vars_ue(PHY_VARS_UE *UE_data,UE_rxtx_proc_t *proc_data) {
+	printf("UE_data->Mod_id=%u\n",UE_data->Mod_id);
+	printf("UE_data->CC_id=%u\n",UE_data->CC_id);
+	printf("UE_data->mode=%u\n",UE_data->mode);
+	printf("UE_data->UE_scan=%d\n",UE_data->UE_scan);
+	printf("UE_data->UE_scan_carrier=%d\n",UE_data->UE_scan_carrier);
+	printf("UE_data->is_synchronized=%d\n",UE_data->is_synchronized);
+	printf("UE_data->no_timing_correction=%d\n",UE_data->no_timing_correction);
+	printf("UE_data->tx_total_gain_dB=%u\n",UE_data->tx_total_gain_dB);
+	printf("UE_data->rx_total_gain_dB=%u\n",UE_data->rx_total_gain_dB);
+	printf("UE_data->tx_power_max_dBm=%d\n",UE_data->tx_power_max_dBm);
+	printf("UE_data->n_connected_eNB=%u\n",UE_data->n_connected_eNB);
+	printf("UE_data->ho_initiated=%u\n",UE_data->ho_initiated);
+	printf("UE_data->ho_triggered=%u\n",UE_data->ho_triggered);
+	for(int i=0; i< 100; i++) {//UE_data->frame_parms.samples_per_tti*10
+		if (i==0) printf("UE_data->common_vars.rxdata[0][i] =");
+		printf(" %x ",UE_data->common_vars.rxdata[0][proc_data->subframe_rx*UE_data->frame_parms.samples_per_tti+i]);
+		if ((i%20==0 && i!=0) || i==99) printf("\n");
+	}
+	//dump_frame_parms(UE_data->frame_parms);
+	printf("UE_data->IMSImod1024=%u\n",UE_data->IMSImod1024);
+	printf("UE_data->PF=%u\n",UE_data->PF);
+	printf("UE_data->PO=%u\n",UE_data->PO);
+	printf("UE_data->high_speed_flag=%u\n",UE_data->high_speed_flag);
+	printf("UE_data->perfect_ce=%u\n",UE_data->perfect_ce);
+	printf("UE_data->ch_est_alpha=%d\n",UE_data->ch_est_alpha);
+	printf("UE_data->turbo_iterations=%d\n",UE_data->turbo_iterations);
+	printf("UE_data->turbo_cntl_iterations=%d\n",UE_data->turbo_cntl_iterations);
+	printf("UE_data->generate_prach=%u\n",UE_data->generate_prach);
+	printf("UE_data->prach_cnt=%u\n",UE_data->prach_cnt);
+	printf("UE_data->prach_PreambleIndex=%u\n",UE_data->prach_PreambleIndex);
+	printf("UE_data->decode_SIB=%u\n",UE_data->decode_SIB);
+	printf("UE_data->decode_MIB=%u\n",UE_data->decode_MIB);
+	printf("UE_data->rx_offset=%d\n",UE_data->rx_offset);
+	printf("UE_data->rx_offset_diff=%d\n",UE_data->rx_offset_diff);
+	printf("UE_data->time_sync_cell=%d\n",UE_data->time_sync_cell);
+	printf("UE_data->timing_advance=%d\n",UE_data->timing_advance);
+	printf("UE_data->hw_timing_advance=%d\n",UE_data->hw_timing_advance);
+	printf("UE_data->N_TA_offset=%d\n",UE_data->N_TA_offset);
+	printf("UE_data->is_secondary_ue=%u\n",UE_data->is_secondary_ue);
+	printf("UE_data->has_valid_precoder=%u\n",UE_data->has_valid_precoder);
+	printf("UE_data->log2_maxp=%d\n",UE_data->log2_maxp);
+	printf("UE_data->mac_enabled=%d\n",UE_data->mac_enabled);
+	printf("UE_data->init_averaging=%d\n",UE_data->init_averaging);
+	printf("UE_data->sinr_eff=%f\n",UE_data->sinr_eff);
+	printf("UE_data->N0=%f\n",UE_data->N0);
 }
 
 void dump_subframe_to_file(void *argum){
@@ -689,14 +744,112 @@ void dump_subframe_to_file(void *argum){
 	procd.sub_frame_step=proc_data->sub_frame_step;
 	procd.gotiqs=proc_data->gotIQs;
 
-	dump_ue_rxtx_proc(proc_data);
+
+    Frameparms frame_p = FRAMEPARMS__INIT;
+    frame_p.n_rb_dl = UE_data->frame_parms.N_RB_DL;
+    frame_p.n_rb_ul = UE_data->frame_parms.N_RB_UL;
+    frame_p.n_rbg = UE_data->frame_parms.N_RBG;
+    frame_p.n_rbgs = UE_data->frame_parms.N_RBGS;
+    frame_p.nid_cell = UE_data->frame_parms.Nid_cell;
+    frame_p.nid_cell_mbsfn = UE_data->frame_parms.Nid_cell_mbsfn;
+    frame_p.ncp = UE_data->frame_parms.Ncp;
+    frame_p.ncp_ul = UE_data->frame_parms.Ncp_UL;
+    frame_p.nushift = UE_data->frame_parms.nushift;
+    frame_p.frame_type = UE_data->frame_parms.frame_type;
+    frame_p.tdd_config = UE_data->frame_parms.tdd_config;
+    frame_p.tdd_config_s = UE_data->frame_parms.tdd_config_S;
+    frame_p.srsx = UE_data->frame_parms.srsX;
+    frame_p.node_id = UE_data->frame_parms.node_id;
+    frame_p.freq_idx = UE_data->frame_parms.freq_idx;
+    frame_p.mode1_flag = UE_data->frame_parms.mode1_flag;
+    frame_p.threequarter_fs = UE_data->frame_parms.threequarter_fs;
+    frame_p.ofdm_symbol_size = UE_data->frame_parms.ofdm_symbol_size;
+    frame_p.nb_prefix_samples = UE_data->frame_parms.nb_prefix_samples;
+    frame_p.nb_prefix_samples0 = UE_data->frame_parms.nb_prefix_samples0;
+    frame_p.first_carrier_offset = UE_data->frame_parms.first_carrier_offset;
+	frame_p.samples_per_tti = UE_data->frame_parms.samples_per_tti;
+	frame_p.symbols_per_tti = UE_data->frame_parms.symbols_per_tti;
+	frame_p.dl_symbols_in_s_subframe = UE_data->frame_parms.dl_symbols_in_S_subframe;
+	frame_p.ul_symbols_in_s_subframe = UE_data->frame_parms.ul_symbols_in_S_subframe;
+	frame_p.nb_antennas_tx = UE_data->frame_parms.nb_antennas_tx;
+	frame_p.nb_antennas_rx = UE_data->frame_parms.nb_antennas_rx;
+	frame_p.nb_antenna_ports_enb = UE_data->frame_parms.nb_antenna_ports_eNB;
+	//Pending: prach_config_common
+	//Pending: pucch_config_common
+	//Pending: pdsch_config_common
+	//Pending: pusch_config_common
+	//Pending: phich_config_common
+	//Pending: soundingrs_ul_config_common
+	//Pending: ul_power_control_config_common
+	frame_p.num_mbsfn_config = UE_data->frame_parms.num_MBSFN_config;
+
+	frame_p.n_mbsfn_config = MAX_MBSFN_AREA;
+	MbsfnConfig **mbsfn_config;
+	mbsfn_config = malloc (sizeof(MbsfnConfig*)*frame_p.n_mbsfn_config);
+	for (int h = 0; h < frame_p.n_mbsfn_config; h++) {
+		mbsfn_config[h]=malloc (sizeof(MbsfnConfig));
+		mbsfn_config__init(mbsfn_config[h]);
+		mbsfn_config[h]->radioframeallocationperiod = UE_data->frame_parms.MBSFN_config[h].radioframeAllocationPeriod;
+		mbsfn_config[h]->radioframeallocationoffset = UE_data->frame_parms.MBSFN_config[h].radioframeAllocationOffset;
+		mbsfn_config[h]->fourframes_flag = UE_data->frame_parms.MBSFN_config[h].fourFrames_flag;
+		mbsfn_config[h]->mbsfn_subframeconfig = UE_data->frame_parms.MBSFN_config[h].mbsfn_SubframeConfig;
+	}
+	frame_p.mbsfn_config=mbsfn_config;
+
+	//Excluded: MBSFN_config
+	frame_p.maxharq_msg3tx = UE_data->frame_parms.maxHARQ_Msg3Tx;
+	frame_p.siwindowsize = UE_data->frame_parms.SIwindowsize;
+	frame_p.siperiod = UE_data->frame_parms.SIPeriod;
+
+	frame_p.n_pcfich_reg = 4;
+	frame_p.pcfich_reg = malloc (sizeof (uint32_t) * frame_p.n_pcfich_reg);
+	for (int i = 0; i < frame_p.n_pcfich_reg; i++)
+		frame_p.pcfich_reg[i] = UE_data->frame_parms.pcfich_reg[i];
+	frame_p.pcfich_first_reg_idx = UE_data->frame_parms.pcfich_first_reg_idx;
+
+	frame_p.n_phich_reg_outer=	MAX_NUM_PHICH_GROUPS;
+	PhichReg **phichreg;
+	phichreg = malloc(sizeof(PhichReg*)*frame_p.n_phich_reg_outer);
+	for (int j = 0; j < frame_p.n_phich_reg_outer; j++) {
+		//printf("j=%d ",j);
+		phichreg[j]=malloc (sizeof(PhichReg));
+		phich_reg__init(phichreg[j]);
+		phichreg[j]->n_phich_reg_inner=3;
+		phichreg[j]->phich_reg_inner=malloc (sizeof(uint32_t)*phichreg[j]->n_phich_reg_inner);
+		//printf("phichreg[%d]->n_phich_reg_inner : %lu\n",j,phichreg[j]->n_phich_reg_inner);
+		for (int k = 0; k < phichreg[j]->n_phich_reg_inner; k++) {
+			phichreg[j]->phich_reg_inner[k] = UE_data->frame_parms.phich_reg[j][k];
+			//printf("val[%d][%d] : %d\n",j,k,phichreg[j]->phich_reg_inner[k]);
+		}
+	}
+	frame_p.phich_reg_outer = phichreg;
+	//Pending: MBSFN_SubframeConfig
+
+
+	LteUeCommon common_vars = LTE_UE_COMMON__INIT;
+	common_vars.n_rxdata=UE_data->frame_parms.nb_antennas_rx;
+	LteData **rxdata;
+	rxdata = malloc (sizeof(LteData*)*common_vars.n_rxdata);
+	for (int i=0; i<common_vars.n_rxdata; i++) {
+		rxdata[i]=malloc (sizeof(LteData));
+		lte_data__init(rxdata[i]);
+		rxdata[i]->n_lte_data=UE_data->frame_parms.samples_per_tti*10;
+		rxdata[i]->lte_data=malloc(sizeof(int32_t)*rxdata[i]->n_lte_data);
+		//rxdata[i]->lte_data=&(UE_data->common_vars.rxdata[i][proc_data->subframe_rx*UE_data->frame_parms.samples_per_tti]);
+		memcpy(rxdata[i]->lte_data[0],&(UE_data->common_vars.rxdata[i][proc_data->subframe_rx*UE_data->frame_parms.samples_per_tti]),rxdata[i]->n_lte_data);
+	}
+	common_vars.rxdata=rxdata;
+	common_vars.sync_corr=UE_data->common_vars.sync_corr;	//ToDo: This only copies the pointer value, which doesn't make much sense
+	common_vars.freq_offset=UE_data->common_vars.freq_offset;
+	common_vars.enb_id=UE_data->common_vars.eNb_id;
+
 
     //Populating top-level PHY Data Structure for UE
     PhyVarsUe	ued	= PHY_VARS_UE__INIT;
     ued.mod_id = UE_data->Mod_id;
     ued.cc_id = UE_data->CC_id;
     //Openair0RfMap rf_map
-    //RunMode mode
+    ued.mode = UE_data->mode;
     ued.ue_scan = UE_data->UE_scan;
     ued.ue_scan_carrier = UE_data->UE_scan_carrier;
 	ued.is_synchronized = UE_data->is_synchronized;
@@ -714,10 +867,15 @@ void dump_subframe_to_file(void *argum){
 	ued.ho_initiated = UE_data->ho_initiated;
 	ued.ho_triggered = UE_data->ho_triggered;
 	//PhyMeasurements measurements
-	//frame_parms -> DONE
+	ued.frame_parms=&frame_p;
 	//Frameparms frame_parms_before_ho
+	//LTE_UE_COMMON    common_vars;
+	ued.common_vars=&common_vars;
 	//UeCommon common_vars
-	//current_thread_id
+	ued.n_current_thread_id = 10;
+	ued.current_thread_id = malloc (sizeof (uint32_t) * ued.n_current_thread_id);
+		for (int i = 0; i < ued.n_current_thread_id; i++)
+			ued.current_thread_id[i] = UE_data->current_thread_id[i];
 	//UePdsch *pdsch_vars[RX_NB_TH_MAX][NUMBER_OF_CONNECTED_eNB_MAX+1]
 	//UePdschFlp *pdsch_vars_flp[NUMBER_OF_CONNECTED_eNB_MAX+1]
 	//UePdsch *pdsch_vars_SI[NUMBER_OF_CONNECTED_eNB_MAX+1]
@@ -806,77 +964,12 @@ void dump_subframe_to_file(void *argum){
 	ued.n0 =UE_data->N0;
 
 
-
-    Frameparms frame_p = FRAMEPARMS__INIT;
-    frame_p.n_rb_dl = UE_data->frame_parms.N_RB_DL;
-    frame_p.n_rb_ul = UE_data->frame_parms.N_RB_UL;
-    frame_p.n_rbg = UE_data->frame_parms.N_RBG;
-    frame_p.n_rbgs = UE_data->frame_parms.N_RBGS;
-    frame_p.nid_cell = UE_data->frame_parms.Nid_cell;
-    frame_p.nid_cell_mbsfn = UE_data->frame_parms.Nid_cell_mbsfn;
-    frame_p.ncp = UE_data->frame_parms.Ncp;
-    frame_p.ncp_ul = UE_data->frame_parms.Ncp_UL;
-    frame_p.nushift = UE_data->frame_parms.nushift;
-    frame_p.frame_type = UE_data->frame_parms.frame_type;
-    frame_p.tdd_config = UE_data->frame_parms.tdd_config;
-    frame_p.tdd_config_s = UE_data->frame_parms.tdd_config_S;
-    frame_p.srsx = UE_data->frame_parms.srsX;
-    frame_p.node_id = UE_data->frame_parms.node_id;
-    frame_p.freq_idx = UE_data->frame_parms.freq_idx;
-    frame_p.mode1_flag = UE_data->frame_parms.mode1_flag;
-    frame_p.threequarter_fs = UE_data->frame_parms.threequarter_fs;
-    frame_p.ofdm_symbol_size = UE_data->frame_parms.ofdm_symbol_size;
-    frame_p.nb_prefix_samples = UE_data->frame_parms.nb_prefix_samples;
-    frame_p.nb_prefix_samples0 = UE_data->frame_parms.nb_prefix_samples0;
-    frame_p.first_carrier_offset = UE_data->frame_parms.first_carrier_offset;
-	frame_p.samples_per_tti = UE_data->frame_parms.samples_per_tti;
-	frame_p.symbols_per_tti = UE_data->frame_parms.symbols_per_tti;
-	frame_p.dl_symbols_in_s_subframe = UE_data->frame_parms.dl_symbols_in_S_subframe;
-	frame_p.ul_symbols_in_s_subframe = UE_data->frame_parms.ul_symbols_in_S_subframe;
-	frame_p.nb_antennas_tx = UE_data->frame_parms.nb_antennas_tx;
-	frame_p.nb_antennas_rx = UE_data->frame_parms.nb_antennas_rx;
-	frame_p.nb_antenna_ports_enb = UE_data->frame_parms.nb_antenna_ports_eNB;
-	//Pending: prach_config_common
-	//Pending: pucch_config_common
-	//Pending: pdsch_config_common
-	//Pending: pusch_config_common
-	//Pending: phich_config_common
-	//Pending: soundingrs_ul_config_common
-	//Pending: ul_power_control_config_common
-	frame_p.num_mbsfn_config = UE_data->frame_parms.num_MBSFN_config;
-	//Excluded: MBSFN_config
-	frame_p.maxharq_msg3tx = UE_data->frame_parms.maxHARQ_Msg3Tx;
-	frame_p.siwindowsize = UE_data->frame_parms.SIwindowsize;
-	frame_p.siperiod = UE_data->frame_parms.SIPeriod;
-
-	frame_p.n_pcfich_reg = 4;
-	frame_p.pcfich_reg = malloc (sizeof (uint32_t) * frame_p.n_pcfich_reg);
-	for (int i = 0; i < frame_p.n_pcfich_reg; i++)
-		frame_p.pcfich_reg[i] = UE_data->frame_parms.pcfich_reg[i];
-	frame_p.pcfich_first_reg_idx = UE_data->frame_parms.pcfich_first_reg_idx;
-
-	frame_p.n_phich_reg_outer=	MAX_NUM_PHICH_GROUPS;
-	PhichReg **phichreg;
-	phichreg = malloc(sizeof(PhichReg*)*frame_p.n_phich_reg_outer);
-	for (int j = 0; j < frame_p.n_phich_reg_outer; j++) {
-		//printf("j=%d ",j);
-		phichreg[j]=malloc (sizeof(PhichReg));
-		phich_reg__init(phichreg[j]);
-		phichreg[j]->n_phich_reg_inner=3;
-		phichreg[j]->phich_reg_inner=malloc (sizeof(uint32_t)*phichreg[j]->n_phich_reg_inner);
-		//printf("phichreg[%d]->n_phich_reg_inner : %lu\n",j,phichreg[j]->n_phich_reg_inner);
-		for (int k = 0; k < phichreg[j]->n_phich_reg_inner; k++) {
-			phichreg[j]->phich_reg_inner[k] = UE_data->frame_parms.phich_reg[j][k];
-			//printf("val[%d][%d] : %d\n",j,k,phichreg[j]->phich_reg_inner[k]);
-		}
-	}
-	frame_p.phich_reg_outer = phichreg;
-
-	//Pending: MBSFN_SubframeConfig
-    ued.frame_parms=&frame_p;
-
     //populate_protobufc_proc(&procd,proc_data);
     //populate_protobufc_ue(&ued,UE_data);
+
+    //dump_ue_rxtx_proc(proc_data);
+    dump_phy_vars_ue(UE_data,proc_data);
+    //dump_frame_parms(&(UE_data->frame_parms));
 
     rxd.proc=&procd;
     rxd.ue=&ued;
@@ -1222,7 +1315,7 @@ void *UE_thread(void *arg) {
                 if (UE->mode != loop_through_memory) {	//LA: this condition is normally met
                     if (UE->no_timing_correction==0) {	//LA: shouldn't the UE do timing correction? -> false, then do it.
                     		//LA: Performing timing correcting
-                        LOG_I(PHY,"[PID-%d] Resynchronizing RX by rx_offset=%d samples (mode = %d, 0:normal_txrx)\n",procID_UE_thread,UE->rx_offset,UE->mode);
+                        LOG_I(PHY,"[PID-%d] Re(void*)&UE->common_vars.rxdata[i]synchronizing RX by rx_offset=%d samples (mode = %d, 0:normal_txrx)\n",procID_UE_thread,UE->rx_offset,UE->mode);
                         //LA: this function receives "rx_offset" samples and stores them in "rxdata." It returns "rx_offset"
                         //LA: after reading them, it can then start reading received samples without having a timing offset
                         //LA: i.e., once we read some values from the buffer, they are freed and the next ones become available for reading

@@ -412,6 +412,141 @@ void   frameparms__free_unpacked
   assert(message->base.descriptor == &frameparms__descriptor);
   protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
 }
+void   mbsfn_config__init
+                     (MbsfnConfig         *message)
+{
+  static const MbsfnConfig init_value = MBSFN_CONFIG__INIT;
+  *message = init_value;
+}
+size_t mbsfn_config__get_packed_size
+                     (const MbsfnConfig *message)
+{
+  assert(message->base.descriptor == &mbsfn_config__descriptor);
+  return protobuf_c_message_get_packed_size ((const ProtobufCMessage*)(message));
+}
+size_t mbsfn_config__pack
+                     (const MbsfnConfig *message,
+                      uint8_t       *out)
+{
+  assert(message->base.descriptor == &mbsfn_config__descriptor);
+  return protobuf_c_message_pack ((const ProtobufCMessage*)message, out);
+}
+size_t mbsfn_config__pack_to_buffer
+                     (const MbsfnConfig *message,
+                      ProtobufCBuffer *buffer)
+{
+  assert(message->base.descriptor == &mbsfn_config__descriptor);
+  return protobuf_c_message_pack_to_buffer ((const ProtobufCMessage*)message, buffer);
+}
+MbsfnConfig *
+       mbsfn_config__unpack
+                     (ProtobufCAllocator  *allocator,
+                      size_t               len,
+                      const uint8_t       *data)
+{
+  return (MbsfnConfig *)
+     protobuf_c_message_unpack (&mbsfn_config__descriptor,
+                                allocator, len, data);
+}
+void   mbsfn_config__free_unpacked
+                     (MbsfnConfig *message,
+                      ProtobufCAllocator *allocator)
+{
+  if(!message)
+    return;
+  assert(message->base.descriptor == &mbsfn_config__descriptor);
+  protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
+}
+void   lte_data__init
+                     (LteData         *message)
+{
+  static const LteData init_value = LTE_DATA__INIT;
+  *message = init_value;
+}
+size_t lte_data__get_packed_size
+                     (const LteData *message)
+{
+  assert(message->base.descriptor == &lte_data__descriptor);
+  return protobuf_c_message_get_packed_size ((const ProtobufCMessage*)(message));
+}
+size_t lte_data__pack
+                     (const LteData *message,
+                      uint8_t       *out)
+{
+  assert(message->base.descriptor == &lte_data__descriptor);
+  return protobuf_c_message_pack ((const ProtobufCMessage*)message, out);
+}
+size_t lte_data__pack_to_buffer
+                     (const LteData *message,
+                      ProtobufCBuffer *buffer)
+{
+  assert(message->base.descriptor == &lte_data__descriptor);
+  return protobuf_c_message_pack_to_buffer ((const ProtobufCMessage*)message, buffer);
+}
+LteData *
+       lte_data__unpack
+                     (ProtobufCAllocator  *allocator,
+                      size_t               len,
+                      const uint8_t       *data)
+{
+  return (LteData *)
+     protobuf_c_message_unpack (&lte_data__descriptor,
+                                allocator, len, data);
+}
+void   lte_data__free_unpacked
+                     (LteData *message,
+                      ProtobufCAllocator *allocator)
+{
+  if(!message)
+    return;
+  assert(message->base.descriptor == &lte_data__descriptor);
+  protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
+}
+void   lte_ue_common__init
+                     (LteUeCommon         *message)
+{
+  static const LteUeCommon init_value = LTE_UE_COMMON__INIT;
+  *message = init_value;
+}
+size_t lte_ue_common__get_packed_size
+                     (const LteUeCommon *message)
+{
+  assert(message->base.descriptor == &lte_ue_common__descriptor);
+  return protobuf_c_message_get_packed_size ((const ProtobufCMessage*)(message));
+}
+size_t lte_ue_common__pack
+                     (const LteUeCommon *message,
+                      uint8_t       *out)
+{
+  assert(message->base.descriptor == &lte_ue_common__descriptor);
+  return protobuf_c_message_pack ((const ProtobufCMessage*)message, out);
+}
+size_t lte_ue_common__pack_to_buffer
+                     (const LteUeCommon *message,
+                      ProtobufCBuffer *buffer)
+{
+  assert(message->base.descriptor == &lte_ue_common__descriptor);
+  return protobuf_c_message_pack_to_buffer ((const ProtobufCMessage*)message, buffer);
+}
+LteUeCommon *
+       lte_ue_common__unpack
+                     (ProtobufCAllocator  *allocator,
+                      size_t               len,
+                      const uint8_t       *data)
+{
+  return (LteUeCommon *)
+     protobuf_c_message_unpack (&lte_ue_common__descriptor,
+                                allocator, len, data);
+}
+void   lte_ue_common__free_unpacked
+                     (LteUeCommon *message,
+                      ProtobufCAllocator *allocator)
+{
+  if(!message)
+    return;
+  assert(message->base.descriptor == &lte_ue_common__descriptor);
+  protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
+}
 void   phy_vars_ue__init
                      (PhyVarsUe         *message)
 {
@@ -767,7 +902,7 @@ const ProtobufCEnumDescriptor frameparms__lte_frame_type__descriptor =
   frameparms__lte_frame_type__value_ranges,
   NULL,NULL,NULL,NULL   /* reserved[1234] */
 };
-static const ProtobufCFieldDescriptor frameparms__field_descriptors[42] =
+static const ProtobufCFieldDescriptor frameparms__field_descriptors[43] =
 {
   {
     "N_RB_DL",
@@ -1202,6 +1337,18 @@ static const ProtobufCFieldDescriptor frameparms__field_descriptors[42] =
     0,NULL,NULL    /* reserved1,reserved2, etc */
   },
   {
+    "MBSFN_config",
+    46,
+    PROTOBUF_C_LABEL_REPEATED,
+    PROTOBUF_C_TYPE_MESSAGE,
+    offsetof(Frameparms, n_mbsfn_config),
+    offsetof(Frameparms, mbsfn_config),
+    &mbsfn_config__descriptor,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
     "maxHARQ_Msg3Tx",
     47,
     PROTOBUF_C_LABEL_REQUIRED,
@@ -1275,6 +1422,7 @@ static const ProtobufCFieldDescriptor frameparms__field_descriptors[42] =
   },
 };
 static const unsigned frameparms__field_indices_by_name[] = {
+  36,   /* field[36] = MBSFN_config */
   2,   /* field[2] = N_RBG */
   3,   /* field[3] = N_RBGS */
   0,   /* field[0] = N_RB_DL */
@@ -1283,13 +1431,13 @@ static const unsigned frameparms__field_indices_by_name[] = {
   7,   /* field[7] = Ncp_UL */
   4,   /* field[4] = Nid_cell */
   5,   /* field[5] = Nid_cell_mbsfn */
-  38,   /* field[38] = SIPeriod */
-  37,   /* field[37] = SIwindowsize */
+  39,   /* field[39] = SIPeriod */
+  38,   /* field[38] = SIwindowsize */
   23,   /* field[23] = dl_symbols_in_S_subframe */
   20,   /* field[20] = first_carrier_offset */
   9,   /* field[9] = frame_type */
   14,   /* field[14] = freq_idx */
-  36,   /* field[36] = maxHARQ_Msg3Tx */
+  37,   /* field[37] = maxHARQ_Msg3Tx */
   15,   /* field[15] = mode1_flag */
   27,   /* field[27] = nb_antenna_ports_eNB */
   26,   /* field[26] = nb_antennas_rx */
@@ -1300,11 +1448,11 @@ static const unsigned frameparms__field_indices_by_name[] = {
   35,   /* field[35] = num_MBSFN_config */
   8,   /* field[8] = nushift */
   17,   /* field[17] = ofdm_symbol_size */
-  40,   /* field[40] = pcfich_first_reg_idx */
-  39,   /* field[39] = pcfich_reg */
+  41,   /* field[41] = pcfich_first_reg_idx */
+  40,   /* field[40] = pcfich_reg */
   30,   /* field[30] = pdsch_config_common */
   32,   /* field[32] = phich_config_common */
-  41,   /* field[41] = phich_reg_outer */
+  42,   /* field[42] = phich_reg_outer */
   28,   /* field[28] = prach_config_common */
   29,   /* field[29] = pucch_config_common */
   31,   /* field[31] = pusch_config_common */
@@ -1318,12 +1466,11 @@ static const unsigned frameparms__field_indices_by_name[] = {
   34,   /* field[34] = ul_power_control_config_common */
   24,   /* field[24] = ul_symbols_in_S_subframe */
 };
-static const ProtobufCIntRange frameparms__number_ranges[3 + 1] =
+static const ProtobufCIntRange frameparms__number_ranges[2 + 1] =
 {
   { 1, 0 },
   { 25, 15 },
-  { 47, 36 },
-  { 0, 42 }
+  { 0, 43 }
 };
 const ProtobufCMessageDescriptor frameparms__descriptor =
 {
@@ -1333,14 +1480,249 @@ const ProtobufCMessageDescriptor frameparms__descriptor =
   "Frameparms",
   "",
   sizeof(Frameparms),
-  42,
+  43,
   frameparms__field_descriptors,
   frameparms__field_indices_by_name,
-  3,  frameparms__number_ranges,
+  2,  frameparms__number_ranges,
   (ProtobufCMessageInit) frameparms__init,
   NULL,NULL,NULL    /* reserved[123] */
 };
-static const ProtobufCFieldDescriptor phy_vars_ue__field_descriptors[39] =
+static const ProtobufCFieldDescriptor mbsfn_config__field_descriptors[4] =
+{
+  {
+    "radioframeAllocationPeriod",
+    1,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_INT32,
+    0,   /* quantifier_offset */
+    offsetof(MbsfnConfig, radioframeallocationperiod),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "radioframeAllocationOffset",
+    2,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_INT32,
+    0,   /* quantifier_offset */
+    offsetof(MbsfnConfig, radioframeallocationoffset),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "fourFrames_flag",
+    3,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_INT32,
+    0,   /* quantifier_offset */
+    offsetof(MbsfnConfig, fourframes_flag),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "mbsfn_SubframeConfig",
+    4,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_INT32,
+    0,   /* quantifier_offset */
+    offsetof(MbsfnConfig, mbsfn_subframeconfig),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+};
+static const unsigned mbsfn_config__field_indices_by_name[] = {
+  2,   /* field[2] = fourFrames_flag */
+  3,   /* field[3] = mbsfn_SubframeConfig */
+  1,   /* field[1] = radioframeAllocationOffset */
+  0,   /* field[0] = radioframeAllocationPeriod */
+};
+static const ProtobufCIntRange mbsfn_config__number_ranges[1 + 1] =
+{
+  { 1, 0 },
+  { 0, 4 }
+};
+const ProtobufCMessageDescriptor mbsfn_config__descriptor =
+{
+  PROTOBUF_C__MESSAGE_DESCRIPTOR_MAGIC,
+  "MbsfnConfig",
+  "MbsfnConfig",
+  "MbsfnConfig",
+  "",
+  sizeof(MbsfnConfig),
+  4,
+  mbsfn_config__field_descriptors,
+  mbsfn_config__field_indices_by_name,
+  1,  mbsfn_config__number_ranges,
+  (ProtobufCMessageInit) mbsfn_config__init,
+  NULL,NULL,NULL    /* reserved[123] */
+};
+static const ProtobufCFieldDescriptor lte_data__field_descriptors[1] =
+{
+  {
+    "lte_data",
+    1,
+    PROTOBUF_C_LABEL_REPEATED,
+    PROTOBUF_C_TYPE_INT32,
+    offsetof(LteData, n_lte_data),
+    offsetof(LteData, lte_data),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+};
+static const unsigned lte_data__field_indices_by_name[] = {
+  0,   /* field[0] = lte_data */
+};
+static const ProtobufCIntRange lte_data__number_ranges[1 + 1] =
+{
+  { 1, 0 },
+  { 0, 1 }
+};
+const ProtobufCMessageDescriptor lte_data__descriptor =
+{
+  PROTOBUF_C__MESSAGE_DESCRIPTOR_MAGIC,
+  "LteData",
+  "LteData",
+  "LteData",
+  "",
+  sizeof(LteData),
+  1,
+  lte_data__field_descriptors,
+  lte_data__field_indices_by_name,
+  1,  lte_data__number_ranges,
+  (ProtobufCMessageInit) lte_data__init,
+  NULL,NULL,NULL    /* reserved[123] */
+};
+static const ProtobufCFieldDescriptor lte_ue_common__field_descriptors[4] =
+{
+  {
+    "rxdata",
+    3,
+    PROTOBUF_C_LABEL_REPEATED,
+    PROTOBUF_C_TYPE_MESSAGE,
+    offsetof(LteUeCommon, n_rxdata),
+    offsetof(LteUeCommon, rxdata),
+    &lte_data__descriptor,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "sync_corr",
+    5,
+    PROTOBUF_C_LABEL_REPEATED,
+    PROTOBUF_C_TYPE_INT32,
+    offsetof(LteUeCommon, n_sync_corr),
+    offsetof(LteUeCommon, sync_corr),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "freq_offset",
+    6,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_INT32,
+    0,   /* quantifier_offset */
+    offsetof(LteUeCommon, freq_offset),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "eNb_id",
+    7,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_INT32,
+    0,   /* quantifier_offset */
+    offsetof(LteUeCommon, enb_id),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+};
+static const unsigned lte_ue_common__field_indices_by_name[] = {
+  3,   /* field[3] = eNb_id */
+  2,   /* field[2] = freq_offset */
+  0,   /* field[0] = rxdata */
+  1,   /* field[1] = sync_corr */
+};
+static const ProtobufCIntRange lte_ue_common__number_ranges[2 + 1] =
+{
+  { 3, 0 },
+  { 5, 1 },
+  { 0, 4 }
+};
+const ProtobufCMessageDescriptor lte_ue_common__descriptor =
+{
+  PROTOBUF_C__MESSAGE_DESCRIPTOR_MAGIC,
+  "LteUeCommon",
+  "LteUeCommon",
+  "LteUeCommon",
+  "",
+  sizeof(LteUeCommon),
+  4,
+  lte_ue_common__field_descriptors,
+  lte_ue_common__field_indices_by_name,
+  2,  lte_ue_common__number_ranges,
+  (ProtobufCMessageInit) lte_ue_common__init,
+  NULL,NULL,NULL    /* reserved[123] */
+};
+static const ProtobufCEnumValue phy_vars_ue__run_mode__enum_values_by_number[9] =
+{
+  { "normal_txrx", "PHY_VARS_UE__RUN_MODE__normal_txrx", 0 },
+  { "rx_calib_ue", "PHY_VARS_UE__RUN_MODE__rx_calib_ue", 1 },
+  { "rx_calib_ue_med", "PHY_VARS_UE__RUN_MODE__rx_calib_ue_med", 2 },
+  { "rx_calib_ue_byp", "PHY_VARS_UE__RUN_MODE__rx_calib_ue_byp", 3 },
+  { "debug_prach", "PHY_VARS_UE__RUN_MODE__debug_prach", 4 },
+  { "no_L2_connect", "PHY_VARS_UE__RUN_MODE__no_L2_connect", 5 },
+  { "calib_prach_tx", "PHY_VARS_UE__RUN_MODE__calib_prach_tx", 6 },
+  { "rx_dump_frame", "PHY_VARS_UE__RUN_MODE__rx_dump_frame", 7 },
+  { "loop_through_memory", "PHY_VARS_UE__RUN_MODE__loop_through_memory", 8 },
+};
+static const ProtobufCIntRange phy_vars_ue__run_mode__value_ranges[] = {
+{0, 0},{0, 9}
+};
+static const ProtobufCEnumValueIndex phy_vars_ue__run_mode__enum_values_by_name[9] =
+{
+  { "calib_prach_tx", 6 },
+  { "debug_prach", 4 },
+  { "loop_through_memory", 8 },
+  { "no_L2_connect", 5 },
+  { "normal_txrx", 0 },
+  { "rx_calib_ue", 1 },
+  { "rx_calib_ue_byp", 3 },
+  { "rx_calib_ue_med", 2 },
+  { "rx_dump_frame", 7 },
+};
+const ProtobufCEnumDescriptor phy_vars_ue__run_mode__descriptor =
+{
+  PROTOBUF_C__ENUM_DESCRIPTOR_MAGIC,
+  "PhyVarsUe.RunMode",
+  "RunMode",
+  "PhyVarsUe__RunMode",
+  "",
+  9,
+  phy_vars_ue__run_mode__enum_values_by_number,
+  9,
+  phy_vars_ue__run_mode__enum_values_by_name,
+  1,
+  phy_vars_ue__run_mode__value_ranges,
+  NULL,NULL,NULL,NULL   /* reserved[1234] */
+};
+static const ProtobufCFieldDescriptor phy_vars_ue__field_descriptors[42] =
 {
   {
     "Mod_id",
@@ -1362,6 +1744,18 @@ static const ProtobufCFieldDescriptor phy_vars_ue__field_descriptors[39] =
     0,   /* quantifier_offset */
     offsetof(PhyVarsUe, cc_id),
     NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "mode",
+    4,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_ENUM,
+    0,   /* quantifier_offset */
+    offsetof(PhyVarsUe, mode),
+    &phy_vars_ue__run_mode__descriptor,
     NULL,
     0,             /* flags */
     0,NULL,NULL    /* reserved1,reserved2, etc */
@@ -1499,6 +1893,30 @@ static const ProtobufCFieldDescriptor phy_vars_ue__field_descriptors[39] =
     0,NULL,NULL    /* reserved1,reserved2, etc */
   },
   {
+    "common_vars",
+    24,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_MESSAGE,
+    0,   /* quantifier_offset */
+    offsetof(PhyVarsUe, common_vars),
+    &lte_ue_common__descriptor,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "current_thread_id",
+    25,
+    PROTOBUF_C_LABEL_REPEATED,
+    PROTOBUF_C_TYPE_UINT32,
+    offsetof(PhyVarsUe, n_current_thread_id),
+    offsetof(PhyVarsUe, current_thread_id),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
     "IMSImod1024",
     42,
     PROTOBUF_C_LABEL_REQUIRED,
@@ -1562,7 +1980,7 @@ static const ProtobufCFieldDescriptor phy_vars_ue__field_descriptors[39] =
     "ch_est_alpha",
     56,
     PROTOBUF_C_LABEL_REQUIRED,
-    PROTOBUF_C_TYPE_UINT32,
+    PROTOBUF_C_TYPE_INT32,
     0,   /* quantifier_offset */
     offsetof(PhyVarsUe, ch_est_alpha),
     NULL,
@@ -1778,7 +2196,7 @@ static const ProtobufCFieldDescriptor phy_vars_ue__field_descriptors[39] =
     "sinr_eff",
     109,
     PROTOBUF_C_LABEL_REQUIRED,
-    PROTOBUF_C_TYPE_INT64,
+    PROTOBUF_C_TYPE_DOUBLE,
     0,   /* quantifier_offset */
     offsetof(PhyVarsUe, sinr_eff),
     NULL,
@@ -1790,7 +2208,7 @@ static const ProtobufCFieldDescriptor phy_vars_ue__field_descriptors[39] =
     "N0",
     110,
     PROTOBUF_C_LABEL_REQUIRED,
-    PROTOBUF_C_TYPE_INT64,
+    PROTOBUF_C_TYPE_DOUBLE,
     0,   /* quantifier_offset */
     offsetof(PhyVarsUe, n0),
     NULL,
@@ -1813,60 +2231,64 @@ static const ProtobufCFieldDescriptor phy_vars_ue__field_descriptors[39] =
 };
 static const unsigned phy_vars_ue__field_indices_by_name[] = {
   1,   /* field[1] = CC_id */
-  13,   /* field[13] = IMSImod1024 */
+  16,   /* field[16] = IMSImod1024 */
   0,   /* field[0] = Mod_id */
-  37,   /* field[37] = N0 */
-  30,   /* field[30] = N_TA_offset */
-  14,   /* field[14] = PF */
-  15,   /* field[15] = PO */
-  2,   /* field[2] = UE_scan */
-  3,   /* field[3] = UE_scan_carrier */
-  18,   /* field[18] = ch_est_alpha */
-  24,   /* field[24] = decode_MIB */
-  23,   /* field[23] = decode_SIB */
-  12,   /* field[12] = frame_parms */
-  20,   /* field[20] = generate_prach */
-  32,   /* field[32] = has_valid_precoder */
-  16,   /* field[16] = high_speed_flag */
-  10,   /* field[10] = ho_initiated */
-  11,   /* field[11] = ho_triggered */
-  29,   /* field[29] = hw_timing_advance */
-  35,   /* field[35] = init_averaging */
-  31,   /* field[31] = is_secondary_ue */
-  4,   /* field[4] = is_synchronized */
-  33,   /* field[33] = log2_maxp */
-  34,   /* field[34] = mac_enabled */
-  9,   /* field[9] = n_connected_eNB */
-  5,   /* field[5] = no_timing_correction */
-  17,   /* field[17] = perfect_ce */
-  22,   /* field[22] = prach_PreambleIndex */
-  21,   /* field[21] = prach_cnt */
-  25,   /* field[25] = rx_offset */
-  26,   /* field[26] = rx_offset_diff */
-  7,   /* field[7] = rx_total_gain_dB */
-  36,   /* field[36] = sinr_eff */
-  27,   /* field[27] = time_sync_cell */
-  28,   /* field[28] = timing_advance */
-  38,   /* field[38] = turbo_cntl_iterations */
-  19,   /* field[19] = turbo_iterations */
-  8,   /* field[8] = tx_power_max_dBm */
-  6,   /* field[6] = tx_total_gain_dB */
+  40,   /* field[40] = N0 */
+  33,   /* field[33] = N_TA_offset */
+  17,   /* field[17] = PF */
+  18,   /* field[18] = PO */
+  3,   /* field[3] = UE_scan */
+  4,   /* field[4] = UE_scan_carrier */
+  21,   /* field[21] = ch_est_alpha */
+  14,   /* field[14] = common_vars */
+  15,   /* field[15] = current_thread_id */
+  27,   /* field[27] = decode_MIB */
+  26,   /* field[26] = decode_SIB */
+  13,   /* field[13] = frame_parms */
+  23,   /* field[23] = generate_prach */
+  35,   /* field[35] = has_valid_precoder */
+  19,   /* field[19] = high_speed_flag */
+  11,   /* field[11] = ho_initiated */
+  12,   /* field[12] = ho_triggered */
+  32,   /* field[32] = hw_timing_advance */
+  38,   /* field[38] = init_averaging */
+  34,   /* field[34] = is_secondary_ue */
+  5,   /* field[5] = is_synchronized */
+  36,   /* field[36] = log2_maxp */
+  37,   /* field[37] = mac_enabled */
+  2,   /* field[2] = mode */
+  10,   /* field[10] = n_connected_eNB */
+  6,   /* field[6] = no_timing_correction */
+  20,   /* field[20] = perfect_ce */
+  25,   /* field[25] = prach_PreambleIndex */
+  24,   /* field[24] = prach_cnt */
+  28,   /* field[28] = rx_offset */
+  29,   /* field[29] = rx_offset_diff */
+  8,   /* field[8] = rx_total_gain_dB */
+  39,   /* field[39] = sinr_eff */
+  30,   /* field[30] = time_sync_cell */
+  31,   /* field[31] = timing_advance */
+  41,   /* field[41] = turbo_cntl_iterations */
+  22,   /* field[22] = turbo_iterations */
+  9,   /* field[9] = tx_power_max_dBm */
+  7,   /* field[7] = tx_total_gain_dB */
 };
-static const ProtobufCIntRange phy_vars_ue__number_ranges[12 + 1] =
+static const ProtobufCIntRange phy_vars_ue__number_ranges[13 + 1] =
 {
   { 1, 0 },
-  { 5, 2 },
-  { 9, 5 },
-  { 17, 8 },
-  { 22, 12 },
-  { 42, 13 },
-  { 54, 16 },
-  { 64, 19 },
-  { 90, 20 },
-  { 104, 33 },
-  { 109, 36 },
-  { 173, 38 },
-  { 0, 39 }
+  { 4, 2 },
+  { 9, 6 },
+  { 17, 9 },
+  { 22, 13 },
+  { 24, 14 },
+  { 42, 16 },
+  { 54, 19 },
+  { 64, 22 },
+  { 90, 23 },
+  { 104, 36 },
+  { 109, 39 },
+  { 173, 41 },
+  { 0, 42 }
 };
 const ProtobufCMessageDescriptor phy_vars_ue__descriptor =
 {
@@ -1876,10 +2298,10 @@ const ProtobufCMessageDescriptor phy_vars_ue__descriptor =
   "PhyVarsUe",
   "",
   sizeof(PhyVarsUe),
-  39,
+  42,
   phy_vars_ue__field_descriptors,
   phy_vars_ue__field_indices_by_name,
-  12,  phy_vars_ue__number_ranges,
+  13,  phy_vars_ue__number_ranges,
   (ProtobufCMessageInit) phy_vars_ue__init,
   NULL,NULL,NULL    /* reserved[123] */
 };

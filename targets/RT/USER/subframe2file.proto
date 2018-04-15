@@ -86,23 +86,64 @@ message Frameparms {
 	optional SoundingrsUlConfigCommon soundingrs_ul_config_common = 43;
 	optional UlPowerControlConfigCommon ul_power_control_config_common = 44;
 	required uint32	num_MBSFN_config = 45;
-	//required MBSFN_config[8] = 46;
+	repeated MbsfnConfig  MBSFN_config = 46; //[8]
 	required uint32 maxHARQ_Msg3Tx = 47;
 	required uint32 SIwindowsize = 48;
 	required uint32 SIPeriod = 49;
 	repeated uint32 pcfich_reg = 50;	//[4]
 	required uint32 pcfich_first_reg_idx = 51;
 	repeated PhichReg phich_reg_outer = 52; //[MAX_NUM_PHICH_GROUPS][3]
-	//required MBSFN_SubframeConfig = 53;
+	//repeated MbsfnSubframeConfig mbsfn_SubframeConfig = 53;
+	//struct MBSFN_SubframeConfig *mbsfn_SubframeConfig[MAX_MBSFN_AREA];
+}
+
+message MbsfnConfig {
+	required int32 radioframeAllocationPeriod = 1;
+	required int32 radioframeAllocationOffset = 2;
+	required int32 fourFrames_flag = 3;
+	required int32 mbsfn_SubframeConfig = 4;
+}
+
+message LteData {
+	repeated int32 lte_data = 1;
+}
+
+/*message DlChEstimates {
+	repeated LteData ch_estimates = 1;
+}
+
+message UeCommonPerThread {
+	repeated LteData rxdata_f = 1;
+	repeated DlChEstimates dl_ch_estimates = 2;
+	repeated DlChEstimates dl_ch_estimates_time = 3;
+}*/
+
+message LteUeCommon {
+	//repeated LteData txdata = 1;
+	//repeated LteData txdata_f = 2;
+	repeated LteData rxdata = 3;
+	//repeated UeCommonPerThread common_vars_rx_data_per_thread = 4;//is it needed to be copied?
+	repeated int32 sync_corr = 5;
+	required int32 freq_offset = 6;
+	required int32 eNb_id = 7;
 }
 
 message PhyVarsUe {
-	//required int32 UE_scan = 1;
-	//required Frameparms frame_param=2;
 	required uint32 Mod_id = 1 ;
 	required uint32 CC_id = 2;
 	//required Openair0RfMap rf_map = 3;
-	//required RunMode mode = 4;
+	enum RunMode	{
+		normal_txrx=0;
+		rx_calib_ue=1;
+		rx_calib_ue_med=2;
+		rx_calib_ue_byp=3;
+		debug_prach=4;
+		no_L2_connect=5;
+		calib_prach_tx=6;
+		rx_dump_frame=7;
+		loop_through_memory=8;
+	}
+	required RunMode mode = 4;
 	required int32 UE_scan = 5;
 	required int32 UE_scan_carrier = 6;
 	required int32 is_synchronized = 7;
@@ -122,8 +163,8 @@ message PhyVarsUe {
 	//required PhyMeasurements measurements = 21;
 	required Frameparms frame_parms = 22;
 //	required Frameparms frame_parms_before_ho = 23;
-	//required UeCommon common_vars = 24;
-	//required uint32 current_thread_id[10] = 25;
+	required LteUeCommon common_vars = 24;
+	repeated uint32 current_thread_id = 25; //[10]
 	/*required UePdsch *pdsch_vars[RX_NB_TH_MAX][NUMBER_OF_CONNECTED_eNB_MAX+1] = 26;
 	required UePdschFlp *pdsch_vars_flp[NUMBER_OF_CONNECTED_eNB_MAX+1] = 27;
 	required UePdsch *pdsch_vars_SI[NUMBER_OF_CONNECTED_eNB_MAX+1] = 28;
@@ -154,7 +195,7 @@ message PhyVarsUe {
 	//required uint32 X_u[64][839] = 53;
 	required uint32 high_speed_flag = 54;
 	required uint32 perfect_ce = 55;
-	required uint32 ch_est_alpha = 56;
+	required int32 ch_est_alpha = 56;
 	//required int32 generate_ul_signal[NUMBER_OF_CONNECTED_eNB_MAX] = 57;
 	//required UeScanInfo scan_info[NB_BANDS_MAX] = 58;
 	//required uint32 ulsch_no_allocation_counter[NUMBER_OF_CONNECTED_eNB_MAX] = 59;
@@ -208,8 +249,8 @@ message PhyVarsUe {
 	required int32 init_averaging = 106;
 	//required int64 *sinr_dB = 107;
 	//required int64 *sinr_CQI_dB = 108;
-	required int64 sinr_eff = 109;
-	required int64 N0 = 110;
+	required double sinr_eff = 109;
+	required double N0 = 110;
 	/*required PdschConfigDedicated pdsch_config_dedicated[NUMBER_OF_CONNECTED_eNB_MAX] = 111;
 	required PuschConfigDedicated pusch_config_dedicated[NUMBER_OF_CONNECTED_eNB_MAX] = 112;
 	required PuschCaConfigDedicated pusch_ca_config_dedicated[NUMBER_OF_eNB_MAX] = 113;

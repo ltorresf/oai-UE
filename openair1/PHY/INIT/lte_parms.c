@@ -203,38 +203,52 @@ void dump_frame_parms(LTE_DL_FRAME_PARMS *frame_parms)
 {
   printf("frame_parms->N_RB_DL=%"PRIu8"\n",frame_parms->N_RB_DL);
   printf("frame_parms->N_RB_UL=%"PRIu8"\n",frame_parms->N_RB_UL);
-  printf("frame_parms->N_RBG=%"PRIu8"\n",frame_parms->N_RBG);
-  printf("frame_parms->N_RBGS=%"PRIu8"\n",frame_parms->N_RBGS);
-  printf("frame_parms->Nid_cell=%d\n",frame_parms->Nid_cell);
+  printf("frame_parms->N_RBG=%u\n",frame_parms->N_RBG);
+  printf("frame_parms->N_RBGS=%u\n",frame_parms->N_RBGS);
+  printf("frame_parms->Nid_cell=%u\n",frame_parms->Nid_cell);
+  printf("frame_parms->Nid_cell_mbsfn=%u\n",frame_parms->Nid_cell_mbsfn);
   printf("frame_parms->Ncp=%d\n",frame_parms->Ncp);
-  printf("frame_parms->threequarter_fs=%"PRIu8"\n",frame_parms->threequarter_fs);
-  printf("frame_parms->node_id=%"PRIu8"\n",frame_parms->node_id);
   printf("frame_parms->Ncp_UL=%d\n",frame_parms->Ncp_UL);
   printf("frame_parms->nushift=%d\n",frame_parms->nushift);
   printf("frame_parms->frame_type=%d\n",frame_parms->frame_type);
-  printf("frame_parms->tdd_config=%d\n",frame_parms->tdd_config);
-  printf("frame_parms->tdd_config_S=%d\n",frame_parms->tdd_config_S);
+  printf("frame_parms->tdd_config=%u\n",frame_parms->tdd_config);
+  printf("frame_parms->tdd_config_S=%u\n",frame_parms->tdd_config_S);
+  printf("frame_parms->srsX=%u\n",frame_parms->srsX);
+  printf("frame_parms->node_id=%"PRIu8"\n",frame_parms->node_id);
+  printf("frame_parms->freq_idx=%"PRIu8"\n",frame_parms->freq_idx);
+  //some excluded here
   printf("frame_parms->mode1_flag=%d\n",frame_parms->mode1_flag);
-  printf("frame_parms->nb_antenna_ports_eNB=%d\n",frame_parms->nb_antenna_ports_eNB);
-  printf("frame_parms->nb_antennas_tx=%d\n",frame_parms->nb_antennas_tx);
-  printf("frame_parms->nb_antennas_rx=%d\n",frame_parms->nb_antennas_rx);
+  printf("frame_parms->threequarter_fs=%"PRIu8"\n",frame_parms->threequarter_fs);
   printf("frame_parms->ofdm_symbol_size=%d\n",frame_parms->ofdm_symbol_size);
-  printf("frame_parms->nb_prefix_samples=%d\n",frame_parms->nb_prefix_samples);
-  printf("frame_parms->nb_prefix_samples0=%d\n",frame_parms->nb_prefix_samples0);
-  printf("frame_parms->first_carrier_offset=%d\n",frame_parms->first_carrier_offset);
-  printf("frame_parms->samples_per_tti=%d\n",frame_parms->samples_per_tti);
-  printf("frame_parms->symbols_per_tti=%d\n",frame_parms->symbols_per_tti);
-  printf("frame_parms->dl_symbols_in_S_subframe=%"PRIu16"\n",frame_parms->dl_symbols_in_S_subframe);
+	printf("frame_parms->nb_prefix_samples=%d\n",frame_parms->nb_prefix_samples);
+	printf("frame_parms->nb_prefix_samples0=%d\n",frame_parms->nb_prefix_samples0);
+	printf("frame_parms->first_carrier_offset=%d\n",frame_parms->first_carrier_offset);
+	printf("frame_parms->samples_per_tti=%d\n",frame_parms->samples_per_tti);
+	printf("frame_parms->symbols_per_tti=%d\n",frame_parms->symbols_per_tti);
+	printf("frame_parms->dl_symbols_in_S_subframe=%"PRIu16"\n",frame_parms->dl_symbols_in_S_subframe);
+	printf("frame_parms->ul_symbols_in_S_subframe=%"PRIu16"\n",frame_parms->ul_symbols_in_S_subframe);
+	printf("frame_parms->nb_antennas_tx=%d\n",frame_parms->nb_antennas_tx);
+	  printf("frame_parms->nb_antennas_rx=%d\n",frame_parms->nb_antennas_rx);
+  printf("frame_parms->nb_antenna_ports_eNB=%d\n",frame_parms->nb_antenna_ports_eNB);
+  //common config excluded
+  printf("frame_parms->num_MBSFN_config=%d\n",frame_parms->num_MBSFN_config);
+  for(int i=0; i<MAX_MBSFN_AREA;i++)
+	  printf("frame_parms->MBSFN_config[%d]: radioframeAllocationPeriod = %d, radioframeAllocationOffset = %d, fourFrames_flag = %d, mbsfn_SubframeConfig = %d\n",
+			  i,frame_parms->MBSFN_config[i].radioframeAllocationPeriod,frame_parms->MBSFN_config[i].radioframeAllocationOffset,frame_parms->MBSFN_config[i].fourFrames_flag,frame_parms->MBSFN_config[i].mbsfn_SubframeConfig);
+
+  printf("frame_parms->maxHARQ_Msg3Tx=%"PRIu8"\n",frame_parms->maxHARQ_Msg3Tx);
+  printf("frame_parms->SIwindowsize=%"PRIu8"\n",frame_parms->SIwindowsize);
+    printf("frame_parms->SIPeriod=%"PRIu16"\n",frame_parms->SIPeriod);
   printf("frame_parms->pcfich_reg={%"PRIu16",%"PRIu16",%"PRIu16",%"PRIu16"}\n",frame_parms->pcfich_reg[0],frame_parms->pcfich_reg[1],frame_parms->pcfich_reg[2],frame_parms->pcfich_reg[3]);
   printf("frame_parms->pcfich_first_reg_idx=%"PRIu8"\n",frame_parms->pcfich_first_reg_idx);
-  printf("frame_parms->SIwindowsize=%"PRIu8"\n",frame_parms->SIwindowsize);
-  printf("frame_parms->SIPeriod=%"PRIu16"\n",frame_parms->SIPeriod);
   printf("frame_parms->phich_reg[0][1][2]={[%u,%u,%u][%u,%u,%u][%u,%u,%u][%u,%u,%u]}\n",
 		  frame_parms->phich_reg[0][0],frame_parms->phich_reg[0][1],frame_parms->phich_reg[0][2],
 		  frame_parms->phich_reg[1][0],frame_parms->phich_reg[1][1],frame_parms->phich_reg[1][2],
 		  frame_parms->phich_reg[2][0],frame_parms->phich_reg[2][1],frame_parms->phich_reg[2][2],
 		  frame_parms->phich_reg[7][0],frame_parms->phich_reg[7][1],frame_parms->phich_reg[7][2]);
+
   printf("frame_parms->pdsch_config_common.referenceSignalPower=%"PRIi8" dBm\n",frame_parms->pdsch_config_common.referenceSignalPower);
   printf("frame_parms->pdsch_config_common.p_b=%"PRIu8"\n",frame_parms->pdsch_config_common.p_b);
   //printf("openair0_cfg[UE->rf_map.card].rx_num_channels = %d\n",openair0_cfg[UE->rf_map.card].rx_num_channels);
 }
+

@@ -24,6 +24,9 @@ typedef struct _SoundingrsUlConfigCommon SoundingrsUlConfigCommon;
 typedef struct _UlPowerControlConfigCommon UlPowerControlConfigCommon;
 typedef struct _PhichReg PhichReg;
 typedef struct _Frameparms Frameparms;
+typedef struct _MbsfnConfig MbsfnConfig;
+typedef struct _LteData LteData;
+typedef struct _LteUeCommon LteUeCommon;
 typedef struct _PhyVarsUe PhyVarsUe;
 typedef struct _UeRxTxProc UeRxTxProc;
 typedef struct _RxTxThreadData RxTxThreadData;
@@ -41,6 +44,21 @@ typedef enum _Frameparms__LteFrameType {
   FRAMEPARMS__LTE_FRAME_TYPE__FDD = 0
     PROTOBUF_C__FORCE_ENUM_TO_BE_INT_SIZE(FRAMEPARMS__LTE_FRAME_TYPE)
 } Frameparms__LteFrameType;
+/*
+ *required Openair0RfMap rf_map = 3;
+ */
+typedef enum _PhyVarsUe__RunMode {
+  PHY_VARS_UE__RUN_MODE__normal_txrx = 0,
+  PHY_VARS_UE__RUN_MODE__rx_calib_ue = 1,
+  PHY_VARS_UE__RUN_MODE__rx_calib_ue_med = 2,
+  PHY_VARS_UE__RUN_MODE__rx_calib_ue_byp = 3,
+  PHY_VARS_UE__RUN_MODE__debug_prach = 4,
+  PHY_VARS_UE__RUN_MODE__no_L2_connect = 5,
+  PHY_VARS_UE__RUN_MODE__calib_prach_tx = 6,
+  PHY_VARS_UE__RUN_MODE__rx_dump_frame = 7,
+  PHY_VARS_UE__RUN_MODE__loop_through_memory = 8
+    PROTOBUF_C__FORCE_ENUM_TO_BE_INT_SIZE(PHY_VARS_UE__RUN_MODE)
+} PhyVarsUe__RunMode;
 
 /* --- messages --- */
 
@@ -169,8 +187,10 @@ struct  _Frameparms
   UlPowerControlConfigCommon *ul_power_control_config_common;
   uint32_t num_mbsfn_config;
   /*
-   *required MBSFN_config[8] = 46;
+   *[8]
    */
+  size_t n_mbsfn_config;
+  MbsfnConfig **mbsfn_config;
   uint32_t maxharq_msg3tx;
   uint32_t siwindowsize;
   uint32_t siperiod;
@@ -188,22 +208,61 @@ struct  _Frameparms
 };
 #define FRAMEPARMS__INIT \
  { PROTOBUF_C_MESSAGE_INIT (&frameparms__descriptor) \
-    , 0, 0, 0, 0, 0, 0, FRAMEPARMS__LTE_PREFIX_TYPE__EXTENDED, FRAMEPARMS__LTE_PREFIX_TYPE__EXTENDED, 0, FRAMEPARMS__LTE_FRAME_TYPE__TDD, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0,NULL, 0, 0,NULL }
+    , 0, 0, 0, 0, 0, 0, FRAMEPARMS__LTE_PREFIX_TYPE__EXTENDED, FRAMEPARMS__LTE_PREFIX_TYPE__EXTENDED, 0, FRAMEPARMS__LTE_FRAME_TYPE__TDD, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0,NULL, 0, 0, 0, 0,NULL, 0, 0,NULL }
+
+
+struct  _MbsfnConfig
+{
+  ProtobufCMessage base;
+  int32_t radioframeallocationperiod;
+  int32_t radioframeallocationoffset;
+  int32_t fourframes_flag;
+  int32_t mbsfn_subframeconfig;
+};
+#define MBSFN_CONFIG__INIT \
+ { PROTOBUF_C_MESSAGE_INIT (&mbsfn_config__descriptor) \
+    , 0, 0, 0, 0 }
+
+
+struct  _LteData
+{
+  ProtobufCMessage base;
+  size_t n_lte_data;
+  int32_t *lte_data;
+};
+#define LTE_DATA__INIT \
+ { PROTOBUF_C_MESSAGE_INIT (&lte_data__descriptor) \
+    , 0,NULL }
+
+
+struct  _LteUeCommon
+{
+  ProtobufCMessage base;
+  /*
+   *repeated LteData txdata = 1;
+   *repeated LteData txdata_f = 2;
+   */
+  size_t n_rxdata;
+  LteData **rxdata;
+  /*
+   *repeated UeCommonPerThread common_vars_rx_data_per_thread = 4;//is it needed to be copied?
+   */
+  size_t n_sync_corr;
+  int32_t *sync_corr;
+  int32_t freq_offset;
+  int32_t enb_id;
+};
+#define LTE_UE_COMMON__INIT \
+ { PROTOBUF_C_MESSAGE_INIT (&lte_ue_common__descriptor) \
+    , 0,NULL, 0,NULL, 0, 0 }
 
 
 struct  _PhyVarsUe
 {
   ProtobufCMessage base;
-  /*
-   *required int32 UE_scan = 1;
-   *required Frameparms frame_param=2;
-   */
   uint32_t mod_id;
   uint32_t cc_id;
-  /*
-   *required Openair0RfMap rf_map = 3;
-   *required RunMode mode = 4;
-   */
+  PhyVarsUe__RunMode mode;
   int32_t ue_scan;
   int32_t ue_scan_carrier;
   int32_t is_synchronized;
@@ -227,12 +286,16 @@ struct  _PhyVarsUe
   /*
    *required PhyMeasurements measurements = 21;
    */
+  Frameparms *frame_parms;
   /*
    *	required Frameparms frame_parms_before_ho = 23;
-   *required UeCommon common_vars = 24;
-   *required uint32 current_thread_id[10] = 25;
    */
-  Frameparms *frame_parms;
+  LteUeCommon *common_vars;
+  /*
+   *[10]
+   */
+  size_t n_current_thread_id;
+  uint32_t *current_thread_id;
   /*
    *required UePdsch *pdsch_vars[RX_NB_TH_MAX][NUMBER_OF_CONNECTED_eNB_MAX+1] = 26;
    *required UePdschFlp *pdsch_vars_flp[NUMBER_OF_CONNECTED_eNB_MAX+1] = 27;
@@ -267,7 +330,7 @@ struct  _PhyVarsUe
    */
   uint32_t high_speed_flag;
   uint32_t perfect_ce;
-  uint32_t ch_est_alpha;
+  int32_t ch_est_alpha;
   /*
    *required int32 generate_ul_signal[NUMBER_OF_CONNECTED_eNB_MAX] = 57;
    *required UeScanInfo scan_info[NB_BANDS_MAX] = 58;
@@ -331,7 +394,7 @@ struct  _PhyVarsUe
    *required int64 *sinr_dB = 107;
    *required int64 *sinr_CQI_dB = 108;
    */
-  int64_t sinr_eff;
+  double sinr_eff;
   /*
    *required PdschConfigDedicated pdsch_config_dedicated[NUMBER_OF_CONNECTED_eNB_MAX] = 111;
    *required PuschConfigDedicated pusch_config_dedicated[NUMBER_OF_CONNECTED_eNB_MAX] = 112;
@@ -396,11 +459,11 @@ struct  _PhyVarsUe
    *required TimeStats dlsch_llr_stripping_unit_SIC_stats = 171;
    *required TimeStats dlsch_unscrambling_SIC_stats = 172;
    */
-  int64_t n0;
+  double n0;
 };
 #define PHY_VARS_UE__INIT \
  { PROTOBUF_C_MESSAGE_INIT (&phy_vars_ue__descriptor) \
-    , 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
+    , 0, 0, PHY_VARS_UE__RUN_MODE__normal_txrx, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, 0,NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
 
 
 struct  _UeRxTxProc
@@ -627,6 +690,63 @@ Frameparms *
 void   frameparms__free_unpacked
                      (Frameparms *message,
                       ProtobufCAllocator *allocator);
+/* MbsfnConfig methods */
+void   mbsfn_config__init
+                     (MbsfnConfig         *message);
+size_t mbsfn_config__get_packed_size
+                     (const MbsfnConfig   *message);
+size_t mbsfn_config__pack
+                     (const MbsfnConfig   *message,
+                      uint8_t             *out);
+size_t mbsfn_config__pack_to_buffer
+                     (const MbsfnConfig   *message,
+                      ProtobufCBuffer     *buffer);
+MbsfnConfig *
+       mbsfn_config__unpack
+                     (ProtobufCAllocator  *allocator,
+                      size_t               len,
+                      const uint8_t       *data);
+void   mbsfn_config__free_unpacked
+                     (MbsfnConfig *message,
+                      ProtobufCAllocator *allocator);
+/* LteData methods */
+void   lte_data__init
+                     (LteData         *message);
+size_t lte_data__get_packed_size
+                     (const LteData   *message);
+size_t lte_data__pack
+                     (const LteData   *message,
+                      uint8_t             *out);
+size_t lte_data__pack_to_buffer
+                     (const LteData   *message,
+                      ProtobufCBuffer     *buffer);
+LteData *
+       lte_data__unpack
+                     (ProtobufCAllocator  *allocator,
+                      size_t               len,
+                      const uint8_t       *data);
+void   lte_data__free_unpacked
+                     (LteData *message,
+                      ProtobufCAllocator *allocator);
+/* LteUeCommon methods */
+void   lte_ue_common__init
+                     (LteUeCommon         *message);
+size_t lte_ue_common__get_packed_size
+                     (const LteUeCommon   *message);
+size_t lte_ue_common__pack
+                     (const LteUeCommon   *message,
+                      uint8_t             *out);
+size_t lte_ue_common__pack_to_buffer
+                     (const LteUeCommon   *message,
+                      ProtobufCBuffer     *buffer);
+LteUeCommon *
+       lte_ue_common__unpack
+                     (ProtobufCAllocator  *allocator,
+                      size_t               len,
+                      const uint8_t       *data);
+void   lte_ue_common__free_unpacked
+                     (LteUeCommon *message,
+                      ProtobufCAllocator *allocator);
 /* PhyVarsUe methods */
 void   phy_vars_ue__init
                      (PhyVarsUe         *message);
@@ -713,6 +833,15 @@ typedef void (*PhichReg_Closure)
 typedef void (*Frameparms_Closure)
                  (const Frameparms *message,
                   void *closure_data);
+typedef void (*MbsfnConfig_Closure)
+                 (const MbsfnConfig *message,
+                  void *closure_data);
+typedef void (*LteData_Closure)
+                 (const LteData *message,
+                  void *closure_data);
+typedef void (*LteUeCommon_Closure)
+                 (const LteUeCommon *message,
+                  void *closure_data);
 typedef void (*PhyVarsUe_Closure)
                  (const PhyVarsUe *message,
                   void *closure_data);
@@ -739,7 +868,11 @@ extern const ProtobufCMessageDescriptor phich_reg__descriptor;
 extern const ProtobufCMessageDescriptor frameparms__descriptor;
 extern const ProtobufCEnumDescriptor    frameparms__lte_prefix_type__descriptor;
 extern const ProtobufCEnumDescriptor    frameparms__lte_frame_type__descriptor;
+extern const ProtobufCMessageDescriptor mbsfn_config__descriptor;
+extern const ProtobufCMessageDescriptor lte_data__descriptor;
+extern const ProtobufCMessageDescriptor lte_ue_common__descriptor;
 extern const ProtobufCMessageDescriptor phy_vars_ue__descriptor;
+extern const ProtobufCEnumDescriptor    phy_vars_ue__run_mode__descriptor;
 extern const ProtobufCMessageDescriptor ue_rx_tx_proc__descriptor;
 extern const ProtobufCMessageDescriptor rx_tx_thread_data__descriptor;
 
